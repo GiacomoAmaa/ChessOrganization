@@ -1,4 +1,4 @@
-package Board;
+package board;
 
 import util.Color;
 
@@ -11,8 +11,8 @@ public class Turn {
 		this.blackMove = blackMove;
 	}
 
-	public String getMove(final Color player) {
-		return player.equals(Color.WHITE) ? this.whiteMove : this.blackMove ;
+	public String getMove(final Color playerColor) {
+		return playerColor.isWhite() ? this.whiteMove : this.blackMove ;
 	}
 
 }

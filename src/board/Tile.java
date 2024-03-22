@@ -1,8 +1,8 @@
-package Board;
+package board;
 
 import java.util.Optional;
 
-import Pieces.Piece;
+import pieces.Piece;
 import util.Color;
 
 public class Tile {

@@ -1,4 +1,4 @@
-package Pieces;
+package pieces;
 
 import util.Color;
 import util.PieceType;
@@ -22,6 +22,6 @@ public class Piece {
 
     @Override
     public String toString() {
-        return this.color.equals(Color.WHITE) ? this.type.toString().toUpperCase() : this.type.toString().toLowerCase();
+        return this.color.isWhite() ? this.type.toString().toUpperCase() : this.type.toString().toLowerCase();
     }
 }
