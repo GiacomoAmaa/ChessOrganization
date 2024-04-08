@@ -1,4 +1,4 @@
-package guitry;
+package GUI;
 
 public class App {
 

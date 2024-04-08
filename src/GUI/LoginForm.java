@@ -1,4 +1,4 @@
-package guitry;
+package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 
 import util.UserType;
 
@@ -34,20 +35,21 @@ public class LoginForm extends JFrame {
 			login = new JButton("LOG IN"),
 			register = new JButton("REGISTER");
 	private static final JPasswordField password = new JPasswordField(LoginForm.MAX_LENGTH);
-	
+	private static final ImageIcon logo = new ImageIcon(LoginForm.class.getResource("/icons/logo.png"));
 	public LoginForm() {
 		super("Chess Organization");
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(LoginForm.panel);
+		setIconImage(LoginForm.logo.getImage());
 		initialize();
 		updateType();
 		setVisible(true);
 	}
 
 	/**
-	 * Sets up the frame
+	 * Sets up the frame.
 	 */
 	private void initialize() {
 		// TODO import font for labels
@@ -64,7 +66,7 @@ public class LoginForm extends JFrame {
 		// initializing northern panel
 		LoginForm.title.setFont(new Font("Serif", Font.BOLD, LoginForm.FONT_SIZE));
 		LoginForm.title.setHorizontalAlignment(JLabel.CENTER);
-		LoginForm.panel.add(title, BorderLayout.NORTH);
+		LoginForm.panel.add(wrap(List.of(LoginForm.title, new JLabel(LoginForm.logo))), BorderLayout.NORTH);
 		// initializing center panel
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
