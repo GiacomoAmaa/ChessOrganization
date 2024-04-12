@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -16,12 +17,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class UserUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private static final int FONT_SIZE = 36;
-	private static final int BUTTON_FONT = 24;
+	private static final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	private static final double PADDING = 0.067,
+			FONT_SIZE = 0.02;
 	private static final JPanel panel = new JPanel(new BorderLayout());
 	private static final ImageIcon logo = new ImageIcon(UserUI.class.getResource("/icons/logo.png")),
 			defIcon = new ImageIcon(UserUI.class.getResource("/icons/default.png"));
@@ -34,7 +37,7 @@ public class UserUI extends JFrame{
 	
 	public UserUI() {
 		super("Chess Organization");
-		setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		setSize(UserUI.screen);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(UserUI.panel);
@@ -77,13 +80,14 @@ public class UserUI extends JFrame{
 			}
 			
 		});
-		UserUI.defaultTxt.setFont(new Font("Serif", Font.BOLD, UserUI.FONT_SIZE));
+		UserUI.defaultTxt.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, (int)(UserUI.screen.height * UserUI.FONT_SIZE)));
 		// initializing northern panel
 		List.of(games, stats, tourn, search).stream()
 			.forEach(elem -> {
 				UserUI.menu.add(elem);
-				elem.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, UserUI.BUTTON_FONT));
+				elem.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, (int)(UserUI.screen.height * UserUI.FONT_SIZE)));
 			});
+		
 		UserUI.panel.add(UserUI.menu, BorderLayout.NORTH);
 		// initializing center panel
 		UserUI.panel.add(wrapV(List.of(UserUI.defaultTxt, new JLabel(UserUI.defIcon))), BorderLayout.CENTER);
@@ -109,9 +113,17 @@ public class UserUI extends JFrame{
 	}
 	
 	/** 
-	 * Wraps components into panels containing them.
+	 * Wraps components into vertical panels containing them.
 	 */
 	private JComponent wrapV(Collection<JComponent> elements) {
+		elements.stream()
+			.forEach(e -> {
+				e.setAlignmentX(CENTER_ALIGNMENT);
+				e.setBorder(new EmptyBorder((int)(UserUI.screen.height * UserUI.PADDING),
+						(int)(UserUI.screen.height * UserUI.PADDING),
+						(int)(UserUI.screen.height * UserUI.PADDING),
+						(int)(UserUI.screen.height * UserUI.PADDING)));
+				});
 		var wrapper = new JPanel();
 		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
 		wrapper.setAlignmentX(CENTER_ALIGNMENT);
