@@ -36,6 +36,8 @@ public class Board {
 			"e8", new Piece(Color.BLACK, PieceType.KING)
 			);
 
+	/* TODO Sta schifezza è per stampare tranquillamente la board, ma
+	 *  una map sarebbe meglio a livello logico */
 	private final List<Pair<String, Tile>> board;
 
 	public Board() {
@@ -77,6 +79,13 @@ public class Board {
 				.get().getY()
 				.moveInPiece(entry.getValue());
 		}
+	}
+	
+	public Tile getTile(final String coord) {
+		return this.board.stream()
+				.filter(x -> x.getX().equals(coord))
+				.findFirst()
+				.get().getY();
 	}
 	
 }
