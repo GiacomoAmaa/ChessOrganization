@@ -2,7 +2,6 @@ package board;
 
 import java.util.Optional;
 
-import pieces.Piece;
 import util.Color;
 
 public class Tile {

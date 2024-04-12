@@ -2,7 +2,6 @@ package board;
 
 import java.util.List;
 
-import pieces.Piece;
 import util.Color;
 import util.MoveSymbols;
 import util.Pair;
