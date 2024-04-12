@@ -11,15 +11,15 @@ import util.PieceType;
 public class Game {
 	private final Board board;
 	private final List<Pair<String,String>> game;
-	private final MoveParser moveParser;
-	
+	private final MoveParser move;
+
 	private boolean isFinished;
 	private int currTurn;
 	private Color player;
 
 	public Game(List<Pair<String,String>> game) {
 		this.board = new Board();
-		this.moveParser = new MoveParser();
+		this.move = new MoveParser();
 		this.game = game;
 		this.isFinished = false;
 		this.currTurn = 0;
@@ -32,32 +32,35 @@ public class Game {
 			return;
 		} else {
 			//  return to previous move state
-			this.currTurn = this.player.isWhite() ? currTurn - 1 : currTurn ;
 			Color opponent = this.player;
+			this.currTurn = this.player.isWhite() ? currTurn - 1 : currTurn ;
 			this.player = this.player.isWhite() ? Color.BLACK: Color.WHITE ;
+
+			this.move.parse(this.player.isWhite() ? 
+					this.game.get(currTurn).getX() : this.game.get(currTurn).getY());
 			
-			if ( this.moveParser.isMoveType(MoveSymbols.CASTLING)) {
+			if (this.move.isMoveType(MoveSymbols.CASTLING)) {
 				/* castling message case start:stop:O-O:start:stop */
-				this.board.getTile(this.moveParser.getStartingCoord()).moveOutPiece(); // removes the king from arrival position
-				this.board.getTile(this.moveParser.getArrivalCoord()).moveOutPiece(); // removes the rook from arrival position
+				this.board.getTile(this.move.getStartingCoord()).moveOutPiece(); // removes the king from arrival position
+				this.board.getTile(this.move.getArrivalCoord()).moveOutPiece(); // removes the rook from arrival position
 				// moves the king in initial position
-				this.board.getTile(this.moveParser.getAttacker()).moveInPiece(new Piece(player, PieceType.KING));
+				this.board.getTile(this.move.getAttacker()).moveInPiece(new Piece(player, PieceType.KING));
 				// moves the rook in initial position
-				this.board.getTile(this.moveParser.getDefender()).moveInPiece(new Piece(player, PieceType.ROOK));
+				this.board.getTile(this.move.getDefender()).moveInPiece(new Piece(player, PieceType.ROOK));
 			} else {
 				// if any piece was captured needs to be restored 
-				if(this.moveParser.isMoveType(MoveSymbols.CAPTURE)) {
-					this.board.getTile(this.moveParser.getArrivalCoord()).moveInPiece(new Piece(opponent,
-							PieceType.getPieceTypeFromSymbol(this.moveParser.getDefender())));
+				if(this.move.isMoveType(MoveSymbols.CAPTURE)) {
+					this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(opponent,
+							PieceType.getPieceTypeFromSymbol(this.move.getDefender())));
 				} else {
 					// just remove attacker from arrival position
-					this.board.getTile(this.moveParser.getArrivalCoord()).moveOutPiece();
+					this.board.getTile(this.move.getArrivalCoord()).moveOutPiece();
 				}
-				// if there was a promotion should be restored the pawn
-				PieceType attacker = this.moveParser.isMoveType(MoveSymbols.PROMOTION) ?
-						PieceType.PAWN : PieceType.getPieceTypeFromSymbol(this.moveParser.getAttacker());
-				// get the attacker back to starting position
-				this.board.getTile(this.moveParser.getArrivalCoord()).moveInPiece(new Piece(player,attacker));
+				// get the attacker back to starting position, if the move was a promotion
+				// the attacker should be demoted to pawn
+				this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(player,
+						this.move.isMoveType(MoveSymbols.PROMOTION) ? PieceType.PAWN :
+							PieceType.getPieceTypeFromSymbol(this.move.getAttacker())));
 			}
 			this.isFinished = false;
 		}
@@ -65,32 +68,31 @@ public class Game {
 
 	public void makeNextMove() {
 		if (!isFinished) {
-			String move = this.player.isWhite() ? 
-					this.game.get(currTurn).getX() : this.game.get(currTurn).getY();
-			this.moveParser.parse(move);
-			
-			if(this.moveParser.isMoveType(MoveSymbols.CONCEED) ||
-					this.moveParser.isMoveType(MoveSymbols.DRAW)) {
+			this.move.parse(this.player.isWhite() ? 
+					this.game.get(currTurn).getX() : this.game.get(currTurn).getY());
+
+			if(this.move.isMoveType(MoveSymbols.CONCEED) ||
+					this.move.isMoveType(MoveSymbols.DRAW)) {
 				this.isFinished = true;
 				return;
 			}
-			 					 
-			if ( this.moveParser.isMoveType(MoveSymbols.CASTLING)) {
+
+			if (this.move.isMoveType(MoveSymbols.CASTLING)) {
 				/* castling message case start:stop:O-O:start:stop */
-				this.board.getTile(this.moveParser.getAttacker()).moveOutPiece(); // moves the king from starting position
-				this.board.getTile(this.moveParser.getDefender()).moveOutPiece(); // moves the rook from starting position
+				this.board.getTile(this.move.getAttacker()).moveOutPiece(); // moves the king from starting position
+				this.board.getTile(this.move.getDefender()).moveOutPiece(); // moves the rook from starting position
 				//moves the king in final position
-				this.board.getTile(this.moveParser.getStartingCoord()).moveInPiece(new Piece(player, PieceType.KING));
+				this.board.getTile(this.move.getStartingCoord()).moveInPiece(new Piece(player, PieceType.KING));
 				//moves the rook in final position
-				this.board.getTile(this.moveParser.getArrivalCoord()).moveInPiece(new Piece(player, PieceType.ROOK));
+				this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(player, PieceType.ROOK));
 			} else {
-				this.board.getTile(this.moveParser.getStartingCoord()).moveOutPiece();
-				this.board.getTile(this.moveParser.getArrivalCoord()).moveInPiece(new Piece(player,
-						PieceType.getPieceTypeFromSymbol(this.moveParser.getAttacker())));
+				this.board.getTile(this.move.getStartingCoord()).moveOutPiece();
+				this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(player,
+						PieceType.getPieceTypeFromSymbol(this.move.getAttacker())));
 			}
 
-			if (this.moveParser.isMoveType(MoveSymbols.C_MATE) ||
-					this.moveParser.isMoveType(MoveSymbols.STALEMATE)) {
+			if (this.move.isMoveType(MoveSymbols.C_MATE) ||
+					this.move.isMoveType(MoveSymbols.STALEMATE)) {
 				this.isFinished = true;
 			}
 
