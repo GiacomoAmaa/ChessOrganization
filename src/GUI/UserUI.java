@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -8,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -30,10 +32,11 @@ public class UserUI extends JFrame{
 			defIcon = new ImageIcon(UserUI.class.getResource("/icons/default.png"));
 	private static final JLabel defaultTxt = new JLabel("Welcome to Chess Org");
 	private static final JMenuBar menu = new JMenuBar(); // could be removed (still to check)
-	private static final JButton games = new JButton("GAMES"),
+	private static final JButton games = new JButton("MY GAMES"),
 			stats = new JButton("STATS"),
 			tourn = new JButton("SIGN IN FOR TOURNAMENTS"),
 			search = new JButton("SEARCH");
+	private static Optional<JButton> selected = Optional.empty();
 	
 	public UserUI() {
 		super("Chess Organization");
@@ -53,6 +56,8 @@ public class UserUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loadGames();
+				UserUI.selected = Optional.of(games);
+				update();
 			}
 			
 		});
@@ -61,6 +66,8 @@ public class UserUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loadStats();
+				UserUI.selected = Optional.of(stats);
+				update();
 			}
 			
 		});
@@ -69,6 +76,8 @@ public class UserUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loadTournaments();
+				UserUI.selected = Optional.of(tourn);
+				update();
 			}
 			
 		});
@@ -77,6 +86,8 @@ public class UserUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loadSearch();
+				UserUI.selected = Optional.of(search);
+				update();
 			}
 			
 		});
@@ -91,6 +102,17 @@ public class UserUI extends JFrame{
 		UserUI.panel.add(UserUI.menu, BorderLayout.NORTH);
 		// initializing center panel
 		UserUI.panel.add(wrapV(List.of(UserUI.defaultTxt, new JLabel(UserUI.defIcon))), BorderLayout.CENTER);
+	}
+	
+	private void update() {
+		List.of(UserUI.games, UserUI.search, UserUI.tourn, UserUI.stats).stream()
+			.forEach(btn -> {
+				if(UserUI.selected.equals(Optional.of(btn))) {
+					btn.setForeground(Color.BLUE);
+				} else {
+					btn.setForeground(Color.BLACK);
+				}
+			});
 	}
 
 	private void loadGames() {

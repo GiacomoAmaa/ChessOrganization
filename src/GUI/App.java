@@ -1,8 +1,10 @@
 package GUI;
 
+import controller.LoginControllerImpl;
+
 public class App {
 
 	public static void main(String[] args) {
-		var view = new UserUI();
+		var login = new LoginControllerImpl();
 	}
 }

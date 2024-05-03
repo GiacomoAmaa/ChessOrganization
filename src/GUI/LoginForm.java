@@ -1,12 +1,15 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,11 +17,14 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
 import javax.swing.ImageIcon;
 
+import util.Pair;
 import util.UserType;
 
 public class LoginForm extends JFrame {
@@ -36,6 +42,7 @@ public class LoginForm extends JFrame {
 			register = new JButton("REGISTER");
 	private static final JPasswordField password = new JPasswordField(LoginForm.MAX_LENGTH);
 	private static final ImageIcon logo = new ImageIcon(LoginForm.class.getResource("/icons/logo.png"));
+	
 	public LoginForm() {
 		super("Chess Organization");
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -44,8 +51,41 @@ public class LoginForm extends JFrame {
 		setContentPane(LoginForm.panel);
 		setIconImage(LoginForm.logo.getImage());
 		initialize();
+		setLocationRelativeTo(null);
 		updateType();
 		setVisible(true);
+	}
+	
+	public void setRegisterHandler(Consumer<Map<String, String>> handler) {
+		LoginForm.register.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				handler.accept(getUserData());
+			}
+			
+		});
+	}
+	
+	public void setLogInHandler(Consumer<Pair<UserType, Map<String, String>>> handler) {
+		LoginForm.login.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				handler.accept(new Pair<UserType, Map<String, String>>((UserType)LoginForm.role.getSelectedItem(), getUserData()));
+			}
+			
+		});
+	}
+	
+	/**
+	 * shows an error and resets fields when log in trial goes wrong
+	 */
+	public void Error() {
+		LoginForm.username.setText("");
+		LoginForm.password.setText("");
+		updateType();
+		JOptionPane.showMessageDialog(null, "Username or password are not valid, please try again.");
 	}
 
 	/**
@@ -98,6 +138,18 @@ public class LoginForm extends JFrame {
 		LoginForm.cardNumber.setEnabled(selectedType.equals(UserType.REFEREE));
 		LoginForm.cardNumber.setText(selectedType.equals(UserType.REFEREE) ? "" : "----");
 		LoginForm.register.setEnabled(selectedType.equals(UserType.PLAYER));
+	}
+	
+	private Map<String, String> getUserData() {
+		if(((UserType)LoginForm.role.getSelectedItem()).equals(UserType.REFEREE)) {
+			return Map.of("username", LoginForm.username.getText(),
+					"password", String.valueOf(LoginForm.password.getPassword()),
+					"cardNumber", LoginForm.cardNumber.getText());
+		}
+		else {
+			return Map.of("username", LoginForm.username.getText(),
+					"password", String.valueOf(LoginForm.password.getPassword()));
+		}
 	}
 	
 }

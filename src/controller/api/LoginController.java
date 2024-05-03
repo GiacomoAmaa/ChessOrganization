@@ -1,7 +1,6 @@
 package controller.api;
 
-import java.util.Optional;
-
+import java.util.Map;
 import util.UserType;
 
 /**
@@ -17,7 +16,7 @@ public interface LoginController {
 	 * @param card the card number needed by referees to log in
 	 * @return true if it's successful, false otherwise 
 	 */
-	public boolean loginAttempt(UserType type, String usr, String pwd, Optional<String> card);
+	public void loginAttempt(UserType type, Map<String, String> data);
 	
 	/**
 	 * handles registration (by players only)
@@ -25,6 +24,6 @@ public interface LoginController {
 	 * @param pwd the password
 	 * @return true if it's successful, false otherwise
 	 */
-	public boolean registrationAttempt(String usr, String pwd);
+	public void registrationAttempt(Map<String, String> data);
 	
 }
