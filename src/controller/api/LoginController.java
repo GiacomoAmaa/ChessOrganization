@@ -25,5 +25,4 @@ public interface LoginController {
 	 * @return true if it's successful, false otherwise
 	 */
 	public void registrationAttempt(Map<String, String> data);
-	
 }

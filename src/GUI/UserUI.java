@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,7 +36,8 @@ public class UserUI extends JFrame{
 	private static final JButton games = new JButton("MY GAMES"),
 			stats = new JButton("STATS"),
 			tourn = new JButton("SIGN IN FOR TOURNAMENTS"),
-			search = new JButton("SEARCH");
+			search = new JButton("SEARCH"),
+			logout = new JButton(new ImageIcon(UserUI.class.getResource("/icons/logout.png")));
 	private static Optional<JButton> selected = Optional.empty();
 	
 	public UserUI() {
@@ -51,7 +53,7 @@ public class UserUI extends JFrame{
 	
 	private void initialize() {
 		// initializing components
-		games.addActionListener(new ActionListener() {
+		UserUI.games.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -61,7 +63,7 @@ public class UserUI extends JFrame{
 			}
 			
 		});
-		stats.addActionListener(new ActionListener() {
+		UserUI.stats.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -71,7 +73,7 @@ public class UserUI extends JFrame{
 			}
 			
 		});
-		tourn.addActionListener(new ActionListener() {
+		UserUI.tourn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -81,7 +83,7 @@ public class UserUI extends JFrame{
 			}
 			
 		});
-		search.addActionListener(new ActionListener() {
+		UserUI.search.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -91,9 +93,18 @@ public class UserUI extends JFrame{
 			}
 			
 		});
+		// maybe this needs to be modified
+		UserUI.logout.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+			
+		});
 		UserUI.defaultTxt.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, (int)(UserUI.screen.height * UserUI.FONT_SIZE)));
 		// initializing northern panel
-		List.of(games, stats, tourn, search).stream()
+		List.of(games, stats, tourn, search, Box.createHorizontalGlue(), logout).stream()
 			.forEach(elem -> {
 				UserUI.menu.add(elem);
 				elem.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, (int)(UserUI.screen.height * UserUI.FONT_SIZE)));
