@@ -115,7 +115,9 @@ public class UserUI extends JFrame{
 		
 		UserUI.panel.add(UserUI.menu, BorderLayout.NORTH);
 		// initializing center panel
-		UserUI.panel.add(wrapV(List.of(UserUI.defaultTxt, new JLabel(UserUI.defIcon))), BorderLayout.CENTER);
+		//UserUI.panel.add(wrapV(List.of(UserUI.defaultTxt, new JLabel(UserUI.defIcon))), BorderLayout.CENTER);
+		final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("",""))));
+		UserUI.panel.add(board.getGui(), BorderLayout.CENTER);
 	}
 	
 	private void update() {
@@ -130,7 +132,7 @@ public class UserUI extends JFrame{
 	}
 
 	private void loadGames() {
-		// TODO change to query retrieving game moves
+		// TODO per qualche motivo entra qui ma il pannello non si aggiorna
 		final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("",""))));
 		UserUI.panel.add(board.getGui(), BorderLayout.CENTER);
 	}

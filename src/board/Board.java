@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Board {
-	public static final String[] COLUMNS = {"a","b","c","d","e","f","g","h"};
+	public static final String[] COLUMNS = {"a","h","g","f","e","d","c","b"};
 	public static final int NUM_TILES = 64;
 	public static final int BOARD_DIM = 8;
 
@@ -54,8 +54,12 @@ public class Board {
 		int rowIndex = BOARD_DIM;
 		Color tileColor;
 		for(int i = Board.NUM_TILES ; i > 0 ; i--) {
-			tileColor = i % 2 == 0 ? Color.WHITE : Color.BLACK; // alternates colors on squares
 			rowIndex = i % BOARD_DIM == 0 ? i / BOARD_DIM : rowIndex;
+			if (rowIndex % 2 == 0) {
+				tileColor = i % 2 == 0 ? Color.WHITE : Color.BLACK; // alternates colors on squares
+			} else {
+				tileColor = i % 2 == 0 ? Color.BLACK : Color.WHITE; // alternates colors on squares
+			}
 			String coordinate = COLUMNS[i % BOARD_DIM] + Integer.toString(rowIndex); 
 			this.board.add(new Pair<String, Tile>(coordinate, new Tile(tileColor, Optional.empty())));
 		}
