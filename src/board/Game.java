@@ -100,5 +100,8 @@ public class Game {
 		}
 
 	}
-	
+
+	public Board getPosition() {
+		return board;
+	}
 }

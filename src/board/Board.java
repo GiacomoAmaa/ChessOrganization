@@ -9,12 +9,13 @@ import util.Pair;
 import util.PieceType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Board {
-	private static final String[] COLUMNS = {"a","b","c","d","e","f","g","h"};
-	private static final int NUM_TILES = 64;
-	private static final int BOARD_DIM = 8;
+	public static final String[] COLUMNS = {"a","b","c","d","e","f","g","h"};
+	public static final int NUM_TILES = 64;
+	public static final int BOARD_DIM = 8;
 
 	/* starting pieces positions */
 	private static final Map<Set<String>, Piece> PIECES_POS = Map.of(
@@ -86,5 +87,9 @@ public class Board {
 				.findFirst()
 				.get().getY();
 	}
-	
+
+	public List<Pair<String, Tile>> getBoard() {
+		return Collections.unmodifiableList(this.board);
+	}
+
 }

@@ -22,6 +22,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import board.Game;
+import util.Pair;
+
 public class UserUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
@@ -127,7 +130,9 @@ public class UserUI extends JFrame{
 	}
 
 	private void loadGames() {
-		// TODO Auto-generated method stub
+		// TODO change to query retrieving game moves
+		final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("",""))));
+		UserUI.panel.add(board.getGui(), BorderLayout.CENTER);
 	}
 	
 	private void loadStats() {

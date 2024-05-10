@@ -1,4 +1,4 @@
-package util.fonts;
+package util.loaders;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
