@@ -22,7 +22,7 @@ public class FontLoader {
      * Loads and initializes all the game's different {@link Font}.
      */
     public FontLoader() {
-        this.titleFont = this.loadFont(DEFAULT_DIR + "titleFont.ttf");
+        this.titleFont = this.loadFont(DEFAULT_DIR + "titleFont.otf");
         this.textFont = this.loadFont(DEFAULT_DIR + "textFont.ttf");
     }
 
