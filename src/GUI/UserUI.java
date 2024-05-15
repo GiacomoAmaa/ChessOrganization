@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -22,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import board.Game;
@@ -38,17 +40,17 @@ public class UserUI extends JFrame{
 			// centerPane represents the center section of pane
 			centerPane = new JPanel();
 	private static final ImageIcon logo = new ImageIcon(UserUI.class.getResource("/icons/logo.png")),
-			defIcon = new ImageIcon(UserUI.class.getResource("/icons/default.png")),
-			// initialize this icon in order to be scaled in this size
-			logoutIcon = new ImageIcon(new ImageIcon(UserUI.class.getResource("/icons/logout.png"))
-				.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+			defIcon = new ImageIcon(UserUI.class.getResource("/icons/default.png"));
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
 	private static final JMenuBar menu = new JMenuBar(); // could be removed (still to check)
 	private static final JButton games = new JButton("MY GAMES"),
 			stats = new JButton("STATS"),
 			tourn = new JButton("SIGN IN FOR TOURNAMENTS"),
 			search = new JButton("SEARCH"),
-			logout = new JButton(UserUI.logoutIcon);
+			logout = new JButton(new ImageIcon(new ImageIcon(UserUI.class.getResource("/icons/logout.png"))
+					.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))),
+			launchSearch = new JButton(new ImageIcon(UserUI.class.getResource("/icons/magnifying-glass.png")));
+	private static final JTextField searchBox = new JTextField("", 50);
 	private static final FontLoader fontLoad = new FontLoader();
 	private static Optional<JButton> selected = Optional.empty();
 	
@@ -61,6 +63,17 @@ public class UserUI extends JFrame{
 		setIconImage(UserUI.logo.getImage());
 		initialize();
 		setVisible(true);
+	}
+	
+	public void setSearchHandler(Function<String, List<String>> handler) {
+		UserUI.launchSearch.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				var result = handler.apply(UserUI.searchBox.getText());
+			}
+			
+		});
 	}
 	
 	private void initialize() {
@@ -168,8 +181,14 @@ public class UserUI extends JFrame{
 	}
 
 	private void loadSearch() {
-		// TODO Auto-generated method stub
-		
+		UserUI.centerPane.removeAll();
+		UserUI.centerPane.revalidate();
+		var wrapper = new JPanel();
+		wrapper.add(UserUI.searchBox);
+		wrapper.add(UserUI.launchSearch);
+		wrapper.setAlignmentX(CENTER_ALIGNMENT);
+		UserUI.centerPane.add(wrapper);
+		UserUI.centerPane.repaint();
 	}
 	
 	/** 
