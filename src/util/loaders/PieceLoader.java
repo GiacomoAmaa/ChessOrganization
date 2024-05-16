@@ -17,20 +17,20 @@ public class PieceLoader {
             + "resources" + SEPARATOR + "pieces" + SEPARATOR;
     
     private static final Map<PieceType,BufferedImage> whitePieces = new HashMap<>(Map.of(
-    		PieceType.BISHOP, loadPiece("whitebishop.gif"),
-    		PieceType.KING, loadPiece("whiteking.gif"),
-    		PieceType.KNIGHT, loadPiece("whiteknight.gif"),
-    		PieceType.PAWN, loadPiece("whitepawn.gif"),
-    		PieceType.QUEEN, loadPiece("whitequeen.gif"),
-    		PieceType.ROOK, loadPiece("whiterook.gif")));
+    		PieceType.BISHOP, loadPiece("whitebishop.png"),
+    		PieceType.KING, loadPiece("whiteking.png"),
+    		PieceType.KNIGHT, loadPiece("whiteknight.png"),
+    		PieceType.PAWN, loadPiece("whitepawn.png"),
+    		PieceType.QUEEN, loadPiece("whitequeen.png"),
+    		PieceType.ROOK, loadPiece("whiterook.png")));
     
     private static final Map<PieceType,BufferedImage> blackPieces = new HashMap<>(Map.of(
-    		PieceType.BISHOP, loadPiece("blackbishop.gif"),
-    		PieceType.KING, loadPiece("blackking.gif"),
-    		PieceType.KNIGHT, loadPiece("blackknight.gif"),
-    		PieceType.PAWN, loadPiece("blackpawn.gif"),
-    		PieceType.QUEEN, loadPiece("blackqueen.gif"),
-    		PieceType.ROOK, loadPiece("blackrook.gif")));
+    		PieceType.BISHOP, loadPiece("blackbishop.png"),
+    		PieceType.KING, loadPiece("blackking.png"),
+    		PieceType.KNIGHT, loadPiece("blackknight.png"),
+    		PieceType.PAWN, loadPiece("blackpawn.png"),
+    		PieceType.QUEEN, loadPiece("blackqueen.png"),
+    		PieceType.ROOK, loadPiece("blackrook.png")));
 
     public BufferedImage getImage(Piece piece) {
     	return piece.getColor().isWhite() ? 

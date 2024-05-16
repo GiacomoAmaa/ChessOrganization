@@ -15,7 +15,8 @@ public class BoardGUI {
 
     private JPanel chessBoard = new JPanel(new GridLayout(0, Board.BOARD_DIM));
     private PieceLoader images = new PieceLoader();
-
+    private Color lightBrown = new Color(215, 215, 215);
+    private Color darkBrown = new Color(160, 160, 160);   
     BoardGUI(Game game) {
         initializeGui(game.getPosition());
     }
@@ -32,10 +33,11 @@ public class BoardGUI {
             }
 
             if(board.get(i).getY().getColor().isWhite()) {
-            	button.setBackground(java.awt.Color.WHITE);
+            	button.setBackground(lightBrown);
             } else {
-            	button.setBackground(java.awt.Color.BLACK);
+            	button.setBackground(darkBrown);
             }
+            button.setPreferredSize(new Dimension(64, 64));
             chessBoard.add(button);
         }
     }
