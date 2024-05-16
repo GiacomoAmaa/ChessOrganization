@@ -3,6 +3,8 @@ package GUI;
 import java.awt.*;
 
 import javax.swing.*;
+
+import java.util.LinkedList;
 import java.util.List;
 
 import board.Board;
@@ -16,9 +18,13 @@ public class BoardGUI {
     private JPanel chessBoard = new JPanel(new GridLayout(0, Board.BOARD_DIM));
     private PieceLoader images = new PieceLoader();
     private Color lightBrown = new Color(215, 215, 215);
-    private Color darkBrown = new Color(160, 160, 160);   
+    private Color darkBrown = new Color(160, 160, 160);
+    private List<JButton> buttons = new LinkedList<>();
+	private final Game game;
+
     BoardGUI(Game game) {
-        initializeGui(game.getPosition());
+    	this.game = game;
+        initializeGui(this.game.getPosition());
     }
 
     public final void initializeGui(Board pos) {
@@ -38,11 +44,26 @@ public class BoardGUI {
             	button.setBackground(darkBrown);
             }
             button.setPreferredSize(new Dimension(64, 64));
-            chessBoard.add(button);
+            this.chessBoard.add(button);
+            this.buttons.add(button);
+        }
+    }
+
+    public final void displayMove(Board pos) {
+    	List<Pair<String, Tile>> board = pos.getBoard();
+    	
+        for (int i = 0; i < Board.NUM_TILES; i++) {
+            if(!board.get(i).getY().isFree()) {
+                ImageIcon icon = new ImageIcon(this.images.getImage(board.get(i).getY().getPiece().get()));
+                this.buttons.get(i).setIcon(icon);
+            } else {
+            	this.buttons.get(i).setIcon(null);
+            }
         }
     }
 
     public final JComponent getGui() {
         return chessBoard;
     }
+
 }
