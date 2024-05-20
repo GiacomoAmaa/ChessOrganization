@@ -21,6 +21,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -33,7 +34,8 @@ import util.loaders.FontLoader;
 public class UserUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private static final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	private static final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize(),
+			MENUITEM_SIZE = new Dimension((int)(UserUI.screen.getWidth() * 0.2), (int)(UserUI.screen.height * 0.1));
 	private static final double PADDING = 0.067,
 			FONT_SIZE = 0.02;
 	private static final JPanel panel = new JPanel(new BorderLayout()),
@@ -43,16 +45,16 @@ public class UserUI extends JFrame{
 			defIcon = new ImageIcon(UserUI.class.getResource("/icons/default.png"));
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
 	private static final JMenuBar menu = new JMenuBar(); // could be removed (still to check)
-	private static final JButton games = new JButton("MY GAMES"),
-			stats = new JButton("STATS"),
-			tourn = new JButton("SIGN IN FOR TOURNAMENTS"),
-			search = new JButton("SEARCH"),
-			logout = new JButton(new ImageIcon(new ImageIcon(UserUI.class.getResource("/icons/logout.png"))
-					.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))),
-			launchSearch = new JButton(new ImageIcon(UserUI.class.getResource("/icons/magnifying-glass.png")));
+	private static final JMenuItem games = new JMenuItem("MY GAMES"),
+			stats = new JMenuItem("STATS"),
+			tourn = new JMenuItem("SIGN IN FOR TOURNAMENTS"),
+			search = new JMenuItem("SEARCH"),
+			logout = new JMenuItem(new ImageIcon(new ImageIcon(UserUI.class.getResource("/icons/logout.png"))
+					.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+	private static final JButton launchSearch = new JButton(new ImageIcon(UserUI.class.getResource("/icons/magnifying-glass.png")));
 	private static final JTextField searchBox = new JTextField("", 50);
 	private static final FontLoader fontLoad = new FontLoader();
-	private static Optional<JButton> selected = Optional.empty();
+	private static Optional<JMenuItem> selected = Optional.empty();
 	
 	public UserUI() {
 		super("Chess Organization");
@@ -137,12 +139,11 @@ public class UserUI extends JFrame{
 		// TODO il font non carica
 		UserUI.defText.setFont(UserUI.fontLoad.getTextFont());
 		// initializing northern panel
-		List.of(games, stats, tourn, search, Box.createHorizontalGlue(), logout).stream()
+		List.of(games, stats, tourn, search, logout).stream()
 			.forEach(elem -> {
+				elem.setPreferredSize(MENUITEM_SIZE);
 				UserUI.menu.add(elem);
-				elem.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, (int)(UserUI.screen.height * UserUI.FONT_SIZE)));
 			});
-		
 		UserUI.panel.add(UserUI.menu, BorderLayout.NORTH);
 		// initializing center panel
 		UserUI.centerPane.add(wrapV(List.of(UserUI.defText, new JLabel(UserUI.defIcon))), BorderLayout.CENTER);
