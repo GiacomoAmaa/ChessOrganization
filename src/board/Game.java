@@ -57,7 +57,7 @@ public class Game {
 				}
 				// get the attacker back to starting position, if the move was a promotion
 				// the attacker should be demoted to pawn
-				this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(player,
+				this.board.getTile(this.move.getStartingCoord()).moveInPiece(new Piece(player,
 						this.move.isMoveType(MoveSymbols.PROMOTION) ? PieceType.PAWN :
 							PieceType.getPieceTypeFromSymbol(this.move.getAttacker())));
 			}
@@ -103,5 +103,9 @@ public class Game {
 
 	public Board getPosition() {
 		return board;
+	}
+
+	public List<Pair<String, String>> getMoves() {
+		return game;
 	}
 }
