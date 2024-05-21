@@ -162,12 +162,15 @@ public class UserUI extends JFrame{
 	}
 
 	private void loadGames() {
-		// TODO per qualche motivo entra qui ma il pannello non si aggiorna
-		final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("",""))));
+		final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("P:e2:::e4","P:e7:#::e5"))));
 		UserUI.centerPane.removeAll();
 		UserUI.centerPane.revalidate();
-		UserUI.centerPane.add(board.getGui());
+		UserUI.centerPane.add(board.getBoard());
 		UserUI.centerPane.repaint();
+		UserUI.panel.add(board.getRightSidebar(),BorderLayout.WEST);
+		UserUI.panel.add(board.getLeftSidebar(),BorderLayout.EAST);
+		UserUI.panel.add(board.getFooter(),BorderLayout.SOUTH);
+		pack();
 	}
 	
 	private void loadStats() {
