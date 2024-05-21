@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`organizzatori` (
     `idadmin` INT NOT NULL,
     `password` VARCHAR(512) NOT NULL,
     `cf` CHAR(16) NOT NULL,
-    `nome`CHAR(30) NOT NULL,
+    `nome` CHAR(30) NOT NULL,
     `cognome` CHAR(30) NOT NULL,
     PRIMARY KEY (`idadmin`))
 ENGINE = InnoDB;
@@ -137,23 +137,11 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`partecipanti` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `ChessOrg`.`turni`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ChessOrg`.`turni` (
-    `codpartita` INT NOT NULL, -- da aggiungere mossa nera e mossa bianca
-    `mossabianca` INT NOT NULL,
-    `mossanera` INT , -- da valutare
-    `numturno` INT NOT NULL,
-    PRIMARY KEY (`codpartita`, `numturno`),
-    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`))
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
 -- Table `ChessOrg`.`caselle`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`caselle` (
-    `riga` INT NOT NULL CHECK(`riga` BETWEEN 1 AND 9),
-    `colonna` CHAR NOT NULL CHECK(`colonna` BETWEEN 'a' AND 'h'),
+    `riga` INT NOT NULL CHECK(`riga` BETWEEN 1 AND 8),
+    `colonna` CHAR(1) NOT NULL CHECK(`colonna` BETWEEN 'a' AND 'h'),
     `visite` INT NOT NULL,
     PRIMARY KEY (`riga`,`colonna`))
 ENGINE = InnoDB;
@@ -170,12 +158,26 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`mosse` (
     `pezzocatturato` CHAR,
     `matto` BOOLEAN,
     `rigaarrivo` INT NOT NULL,
-    `colonnaarrivo` CHAR NOT NULL,
+    `colonnaarrivo` CHAR(1) NOT NULL,
     `rigapartenza` INT NOT NULL,
-    `colonnapartenza` CHAR NOT NULL,
+    `colonnapartenza` CHAR(1) NOT NULL,
     PRIMARY KEY (`idmossa`),
-    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partita` (`codpartita`),
-    FOREIGN KEY (`rigaarrivo`, `colonnaarrivo`) REFERENCES `ChessOrg`.`caselle` (`riga`, `colonna`),
-    FOREIGN KEY (`rigapartenza`, `colonnapartenza`) REFERENCES `ChessOrg`.`caselle` (`riga`, `colonna`),
+    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`),
+    FOREIGN KEY (`rigaarrivo`,`colonnaarrivo`) REFERENCES `ChessOrg`.`caselle` (`riga`,`colonna`),
+    FOREIGN KEY (`rigapartenza`,`colonnapartenza`) REFERENCES `ChessOrg`.`caselle` (`riga`,`colonna`),
     FOREIGN KEY (`idiscrizione`) REFERENCES `ChessOrg`.`iscrizioni` (`idiscrizione`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `ChessOrg`.`turni`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ChessOrg`.`turni` (
+    `codpartita` INT NOT NULL, -- da aggiungere mossa nera e mossa bianca
+    `mossabianca` INT NOT NULL,
+    `mossanera` INT , -- da valutare
+    `numturno` INT NOT NULL,
+    PRIMARY KEY (`codpartita`, `numturno`),
+    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`),
+    FOREIGN KEY (`mossabianca`) REFERENCES `mosse` (`idmossa`),
+    FOREIGN KEY (`mossanera`) REFERENCES `mosse` (`idmossa`))
 ENGINE = InnoDB;
