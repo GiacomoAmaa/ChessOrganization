@@ -9,6 +9,6 @@ public class App {
 		//var login = new LoginControllerImpl();
 		var test = new UserUI();
 		// established a new connection to the db
-		var connection = DAOUtils.localMySQLConnection("chessOrg", "root", "");
+		var connection = DAOUtils.localMySQLConnection("chessorg", "root", "");
 	}
 }

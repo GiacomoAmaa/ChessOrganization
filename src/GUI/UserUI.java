@@ -3,29 +3,31 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.swing.Box;
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import board.Game;
 import util.Pair;
@@ -34,32 +36,33 @@ import util.loaders.FontLoader;
 public class UserUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private static final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize(),
-			MENUITEM_SIZE = new Dimension((int)(UserUI.screen.getWidth() * 0.2), (int)(UserUI.screen.height * 0.1));
-	private static final double PADDING = 0.067,
-			FONT_SIZE = 0.02;
+	private static final Dimension screen = new Dimension(700, 700);
+	private static final double PADDING = 0.067;
+	private static final float FONT_SIZE = 15;
 	private static final JPanel panel = new JPanel(new BorderLayout()),
 			// centerPane represents the center section of pane
 			centerPane = new JPanel();
 	private static final ImageIcon logo = new ImageIcon(UserUI.class.getResource("/icons/logo.png")),
 			defIcon = new ImageIcon(UserUI.class.getResource("/icons/default.png"));
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
-	private static final JMenuBar menu = new JMenuBar(); // could be removed (still to check)
-	private static final JMenuItem games = new JMenuItem("MY GAMES"),
-			stats = new JMenuItem("STATS"),
-			tourn = new JMenuItem("SIGN IN FOR TOURNAMENTS"),
-			search = new JMenuItem("SEARCH"),
-			logout = new JMenuItem(new ImageIcon(new ImageIcon(UserUI.class.getResource("/icons/logout.png"))
-					.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+	private static final JMenuBar menu = new JMenuBar();
+	private static final JMenu games = new JMenu("MyGames"),
+			stats = new JMenu("My stats"),
+			search = new JMenu("Search"),
+			tourn = new JMenu("Sign in for tournaments"),
+			logout = new JMenu("Logout");
+	private static final JMenuItem searchPlayers = new JMenuItem("Search players"),
+			searchGames = new JMenuItem("Search games");
 	private static final JButton launchSearch = new JButton(new ImageIcon(UserUI.class.getResource("/icons/magnifying-glass.png")));
 	private static final JTextField searchBox = new JTextField("", 50);
 	private static final FontLoader fontLoad = new FontLoader();
-	private static Optional<JMenuItem> selected = Optional.empty();
+	private static Optional<JMenu> selected = Optional.empty();
 	
 	public UserUI() {
 		super("Chess Organization");
 		setSize(UserUI.screen);
 		setResizable(false);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(UserUI.panel);
 		setIconImage(UserUI.logo.getImage());
@@ -73,6 +76,7 @@ public class UserUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				var result = handler.apply(UserUI.searchBox.getText());
+				// show results
 			}
 			
 		});
@@ -80,37 +84,99 @@ public class UserUI extends JFrame{
 	
 	private void initialize() {
 		// initializing components
-		UserUI.games.addActionListener(new ActionListener() {
+		UserUI.games.addMouseListener(new MouseListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void mouseClicked(MouseEvent e) {
 				loadGames();
 				UserUI.selected = Optional.of(games);
 				update();
 			}
-			
-		});
-		UserUI.stats.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void mousePressed(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				return;
+			}
+
+			
+		});
+		UserUI.stats.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				loadStats();
 				UserUI.selected = Optional.of(stats);
 				update();
 			}
-			
-		});
-		UserUI.tourn.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void mousePressed(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				return;
+			}
+			
+		});
+		UserUI.tourn.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				loadTournaments();
 				UserUI.selected = Optional.of(tourn);
 				update();
 			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				return;
+			}
+
 			
 		});
-		UserUI.search.addActionListener(new ActionListener() {
+		UserUI.searchPlayers.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -120,28 +186,59 @@ public class UserUI extends JFrame{
 			}
 			
 		});
-		UserUI.logout.addActionListener(new ActionListener() {
+		UserUI.searchGames.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					int dialogButton = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?","WARNING",JOptionPane.YES_NO_OPTION);
-
-					if(dialogButton == JOptionPane.YES_OPTION) {
-						System.exit(0);
-					} else {
-						remove(dialogButton);
-					}
+				// TODO should be a different method
+				loadSearch();
+				UserUI.selected = Optional.of(search);
+				update();
 			}
 			
 		});
+		UserUI.logout.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int dialogButton = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?","WARNING",JOptionPane.YES_NO_OPTION);
+
+				if(dialogButton == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				return;
+			}
+			
+		});
+		// adding every menu item to its corresponding menu
+		UserUI.search.add(UserUI.searchPlayers);
+		UserUI.search.add(UserUI.searchGames);
 		// inserting centerPane into pane
 		UserUI.panel.add(centerPane, BorderLayout.CENTER);
 		// TODO il font non carica
-		UserUI.defText.setFont(UserUI.fontLoad.getTextFont());
+		UserUI.defText.setFont(UserUI.fontLoad.getTextFont().deriveFont(UserUI.FONT_SIZE));
 		// initializing northern panel
 		List.of(games, stats, tourn, search, logout).stream()
 			.forEach(elem -> {
-				elem.setPreferredSize(MENUITEM_SIZE);
 				UserUI.menu.add(elem);
 			});
 		UserUI.panel.add(UserUI.menu, BorderLayout.NORTH);
@@ -163,8 +260,7 @@ public class UserUI extends JFrame{
 	}
 
 	private void loadGames() {
-		// TODO per qualche motivo entra qui ma il pannello non si aggiorna
-		final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("",""))));
+		final BoardGUI board = new BoardGUI(new Game(List.of(new Pair<>("",""))));
 		UserUI.centerPane.removeAll();
 		UserUI.centerPane.revalidate();
 		UserUI.centerPane.add(board.getGui());
