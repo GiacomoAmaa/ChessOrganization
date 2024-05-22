@@ -70,7 +70,7 @@ public class Game {
 			this.move.parse(this.player.isWhite() ? 
 					this.game.get(currTurn).getX() : this.game.get(currTurn).getY());
 
-			if(this.move.isMoveType(MoveSymbols.CONCEED) ||
+			if(this.move.isMoveType(MoveSymbols.CONCEDE) ||
 					this.move.isMoveType(MoveSymbols.DRAW)) {
 				this.isFinished = true;
 				return;
@@ -90,7 +90,7 @@ public class Game {
 						PieceType.getPieceTypeFromSymbol(this.move.getAttacker())));
 			}
 
-			if (this.move.isMoveType(MoveSymbols.C_MATE) ||
+			if (this.move.isMoveType(MoveSymbols.CHECKMATE) ||
 					this.move.isMoveType(MoveSymbols.STALEMATE)) {
 				this.isFinished = true;
 			}
