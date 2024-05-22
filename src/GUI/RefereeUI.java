@@ -26,7 +26,7 @@ public class RefereeUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private static final Dimension screen = new Dimension(700,700);
-	private static final JPanel panel = new JPanel(new BorderLayout());
+	private static final JPanel panel = new JPanel(new BorderLayout()), centerPane = new JPanel();
 	private static final ImageIcon logo = new ImageIcon(UserUI.class.getResource("/icons/logo.png"));
 	private static final JMenuBar navbar = new JMenuBar();
 	private static final JMenu games = new JMenu("Designations");
@@ -47,6 +47,7 @@ public class RefereeUI extends JFrame{
 		setContentPane(RefereeUI.panel);
 		setIconImage(RefereeUI.logo.getImage());
 		initializeNavbar();
+		panel.add(centerPane,BorderLayout.CENTER);
 		setVisible(true);
 	}
 
@@ -65,6 +66,10 @@ public class RefereeUI extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				RefereeUI.selected = Optional.of(games);
 				updateNavbar();
+				RefereeUI.centerPane.removeAll();
+				RefereeUI.centerPane.revalidate();
+				RefereeUI.centerPane.add(new RegisterGameUI().getPanel());
+				RefereeUI.centerPane.repaint();
 			}
 		});
 		RefereeUI.games.add(toRegister);

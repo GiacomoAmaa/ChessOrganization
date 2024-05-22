@@ -9,7 +9,8 @@ public enum MoveSymbols {
 	CASTLING("O-O", "Castling"),
 	DRAW("?", "Draw"),
 	STALEMATE("%", "Stalemate"),
-	CONCEDE("!", "Concede");
+	CONCEDE("!", "Concede"),
+	UNKNOWN("--", "--");
 
 	private final String symbol;
 	private final String description;

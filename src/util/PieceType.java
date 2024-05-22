@@ -6,7 +6,8 @@ public enum PieceType {
     ROOK("Rook", "R"),
     BISHOP("Bishop", "B"),
     KNIGHT("Knight", "N"),
-    PAWN("Pawn", "P");
+    PAWN("Pawn", "P"),
+	UNKNOWN("--", "--");
 
     private final String name;
     private final String symbol;
