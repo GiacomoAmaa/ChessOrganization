@@ -41,8 +41,6 @@ public class Board {
 			"e8", new Piece(Color.BLACK, PieceType.KING)
 			);
 
-	/* TODO Sta schifezza è per stampare tranquillamente la board, ma
-	 *  una map sarebbe meglio a livello logico */
 	private final List<Pair<String, Tile>> board;
 
 	public Board() {

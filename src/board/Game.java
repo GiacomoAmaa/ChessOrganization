@@ -1,5 +1,6 @@
 package board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import util.Color;
@@ -9,7 +10,7 @@ import util.PieceType;
 
 public class Game {
 	private final Board board;
-	private final List<Pair<String,String>> game;
+	private List<Pair<String,String>> game;
 	private final MoveParser move;
 
 	private boolean isFinished;
@@ -20,6 +21,15 @@ public class Game {
 		this.board = new Board();
 		this.move = new MoveParser();
 		this.game = game;
+		this.isFinished = false;
+		this.currTurn = 0;
+		this.player = Color.WHITE;
+	}
+
+	public Game() {
+		this.board = new Board();
+		this.move = new MoveParser();
+		this.game = new ArrayList<Pair<String, String>>();
 		this.isFinished = false;
 		this.currTurn = 0;
 		this.player = Color.WHITE;
@@ -99,6 +109,24 @@ public class Game {
 			this.player = this.player.isBlack() ? Color.WHITE : Color.BLACK;
 		}
 
+	}
+
+	public void uploadMove(String move) {
+		if(this.player.isWhite()) {
+			this.game.add(new Pair<>(move,""));
+		} else {
+			this.game.get(currTurn).setY(move);
+		}
+		this.makeNextMove();
+	}
+
+	public void undoMove() {
+		this.makePrevMove();
+		if(this.player.isWhite()) {
+			this.game.get(currTurn).setY("");
+		} else {
+			this.game.remove(currTurn + 1);
+		}
 	}
 
 	public Board getPosition() {

@@ -11,15 +11,20 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import board.Board;
+import board.Game;
 import util.Color;
 import util.MoveSymbols;
 import util.PieceType;
 
 public class RegisterGameUI {
 
-	private final JPanel panel = new JPanel(new GridLayout(0, 2));
+	private final JPanel panel = new JPanel(new GridLayout(0, 6));
+	private final Game game = new Game();
+	private final BoardGUI board = new BoardGUI(game);
+
 	private static final String SEP = ":";
     private static final JCheckBox captureCheck = new JCheckBox("Capture"),
     		castlingCheck = new JCheckBox("Castling"),
@@ -27,6 +32,8 @@ public class RegisterGameUI {
     		checkCheck  = new JCheckBox("Check"),
     		endgameCheck = new JCheckBox("Final Move");
 
+    private static final JLabel turnLabel = new JLabel(),
+    		playerLabel = new JLabel();
     private static final JComboBox<String> toField  = new JComboBox<>(Board.SQUARES),
     		fromField = new JComboBox<>(Board.SQUARES),
     		castleField = new JComboBox<>(new String[] {"--", "Long", "Short"});
@@ -37,9 +44,10 @@ public class RegisterGameUI {
     private static final JComboBox<MoveSymbols>
     		endgameField = new JComboBox<>();
     
-    private JButton submitMoveButton;
-    //private int turn = 1;  //TODO da caricare dinamicamente dal db in base a fin dove è stata registrata la partita
-    private Color player = Color.WHITE;
+    private static final JButton submitMoveButton = new JButton("Submit Move"),
+    		backButton = new JButton("Undo Move ");
+    private int turn;
+    private Color player;
 
     public RegisterGameUI() {
     	List.of(PieceType.UNKNOWN, PieceType.PAWN, PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN,PieceType.KING)
@@ -50,28 +58,33 @@ public class RegisterGameUI {
     		.forEach( x -> RegisterGameUI.promotedPieceField.addItem(x));
     	List.of(MoveSymbols.UNKNOWN, MoveSymbols.CHECKMATE, MoveSymbols.STALEMATE, MoveSymbols.DRAW, MoveSymbols.CONCEDE)
 		.forEach( x -> RegisterGameUI.endgameField.addItem(x));
+    	this.turn = 1;
+    	this.player = Color.WHITE;
     	setupForm();
     }
 
     private void setupForm() {
         this.panel.add(new JLabel("Piece Moved:"));	// Attacking piece
         this.panel.add(attackingPieceField);
-        this.panel.add(new JLabel("From:"));		// From field
+        this.panel.add(new JLabel("From:", SwingConstants.CENTER));		// From field
         this.panel.add(fromField);
-        this.panel.add(new JLabel("To:"));			// To field
+        this.panel.add(new JLabel("To:", SwingConstants.CENTER));			// To field
         this.panel.add(toField);
-        this.panel.add(new JLabel("Move type:"));	// Move types
-        this.panel.add(checkCheck);					// Check		
+        this.panel.add(new JLabel("Move type:"));	// Move types	
+        this.panel.add(checkCheck);					// Check
         this.panel.add(captureCheck);				// Capture
-        this.panel.add(capturedPieceField);			// Castling
-        this.panel.add(castlingCheck);
-        this.panel.add(castleField);
+        this.panel.add(castlingCheck);				// Castling
         this.panel.add(promotionCheck); 			// Promotion
-        this.panel.add(promotedPieceField);
         this.panel.add(endgameCheck);        		//Last move
-        this.panel.add(endgameField);        		// Submit move button
-        submitMoveButton = new JButton("Submit Move");
+        this.panel.add(turnLabel);
+        this.panel.add(playerLabel);
+        this.panel.add(capturedPieceField);	
+        this.panel.add(castleField);
+        this.panel.add(promotedPieceField);
+        this.panel.add(endgameField);
+        this.panel.add(backButton);
         this.panel.add(submitMoveButton);
+
     	resetForm();
 
         // Add action listeners
@@ -125,14 +138,52 @@ public class RegisterGameUI {
 			}
         });
 
-        endgameCheck.addActionListener(e -> endgameField.setEnabled(endgameCheck.isSelected()));
-
+        endgameCheck.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				endgameField.setEnabled(endgameCheck.isSelected());
+				submitMoveButton.setText(endgameCheck.isSelected() ?
+						"Submit Game" : "Submit Move");
+			}
+        }); 
+        		
         submitMoveButton.addActionListener(new ActionListener() {
         	@Override
             public void actionPerformed(ActionEvent e) {
-        		System.out.println(packMoveInfo());
+        		String move = packMoveInfo();
+        		if (!move.isEmpty()) {
+        			if(endgameCheck.isSelected()) {
+        				// TODO chiamare query e aggiornare il database
+        			} else {
+            			System.out.println(move);
+            			turn = player.isWhite() ? turn : turn + 1;
+            			player = player.isWhite() ? Color.BLACK : Color.WHITE;
+            	        turnLabel.setText("Turn: " + turn);
+            	        playerLabel.setText(player.isWhite()? "White to play" : "Black to play");
+                		game.uploadMove(move);
+                		board.displayMove();
+        			}
+        		}
             }
         });
+
+        backButton.addActionListener(new ActionListener() {
+        	@Override
+            public void actionPerformed(ActionEvent e) {
+        		if(player.isWhite() && turn == 1) {
+    				JOptionPane.showMessageDialog(null,"No moves to undo");
+    				return ;
+        		} else {
+            		turn = player.isWhite() ? turn - 1 : turn;
+            		player = player.isWhite() ? Color.BLACK : Color.WHITE;
+            	    turnLabel.setText("Turn: " + turn);
+            	    playerLabel.setText(player.isWhite()? "White to play" : "Black to play");
+            	    game.undoMove();
+                	board.displayMove();
+        		}
+        	}
+        });
+
     }
 
     private String packMoveInfo() {
@@ -152,8 +203,8 @@ public class RegisterGameUI {
 			}
 		} else if (
 				!attackingPieceField.getSelectedItem().equals(PieceType.UNKNOWN) &&
-				!fromField.getSelectedItem().equals("") &&
-    			!toField.getSelectedItem().equals("")) {
+				!fromField.getSelectedItem().equals("--") &&
+    			!toField.getSelectedItem().equals("--")) {
 
     		if(promotionCheck.isSelected()) {
     			if(promotedPieceField.getSelectedItem().equals(PieceType.UNKNOWN)) {
@@ -189,7 +240,7 @@ public class RegisterGameUI {
         	type = checkCheck.isSelected() ? type + MoveSymbols.CHECK.getSymbol() : type;
         	from = fromField.getSelectedItem().toString();
         	to = toField.getSelectedItem().toString();
-        	result = attacker + SEP + from + SEP + type + SEP + to + SEP + defender;
+        	result = attacker + SEP + from + SEP + type + SEP + defender + SEP + to;
     	} else {
     		JOptionPane.showMessageDialog(null,"Required field Missing");
     		return "";
@@ -215,11 +266,16 @@ public class RegisterGameUI {
         promotedPieceField.setEnabled(false);
         endgameField.setSelectedItem(MoveSymbols.UNKNOWN);
         endgameCheck.setSelected(false);
-        endgameField.setEnabled(false); 
+        endgameField.setEnabled(false);
+        turnLabel.setText("Turn: " + turn);
+        playerLabel.setText(player.isWhite()? "White to play" : "Black to play");
     }
 
 	public JPanel getPanel() {
 		return panel;
 	}
 
+	public JPanel getBoard() {
+		return board.getBoard();
+	}
 }

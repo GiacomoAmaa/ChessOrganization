@@ -14,7 +14,7 @@ public class MoveParser {
 	}
 
 	public void parse(final String move) {
-		this.move = move.split(MoveSymbols.SEPARATOR.toString());
+		this.move = move.split(MoveSymbols.SEPARATOR.getSymbol());
 	}
 
 	public boolean isMoveType(MoveSymbols sym) {
