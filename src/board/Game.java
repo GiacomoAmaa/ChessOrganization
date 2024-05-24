@@ -3,10 +3,12 @@ package board;
 import java.util.ArrayList;
 import java.util.List;
 
+import GUI.App;
 import util.Color;
 import util.MoveSymbols;
 import util.Pair;
 import util.PieceType;
+import util.Sound;
 
 public class Game {
 	private final Board board;
@@ -49,6 +51,7 @@ public class Game {
 					this.game.get(currTurn).getX() : this.game.get(currTurn).getY());
 			
 			if (this.move.isMoveType(MoveSymbols.CASTLING)) {
+				App.SOUND.play(Sound.CASTLE);
 				/* castling message case start:stop:O-O:start:stop */
 				this.board.getTile(this.move.getStartingCoord()).moveOutPiece(); // removes the king from arrival position
 				this.board.getTile(this.move.getArrivalCoord()).moveOutPiece(); // removes the rook from arrival position
@@ -57,6 +60,7 @@ public class Game {
 				// moves the rook in initial position
 				this.board.getTile(this.move.getDefender()).moveInPiece(new Piece(player, PieceType.ROOK));
 			} else {
+				App.SOUND.play(Sound.MOVE);
 				// if any piece was captured needs to be restored 
 				if(this.move.isMoveType(MoveSymbols.CAPTURE)) {
 					this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(opponent,
@@ -107,6 +111,18 @@ public class Game {
 
 			this.currTurn = this.player.isBlack() ? currTurn + 1 : currTurn;
 			this.player = this.player.isBlack() ? Color.WHITE : Color.BLACK;
+
+			//Sound effects
+			if(this.move.isMoveType(MoveSymbols.CHECK) ||
+					this.move.isMoveType(MoveSymbols.CHECKMATE)) {
+				App.SOUND.play(Sound.CHECK);
+			} else if(this.move.isMoveType(MoveSymbols.CASTLING)) {
+				App.SOUND.play(Sound.CASTLE);
+			} else if(this.move.isMoveType(MoveSymbols.CAPTURE)) {
+				App.SOUND.play(Sound.CAPTURE);
+			} else {
+				App.SOUND.play(Sound.MOVE);
+			}
 		}
 
 	}
@@ -123,9 +139,9 @@ public class Game {
 	public void undoMove() {
 		this.makePrevMove();
 		if(this.player.isWhite()) {
-			this.game.get(currTurn).setY("");
+			this.game.remove(currTurn);
 		} else {
-			this.game.remove(currTurn + 1);
+			this.game.get(currTurn).setY("");
 		}
 	}
 

@@ -255,6 +255,7 @@ public class RegisterGameUI {
     	fromField.setSelectedItem("--");
     	toField.setSelectedItem("--");
     	capturedPieceField.setSelectedItem(PieceType.UNKNOWN);
+        checkCheck.setSelected(false);
         captureCheck.setSelected(false);
         capturedPieceField.setEnabled(false);
         castleField.setSelectedItem("--");
