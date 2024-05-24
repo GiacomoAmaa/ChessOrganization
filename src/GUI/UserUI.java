@@ -43,7 +43,7 @@ public class UserUI extends JFrame{
 			defIcon = new ImageIcon(UserUI.class.getResource("/icons/default.png"));
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
 	private static final JMenuBar menu = new JMenuBar();
-	private static final JMenu games = new JMenu("MyGames"),
+	private static final JMenu games = new JMenu("My Games"),
 			stats = new JMenu("My stats"),
 			search = new JMenu("Search"),
 			tourn = new JMenu("Sign in for tournaments"),
@@ -81,150 +81,38 @@ public class UserUI extends JFrame{
 	
 	private void initialize() {
 		// initializing components
-		UserUI.games.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				loadGames();
-				UserUI.selected = Optional.of(games);
-				update();
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				return;
-			}
-
-			
+		setHandler(UserUI.games, () -> {
+			loadGames();
+			UserUI.selected = Optional.of(UserUI.games);
+			update();
 		});
-		UserUI.stats.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				loadStats();
-				UserUI.selected = Optional.of(stats);
-				update();
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				return;
-			}
-			
+		setHandler(UserUI.stats, () -> {
+			loadStats();
+			UserUI.selected = Optional.of(stats);
+			update();
 		});
-		UserUI.tourn.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				loadTournaments();
-				UserUI.selected = Optional.of(tourn);
-				update();
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				return;
-			}
-
-			
+		setHandler(UserUI.tourn, () -> {
+			loadTournaments();
+			UserUI.selected = Optional.of(tourn);
+			update();
 		});
-		UserUI.searchPlayers.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				loadSearch();
-				UserUI.selected = Optional.of(search);
-				update();
-			}
-			
+		setHandler(UserUI.searchPlayers, () -> {
+			loadSearch();
+			UserUI.selected = Optional.of(search);
+			update();
 		});
-		UserUI.searchGames.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO should be a different method
-				loadSearch();
-				UserUI.selected = Optional.of(search);
-				update();
-			}
-			
+		setHandler(UserUI.searchGames, () -> {
+			// TODO should be a different method
+			loadSearch();
+			UserUI.selected = Optional.of(search);
+			update();
 		});
-		UserUI.logout.addMouseListener(new MouseListener() {
+		setHandler(UserUI.logout, () -> {
+			int dialogButton = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?","WARNING",JOptionPane.YES_NO_OPTION);
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int dialogButton = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?","WARNING",JOptionPane.YES_NO_OPTION);
-
-				if(dialogButton == JOptionPane.YES_OPTION) {
-					System.exit(0);
-				}
+			if(dialogButton == JOptionPane.YES_OPTION) {
+				System.exit(0);
 			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				return;
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				return;
-			}
-			
 		});
 		// adding every menu item to its corresponding menu
 		UserUI.search.add(UserUI.searchPlayers);
@@ -310,6 +198,37 @@ public class UserUI extends JFrame{
 		wrapper.setAlignmentY(CENTER_ALIGNMENT);
 		elements.stream().forEach(e -> wrapper.add(e));
 		return wrapper;
+	}
+	
+	private void setHandler(JComponent comp, Runnable handler) {
+		comp.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				handler.run();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				return;
+			}
+			
+		});
 	}
 	
 }
