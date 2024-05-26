@@ -1,12 +1,16 @@
 package data;
 
+import java.sql.Connection;
+import java.util.List;
+
 /**
  * A representation of a data instance of a player in the database
  */
-public class Player {
+public final class Player {
 	
 	private static int id;
 	private static int elo;
+	private static String username; 
 	private static String password;
 	private static String cf;
 	private static String name;
@@ -23,47 +27,76 @@ public class Player {
 	
 	
 	
-	public static int getId() {
+	public int getId() {
 		return Player.id;
 	}
 
 
 
-	public static int getElo() {
+	public int getElo() {
 		return Player.elo;
 	}
 
 
 
-	public static String getPassword() {
+	public String getPassword() {
 		return Player.password;
 	}
 
 
 
-	public static String getCf() {
+	public String getCf() {
 		return Player.cf;
 	}
 
 
 
-	public static String getName() {
+	public String getName() {
 		return Player.name;
 	}
 
 
 
-	public static String getLastname() {
+	public String getLastname() {
 		return Player.lastname;
 	}
+	
+	public String getUsername() {
+		return Player.username;
+	}
 
-
-/*
 	@Override
 	public boolean equals(Object other) {
 		var p = (Player) other;
-		return Player.id.equals(p);
+		return Player.id == p.getId();
 		
 	}
-*/
+	
+	public final static class DAO {
+		
+		public static List<Game> gamesForPlayer(Connection conn, int playerId) {
+			// TODO implementation
+			return null;
+		}
+		
+		public static List<Tournament> tournamentsForPlayer(Connection conn, int playerId) {
+			// TODO implementation
+			return null;
+		}
+		
+		public static List<Player> searchPlayer(Connection conn, String input) {
+			// TODO implementation
+			return null;
+		}
+		
+		public static List<Game> searchGames(Connection conn, String input) {
+			// TODO implementation
+			return null;
+		}
+		
+		public static boolean exists(Connection conn, Player player) {
+			// TODO implementation
+			return false;
+		}
+	}
 }

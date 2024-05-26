@@ -35,7 +35,8 @@ public class UserUI extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private static final Dimension screen = new Dimension(700, 700);
 	private static final double PADDING = 0.067;
-	private static final float FONT_SIZE = 15;
+	private static final float TEXT_SIZE = 15,
+			TITLE_SIZE = 18;
 	private static final JPanel panel = new JPanel(new BorderLayout()),
 			// centerPane represents the center section of pane
 			centerPane = new JPanel();
@@ -96,23 +97,35 @@ public class UserUI extends JFrame{
 			UserUI.selected = Optional.of(tourn);
 			update();
 		});
-		setHandler(UserUI.searchPlayers, () -> {
-			loadSearch();
-			UserUI.selected = Optional.of(search);
-			update();
-		});
-		setHandler(UserUI.searchGames, () -> {
-			// TODO should be a different method
-			loadSearch();
-			UserUI.selected = Optional.of(search);
-			update();
-		});
 		setHandler(UserUI.logout, () -> {
+			UserUI.selected = Optional.of(UserUI.logout);
+			update();
 			int dialogButton = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?","WARNING",JOptionPane.YES_NO_OPTION);
 
 			if(dialogButton == JOptionPane.YES_OPTION) {
 				System.exit(0);
 			}
+		});
+		UserUI.searchGames.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO should be a different method
+				loadSearch();
+				UserUI.selected = Optional.of(search);
+				update();
+			}
+			
+		});
+		UserUI.searchPlayers.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadSearch();
+				UserUI.selected = Optional.of(search);
+				update();
+			}
+			
 		});
 		// adding every menu item to its corresponding menu
 		UserUI.search.add(UserUI.searchPlayers);
@@ -120,11 +133,14 @@ public class UserUI extends JFrame{
 		// inserting centerPane into pane
 		UserUI.panel.add(centerPane, BorderLayout.CENTER);
 		// TODO il font non carica
-		UserUI.defText.setFont(UserUI.fontLoad.getTextFont().deriveFont(UserUI.FONT_SIZE));
+		UserUI.defText.setFont(UserUI.fontLoad.getTextFont().deriveFont(UserUI.TEXT_SIZE));
 		// initializing northern panel
-		List.of(games, stats, tourn, search, logout).stream()
+		List.of(games, stats, tourn, search, logout, searchPlayers, searchGames).stream()
 			.forEach(elem -> {
-				UserUI.menu.add(elem);
+				if (elem instanceof JMenu) {
+					UserUI.menu.add(elem);
+				}
+				elem.setFont(UserUI.fontLoad.getTitleFont().deriveFont(UserUI.TITLE_SIZE));
 			});
 		UserUI.panel.add(UserUI.menu, BorderLayout.NORTH);
 		// initializing center panel

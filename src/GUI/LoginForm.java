@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import javax.swing.BoxLayout;
@@ -28,7 +29,8 @@ import util.UserType;
 
 public class LoginForm extends JFrame {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L,
+			RENDER = 50;
 	private static final int MAX_LENGTH = 30;
 	private static final int FONT_SIZE = 36;
 	private static final JPanel panel = new JPanel(new BorderLayout());
@@ -36,11 +38,11 @@ public class LoginForm extends JFrame {
 	private static final JTextField username = new JTextField(LoginForm.MAX_LENGTH),
 			cardNumber = new JTextField(LoginForm.MAX_LENGTH);
 	private static final JComboBox<UserType> role = new JComboBox<>(UserType.values());
-	private static final JButton confirmType = new JButton("OK"),
-			login = new JButton("LOG IN"),
+	private static final JButton login = new JButton("LOG IN"),
 			register = new JButton("REGISTER");
 	private static final JPasswordField password = new JPasswordField(LoginForm.MAX_LENGTH);
 	private static final ImageIcon logo = new ImageIcon(LoginForm.class.getResource("/icons/logo.png"));
+	private static final UpdateAgent agent = new UpdateAgent();
 	
 	public LoginForm() {
 		super("Chess Organization");
@@ -92,16 +94,10 @@ public class LoginForm extends JFrame {
 	 */
 	private void initialize() {
 		// TODO import font for labels
+		// initializing the update thread
+		LoginForm.agent.start();
 		// initializing components
 		LoginForm.password.setEchoChar('*');
-		LoginForm.confirmType.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateType();
-			}
-			
-		});
 		// initializing northern panel
 		LoginForm.title.setFont(new Font("Serif", Font.BOLD, LoginForm.FONT_SIZE));
 		LoginForm.title.setHorizontalAlignment(JLabel.CENTER);
@@ -109,7 +105,7 @@ public class LoginForm extends JFrame {
 		// initializing center panel
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-		centerPanel.add(wrap(List.of(new JLabel("submit as\t"), role, confirmType)));
+		centerPanel.add(wrap(List.of(new JLabel("submit as\t"), role)));
 		centerPanel.add(wrap(List.of(new JLabel("username\t"), LoginForm.username)));
 		centerPanel.add(wrap(List.of(new JLabel("password\t"), LoginForm.password)));
 		centerPanel.add(wrap(List.of(new JLabel("card num.\t"), LoginForm.cardNumber)));
@@ -132,7 +128,7 @@ public class LoginForm extends JFrame {
 	/**
 	 * Updates the login form based on the type of user chosen.
 	 */
-	private void updateType() {
+	private static void updateType() {
 		var selectedType = (UserType)LoginForm.role.getSelectedItem();
 		LoginForm.cardNumber.setEnabled(selectedType.equals(UserType.REFEREE));
 		LoginForm.cardNumber.setText(selectedType.equals(UserType.REFEREE) ? "" : "----");
@@ -149,6 +145,33 @@ public class LoginForm extends JFrame {
 			return Map.of("username", LoginForm.username.getText(),
 					"password", String.valueOf(LoginForm.password.getPassword()));
 		}
+	}
+	
+	/**
+	 * need a thread to refresh the GUI every time the type gets changed.
+	 */
+	private static class UpdateAgent extends Thread {
+		
+		private static boolean flag = true;
+
+		public UpdateAgent() {
+			super();
+		}
+
+		@Override
+		public void run() {
+			while(UpdateAgent.flag) {
+				try {
+					LoginForm.updateType();
+					TimeUnit.MILLISECONDS.sleep(RENDER);
+				} catch (InterruptedException e) {
+					flag = false;
+				}
+			}
+			
+		}
+
+		
 	}
 	
 }
