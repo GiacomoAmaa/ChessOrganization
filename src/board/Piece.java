@@ -19,9 +19,4 @@ public class Piece {
 	public PieceType getType() {
 		return type;
 	}
-
-    @Override
-    public String toString() {
-        return this.color.isWhite() ? this.type.toString().toUpperCase() : this.type.toString().toLowerCase();
-    }
 }

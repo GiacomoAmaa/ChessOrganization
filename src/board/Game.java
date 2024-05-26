@@ -1,15 +1,18 @@
 package board;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import GUI.App;
 import util.Color;
 import util.MoveSymbols;
 import util.Pair;
 import util.PieceType;
+import util.Sound;
 
 public class Game {
 	private final Board board;
-	private final List<Pair<String,String>> game;
+	private List<Pair<String,String>> game;
 	private final MoveParser move;
 
 	private boolean isFinished;
@@ -20,6 +23,15 @@ public class Game {
 		this.board = new Board();
 		this.move = new MoveParser();
 		this.game = game;
+		this.isFinished = false;
+		this.currTurn = 0;
+		this.player = Color.WHITE;
+	}
+
+	public Game() {
+		this.board = new Board();
+		this.move = new MoveParser();
+		this.game = new ArrayList<Pair<String, String>>();
 		this.isFinished = false;
 		this.currTurn = 0;
 		this.player = Color.WHITE;
@@ -39,6 +51,7 @@ public class Game {
 					this.game.get(currTurn).getX() : this.game.get(currTurn).getY());
 			
 			if (this.move.isMoveType(MoveSymbols.CASTLING)) {
+				App.SOUND.play(Sound.CASTLE);
 				/* castling message case start:stop:O-O:start:stop */
 				this.board.getTile(this.move.getStartingCoord()).moveOutPiece(); // removes the king from arrival position
 				this.board.getTile(this.move.getArrivalCoord()).moveOutPiece(); // removes the rook from arrival position
@@ -47,6 +60,7 @@ public class Game {
 				// moves the rook in initial position
 				this.board.getTile(this.move.getDefender()).moveInPiece(new Piece(player, PieceType.ROOK));
 			} else {
+				App.SOUND.play(Sound.MOVE);
 				// if any piece was captured needs to be restored 
 				if(this.move.isMoveType(MoveSymbols.CAPTURE)) {
 					this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(opponent,
@@ -70,7 +84,7 @@ public class Game {
 			this.move.parse(this.player.isWhite() ? 
 					this.game.get(currTurn).getX() : this.game.get(currTurn).getY());
 
-			if(this.move.isMoveType(MoveSymbols.CONCEED) ||
+			if(this.move.isMoveType(MoveSymbols.CONCEDE) ||
 					this.move.isMoveType(MoveSymbols.DRAW)) {
 				this.isFinished = true;
 				return;
@@ -90,15 +104,45 @@ public class Game {
 						PieceType.getPieceTypeFromSymbol(this.move.getAttacker())));
 			}
 
-			if (this.move.isMoveType(MoveSymbols.C_MATE) ||
+			if (this.move.isMoveType(MoveSymbols.CHECKMATE) ||
 					this.move.isMoveType(MoveSymbols.STALEMATE)) {
 				this.isFinished = true;
 			}
 
 			this.currTurn = this.player.isBlack() ? currTurn + 1 : currTurn;
 			this.player = this.player.isBlack() ? Color.WHITE : Color.BLACK;
+
+			//Sound effects
+			if(this.move.isMoveType(MoveSymbols.CHECK) ||
+					this.move.isMoveType(MoveSymbols.CHECKMATE)) {
+				App.SOUND.play(Sound.CHECK);
+			} else if(this.move.isMoveType(MoveSymbols.CASTLING)) {
+				App.SOUND.play(Sound.CASTLE);
+			} else if(this.move.isMoveType(MoveSymbols.CAPTURE)) {
+				App.SOUND.play(Sound.CAPTURE);
+			} else {
+				App.SOUND.play(Sound.MOVE);
+			}
 		}
 
+	}
+
+	public void uploadMove(String move) {
+		if(this.player.isWhite()) {
+			this.game.add(new Pair<>(move,""));
+		} else {
+			this.game.get(currTurn).setY(move);
+		}
+		this.makeNextMove();
+	}
+
+	public void undoMove() {
+		this.makePrevMove();
+		if(this.player.isWhite()) {
+			this.game.remove(currTurn);
+		} else {
+			this.game.get(currTurn).setY("");
+		}
 	}
 
 	public Board getPosition() {

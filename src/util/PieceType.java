@@ -1,23 +1,34 @@
 package util;
 
 public enum PieceType {
-	PAWN("P"),
-	KNIGHT("N"),
-	BISHOP("B"),
-	ROOK("R"),
-	QUEEN("Q"),
-	KING("K");
+    KING("King", "K"),
+    QUEEN("Queen", "Q"),
+    ROOK("Rook", "R"),
+    BISHOP("Bishop", "B"),
+    KNIGHT("Knight", "N"),
+    PAWN("Pawn", "P"),
+	UNKNOWN("--", "--");
 
-	private String symbol;
+    private final String name;
+    private final String symbol;
 
-	PieceType(String s) {
-		this.symbol = s;
-	}
+    PieceType(String name, String symbol) {
+        this.name = name;
+        this.symbol = symbol;
+    }
 
-	@Override
-	public String toString() {
-		return this.symbol;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 
 	public static PieceType getPieceTypeFromSymbol(final String sym) {
 		switch(sym) {

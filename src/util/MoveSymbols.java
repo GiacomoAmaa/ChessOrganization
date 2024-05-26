@@ -1,25 +1,31 @@
 package util;
 
 public enum MoveSymbols {
-	SEPARATOR(":"),
-	CAPTURE("x"),
-	PROMOTION("*"),
-	CHECK("+"),
-	C_MATE("#"),
-	CASTLING("O-O"),
-	DRAW("?"),
-	STALEMATE("%"),
-	CONCEED("!");
+	SEPARATOR(":", "Separator"),
+	CAPTURE("x", "Capture"),
+	PROMOTION("*", "Promotion"),
+	CHECK("+", "Check"),
+	CHECKMATE("#", "Checkmate"),
+	CASTLING("O-O", "Castling"),
+	DRAW("?", "Draw"),
+	STALEMATE("%", "Stalemate"),
+	CONCEDE("!", "Concede"),
+	UNKNOWN("--", "--");
 
-	private String symbol;
+	private final String symbol;
+	private final String description;
 
-	MoveSymbols(String s) {
-		this.symbol = s;
+	MoveSymbols(String symbol, String description) {
+		this.symbol = symbol;
+	    this.description = description;
+	}
+
+	public String getSymbol() {
+	    return symbol;
 	}
 
 	@Override
 	public String toString() {
-		return this.symbol;
+	    return description;
 	}
-
 }

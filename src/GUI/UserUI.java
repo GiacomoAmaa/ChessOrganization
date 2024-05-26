@@ -3,24 +3,24 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -33,31 +33,33 @@ import util.loaders.FontLoader;
 public class UserUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private static final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-	private static final double PADDING = 0.067,
-			FONT_SIZE = 0.02;
+	private static final Dimension screen = new Dimension(700, 700);
+	private static final double PADDING = 0.067;
+	private static final float FONT_SIZE = 15;
 	private static final JPanel panel = new JPanel(new BorderLayout()),
 			// centerPane represents the center section of pane
 			centerPane = new JPanel();
 	private static final ImageIcon logo = new ImageIcon(UserUI.class.getResource("/icons/logo.png")),
 			defIcon = new ImageIcon(UserUI.class.getResource("/icons/default.png"));
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
-	private static final JMenuBar menu = new JMenuBar(); // could be removed (still to check)
-	private static final JButton games = new JButton("MY GAMES"),
-			stats = new JButton("STATS"),
-			tourn = new JButton("SIGN IN FOR TOURNAMENTS"),
-			search = new JButton("SEARCH"),
-			logout = new JButton(new ImageIcon(new ImageIcon(UserUI.class.getResource("/icons/logout.png"))
-					.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))),
-			launchSearch = new JButton(new ImageIcon(UserUI.class.getResource("/icons/magnifying-glass.png")));
+	private static final JMenuBar menu = new JMenuBar();
+	private static final JMenu games = new JMenu("My Games"),
+			stats = new JMenu("My stats"),
+			search = new JMenu("Search"),
+			tourn = new JMenu("Sign in for tournaments"),
+			logout = new JMenu("Logout");
+	private static final JMenuItem searchPlayers = new JMenuItem("Search players"),
+			searchGames = new JMenuItem("Search games");
+	private static final JButton launchSearch = new JButton(new ImageIcon(UserUI.class.getResource("/icons/magnifying-glass.png")));
 	private static final JTextField searchBox = new JTextField("", 50);
 	private static final FontLoader fontLoad = new FontLoader();
-	private static Optional<JButton> selected = Optional.empty();
+	private static Optional<JMenu> selected = Optional.empty();
 	
 	public UserUI() {
 		super("Chess Organization");
 		setSize(UserUI.screen);
 		setResizable(false);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(UserUI.panel);
 		setIconImage(UserUI.logo.getImage());
@@ -71,6 +73,7 @@ public class UserUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				var result = handler.apply(UserUI.searchBox.getText());
+				// show results
 			}
 			
 		});
@@ -78,71 +81,51 @@ public class UserUI extends JFrame{
 	
 	private void initialize() {
 		// initializing components
-		UserUI.games.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				loadGames();
-				UserUI.selected = Optional.of(games);
-				update();
-			}
-			
+		setHandler(UserUI.games, () -> {
+			loadGames();
+			UserUI.selected = Optional.of(UserUI.games);
+			update();
 		});
-		UserUI.stats.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				loadStats();
-				UserUI.selected = Optional.of(stats);
-				update();
-			}
-			
+		setHandler(UserUI.stats, () -> {
+			loadStats();
+			UserUI.selected = Optional.of(stats);
+			update();
 		});
-		UserUI.tourn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				loadTournaments();
-				UserUI.selected = Optional.of(tourn);
-				update();
-			}
-			
+		setHandler(UserUI.tourn, () -> {
+			loadTournaments();
+			UserUI.selected = Optional.of(tourn);
+			update();
 		});
-		UserUI.search.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				loadSearch();
-				UserUI.selected = Optional.of(search);
-				update();
-			}
-			
+		setHandler(UserUI.searchPlayers, () -> {
+			loadSearch();
+			UserUI.selected = Optional.of(search);
+			update();
 		});
-		UserUI.logout.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-					int dialogButton = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?","WARNING",JOptionPane.YES_NO_OPTION);
-
-					if(dialogButton == JOptionPane.YES_OPTION) {
-						System.exit(0);
-					} else {
-						remove(dialogButton);
-					}
-			}
-			
+		setHandler(UserUI.searchGames, () -> {
+			// TODO should be a different method
+			loadSearch();
+			UserUI.selected = Optional.of(search);
+			update();
 		});
+		setHandler(UserUI.logout, () -> {
+			int dialogButton = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?","WARNING",JOptionPane.YES_NO_OPTION);
+
+			if(dialogButton == JOptionPane.YES_OPTION) {
+				System.exit(0);
+			}
+		});
+		// adding every menu item to its corresponding menu
+		UserUI.search.add(UserUI.searchPlayers);
+		UserUI.search.add(UserUI.searchGames);
 		// inserting centerPane into pane
 		UserUI.panel.add(centerPane, BorderLayout.CENTER);
 		// TODO il font non carica
-		UserUI.defText.setFont(UserUI.fontLoad.getTextFont());
+		UserUI.defText.setFont(UserUI.fontLoad.getTextFont().deriveFont(UserUI.FONT_SIZE));
 		// initializing northern panel
-		List.of(games, stats, tourn, search, Box.createHorizontalGlue(), logout).stream()
+		List.of(games, stats, tourn, search, logout).stream()
 			.forEach(elem -> {
 				UserUI.menu.add(elem);
-				elem.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, (int)(UserUI.screen.height * UserUI.FONT_SIZE)));
 			});
-		
 		UserUI.panel.add(UserUI.menu, BorderLayout.NORTH);
 		// initializing center panel
 		UserUI.centerPane.add(wrapV(List.of(UserUI.defText, new JLabel(UserUI.defIcon))), BorderLayout.CENTER);
@@ -162,15 +145,18 @@ public class UserUI extends JFrame{
 	}
 
 	private void loadGames() {
-		final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("P:e2:::e4","P:e7:#::e5"))));
+		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("P:e2:::e4","P:e7:#::e5"))));
+		final RegisterGameUI form= new RegisterGameUI();
 		UserUI.centerPane.removeAll();
 		UserUI.centerPane.revalidate();
-		UserUI.centerPane.add(board.getBoard());
+		//UserUI.centerPane.add(board.getBoard());
+		UserUI.centerPane.add(form.getPanel());
+		UserUI.panel.add(form.getBoard(),BorderLayout.SOUTH);
 		UserUI.centerPane.repaint();
-		UserUI.panel.add(board.getRightSidebar(),BorderLayout.WEST);
-		UserUI.panel.add(board.getLeftSidebar(),BorderLayout.EAST);
-		UserUI.panel.add(board.getFooter(),BorderLayout.SOUTH);
-		pack();
+		//UserUI.panel.add(board.getRightSidebar(),BorderLayout.WEST);
+		//UserUI.panel.add(board.getLeftSidebar(),BorderLayout.EAST);
+		//UserUI.panel.add(board.getFooter(),BorderLayout.SOUTH);
+		//pack();
 	}
 	
 	private void loadStats() {
@@ -212,6 +198,37 @@ public class UserUI extends JFrame{
 		wrapper.setAlignmentY(CENTER_ALIGNMENT);
 		elements.stream().forEach(e -> wrapper.add(e));
 		return wrapper;
+	}
+	
+	private void setHandler(JComponent comp, Runnable handler) {
+		comp.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				handler.run();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				return;
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				return;
+			}
+			
+		});
 	}
 	
 }

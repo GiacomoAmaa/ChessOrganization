@@ -14,11 +14,11 @@ public class MoveParser {
 	}
 
 	public void parse(final String move) {
-		this.move = move.split(MoveSymbols.SEPARATOR.toString());
+		this.move = move.split(MoveSymbols.SEPARATOR.getSymbol());
 	}
 
 	public boolean isMoveType(MoveSymbols sym) {
-		return this.move[Position.MOVE_TYPE.ordinal()].contains(sym.toString());	
+		return this.move[Position.MOVE_TYPE.ordinal()].contains(sym.getSymbol());	
 	}
 
 	public String getAttacker() {

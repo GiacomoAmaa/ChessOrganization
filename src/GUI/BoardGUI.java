@@ -104,7 +104,7 @@ public class BoardGUI {
         this.footer.add(this.backButton);
 	}
 
-    private final void displayMove() {
+    public final void displayMove() {
     	List<Pair<String, Tile>> board = this.game.getPosition().getBoard();
     	
         for (int i = 0; i < Board.NUM_TILES; i++) {
