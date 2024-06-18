@@ -1,10 +1,13 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,7 @@ import javax.swing.ImageIcon;
 
 import util.Pair;
 import util.UserType;
+import util.loaders.FontLoader;
 
 public class LoginForm extends JFrame {
 	
@@ -33,6 +37,7 @@ public class LoginForm extends JFrame {
 			RENDER = 50;
 	private static final int MAX_LENGTH = 30;
 	private static final int FONT_SIZE = 36;
+	private static final int ERROR_SIZE = 15;
 	private static final JPanel panel = new JPanel(new BorderLayout());
 	private static final JLabel title = new JLabel("Chess Org");
 	private static final JTextField username = new JTextField(LoginForm.MAX_LENGTH),
@@ -43,8 +48,9 @@ public class LoginForm extends JFrame {
 	private static final JPasswordField password = new JPasswordField(LoginForm.MAX_LENGTH);
 	private static final ImageIcon logo = new ImageIcon(LoginForm.class.getResource("/icons/logo.png"));
 	private static final UpdateAgent agent = new UpdateAgent();
+	private static final FontLoader fontload = new FontLoader();
 	
-	public LoginForm() {
+	public LoginForm(Runnable onClose) {
 		super("Chess Organization");
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		setResizable(false);
@@ -54,7 +60,13 @@ public class LoginForm extends JFrame {
 		initialize();
 		setLocationRelativeTo(null);
 		updateType();
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				onClose.run();
+			}
+		});
 		setVisible(true);
+		
 	}
 	
 	public void setRegisterHandler(Consumer<Map<String, String>> handler) {
@@ -98,6 +110,7 @@ public class LoginForm extends JFrame {
 		LoginForm.agent.start();
 		// initializing components
 		LoginForm.password.setEchoChar('*');
+		//LoginForm.error.setVisible();
 		// initializing northern panel
 		LoginForm.title.setFont(new Font("Serif", Font.BOLD, LoginForm.FONT_SIZE));
 		LoginForm.title.setHorizontalAlignment(JLabel.CENTER);
@@ -111,7 +124,10 @@ public class LoginForm extends JFrame {
 		centerPanel.add(wrap(List.of(new JLabel("card num.\t"), LoginForm.cardNumber)));
 		LoginForm.panel.add(centerPanel, BorderLayout.CENTER);
 		// initializing southern panel
-		LoginForm.panel.add(wrap(List.of(login, register)), BorderLayout.SOUTH);
+		JPanel southernPanel = new JPanel();
+		southernPanel.setLayout(new BoxLayout(southernPanel, BoxLayout.Y_AXIS));
+		southernPanel.add(wrap(List.of(login, register)));
+		LoginForm.panel.add(southernPanel, BorderLayout.SOUTH);
 		// packing frame
 		pack();
 	}

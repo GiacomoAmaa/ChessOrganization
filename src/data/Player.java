@@ -1,6 +1,7 @@
 package data;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -24,38 +25,26 @@ public final class Player {
 		Player.name = name;
 		Player.lastname = lastname;
 	}
-	
-	
-	
+		
 	public int getId() {
 		return Player.id;
 	}
-
-
 
 	public int getElo() {
 		return Player.elo;
 	}
 
-
-
 	public String getPassword() {
 		return Player.password;
 	}
-
-
 
 	public String getCf() {
 		return Player.cf;
 	}
 
-
-
 	public String getName() {
 		return Player.name;
 	}
-
-
 
 	public String getLastname() {
 		return Player.lastname;
@@ -69,7 +58,6 @@ public final class Player {
 	public boolean equals(Object other) {
 		var p = (Player) other;
 		return Player.id == p.getId();
-		
 	}
 	
 	public final static class DAO {
@@ -94,9 +82,17 @@ public final class Player {
 			return null;
 		}
 		
-		public static boolean exists(Connection conn, Player player) {
-			// TODO implementation
-			return false;
+		public static boolean exists(Connection conn, String username, String password) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.PLAYER_EXISTS, username, password)) {
+				var resultSet = stmt.executeQuery();
+				while(resultSet.next()) {
+					return true;
+				}
+				return false;
+				
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
 		}
 	}
 }

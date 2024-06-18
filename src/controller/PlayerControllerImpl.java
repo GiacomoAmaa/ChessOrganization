@@ -1,14 +1,14 @@
 package controller;
 
-import GUI.UserUI;
+import GUI.PlayerUI;
 import controller.api.UserController;
 
-public class UserControllerImpl implements UserController{
+public class PlayerControllerImpl implements UserController{
 	
 	// private static final User model = new User();
-	private static final UserUI view = new UserUI();
+	private static final PlayerUI view = new PlayerUI();
 	
-	public UserControllerImpl() {
+	public PlayerControllerImpl() {
 		
 	}
 

@@ -27,10 +27,9 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import board.Game;
-import util.Pair;
 import util.loaders.FontLoader;
 
-public class UserUI extends JFrame{
+public class PlayerUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private static final Dimension screen = new Dimension(700, 700);
@@ -40,8 +39,8 @@ public class UserUI extends JFrame{
 	private static final JPanel panel = new JPanel(new BorderLayout()),
 			// centerPane represents the center section of pane
 			centerPane = new JPanel();
-	private static final ImageIcon logo = new ImageIcon(UserUI.class.getResource("/icons/logo.png")),
-			defIcon = new ImageIcon(UserUI.class.getResource("/icons/default.png"));
+	private static final ImageIcon logo = new ImageIcon(PlayerUI.class.getResource("/icons/logo.png")),
+			defIcon = new ImageIcon(PlayerUI.class.getResource("/icons/default.png"));
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
 	private static final JMenuBar menu = new JMenuBar();
 	private static final JMenu games = new JMenu("My Games"),
@@ -51,29 +50,29 @@ public class UserUI extends JFrame{
 			logout = new JMenu("Logout");
 	private static final JMenuItem searchPlayers = new JMenuItem("Search players"),
 			searchGames = new JMenuItem("Search games");
-	private static final JButton launchSearch = new JButton(new ImageIcon(UserUI.class.getResource("/icons/magnifying-glass.png")));
+	private static final JButton launchSearch = new JButton(new ImageIcon(PlayerUI.class.getResource("/icons/magnifying-glass.png")));
 	private static final JTextField searchBox = new JTextField("", 50);
 	private static final FontLoader fontLoad = new FontLoader();
 	private static Optional<JMenu> selected = Optional.empty();
 	
-	public UserUI() {
+	public PlayerUI() {
 		super("Chess Organization");
-		setSize(UserUI.screen);
+		setSize(PlayerUI.screen);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setContentPane(UserUI.panel);
-		setIconImage(UserUI.logo.getImage());
+		setContentPane(PlayerUI.panel);
+		setIconImage(PlayerUI.logo.getImage());
 		initialize();
 		setVisible(true);
 	}
 	
 	public void setSearchHandler(Function<String, List<String>> handler) {
-		UserUI.launchSearch.addActionListener(new ActionListener() {
+		PlayerUI.launchSearch.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				var result = handler.apply(UserUI.searchBox.getText());
+				var result = handler.apply(PlayerUI.searchBox.getText());
 				// show results
 			}
 			
@@ -82,23 +81,23 @@ public class UserUI extends JFrame{
 	
 	private void initialize() {
 		// initializing components
-		setHandler(UserUI.games, () -> {
+		setHandler(PlayerUI.games, () -> {
 			loadGames();
-			UserUI.selected = Optional.of(UserUI.games);
+			PlayerUI.selected = Optional.of(PlayerUI.games);
 			update();
 		});
-		setHandler(UserUI.stats, () -> {
+		setHandler(PlayerUI.stats, () -> {
 			loadStats();
-			UserUI.selected = Optional.of(stats);
+			PlayerUI.selected = Optional.of(stats);
 			update();
 		});
-		setHandler(UserUI.tourn, () -> {
+		setHandler(PlayerUI.tourn, () -> {
 			loadTournaments();
-			UserUI.selected = Optional.of(tourn);
+			PlayerUI.selected = Optional.of(tourn);
 			update();
 		});
-		setHandler(UserUI.logout, () -> {
-			UserUI.selected = Optional.of(UserUI.logout);
+		setHandler(PlayerUI.logout, () -> {
+			PlayerUI.selected = Optional.of(PlayerUI.logout);
 			update();
 			int dialogButton = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?","WARNING",JOptionPane.YES_NO_OPTION);
 
@@ -106,53 +105,53 @@ public class UserUI extends JFrame{
 				System.exit(0);
 			}
 		});
-		UserUI.searchGames.addActionListener(new ActionListener() {
+		PlayerUI.searchGames.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO should be a different method
 				loadSearch();
-				UserUI.selected = Optional.of(search);
+				PlayerUI.selected = Optional.of(search);
 				update();
 			}
 			
 		});
-		UserUI.searchPlayers.addActionListener(new ActionListener() {
+		PlayerUI.searchPlayers.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loadSearch();
-				UserUI.selected = Optional.of(search);
+				PlayerUI.selected = Optional.of(search);
 				update();
 			}
 			
 		});
 		// adding every menu item to its corresponding menu
-		UserUI.search.add(UserUI.searchPlayers);
-		UserUI.search.add(UserUI.searchGames);
+		PlayerUI.search.add(PlayerUI.searchPlayers);
+		PlayerUI.search.add(PlayerUI.searchGames);
 		// inserting centerPane into pane
-		UserUI.panel.add(centerPane, BorderLayout.CENTER);
+		PlayerUI.panel.add(centerPane, BorderLayout.CENTER);
 		// TODO il font non carica
-		UserUI.defText.setFont(UserUI.fontLoad.getTextFont().deriveFont(UserUI.TEXT_SIZE));
+		PlayerUI.defText.setFont(PlayerUI.fontLoad.getTextFont().deriveFont(PlayerUI.TEXT_SIZE));
 		// initializing northern panel
 		List.of(games, stats, tourn, search, logout, searchPlayers, searchGames).stream()
 			.forEach(elem -> {
 				if (elem instanceof JMenu) {
-					UserUI.menu.add(elem);
+					PlayerUI.menu.add(elem);
 				}
-				elem.setFont(UserUI.fontLoad.getTitleFont().deriveFont(UserUI.TITLE_SIZE));
+				elem.setFont(PlayerUI.fontLoad.getTitleFont().deriveFont(PlayerUI.TITLE_SIZE));
 			});
-		UserUI.panel.add(UserUI.menu, BorderLayout.NORTH);
+		PlayerUI.panel.add(PlayerUI.menu, BorderLayout.NORTH);
 		// initializing center panel
-		UserUI.centerPane.add(wrapV(List.of(UserUI.defText, new JLabel(UserUI.defIcon))), BorderLayout.CENTER);
+		PlayerUI.centerPane.add(wrapV(List.of(PlayerUI.defText, new JLabel(PlayerUI.defIcon))), BorderLayout.CENTER);
 		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("",""))));
 		//UserUI.panel.add(board.getGui(), BorderLayout.CENTER);
 	}
 	
 	private void update() {
-		List.of(UserUI.games, UserUI.search, UserUI.tourn, UserUI.stats).stream()
+		List.of(PlayerUI.games, PlayerUI.search, PlayerUI.tourn, PlayerUI.stats).stream()
 			.forEach(btn -> {
-				if(UserUI.selected.equals(Optional.of(btn))) {
+				if(PlayerUI.selected.equals(Optional.of(btn))) {
 					btn.setForeground(Color.BLUE);
 				} else {
 					btn.setForeground(Color.BLACK);
@@ -163,12 +162,12 @@ public class UserUI extends JFrame{
 	private void loadGames() {
 		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("P:e2:::e4","P:e7:#::e5"))));
 		final RegisterGameUI form= new RegisterGameUI();
-		UserUI.centerPane.removeAll();
-		UserUI.centerPane.revalidate();
+		PlayerUI.centerPane.removeAll();
+		PlayerUI.centerPane.revalidate();
 		//UserUI.centerPane.add(board.getBoard());
-		UserUI.centerPane.add(form.getPanel());
-		UserUI.panel.add(form.getBoard(),BorderLayout.SOUTH);
-		UserUI.centerPane.repaint();
+		PlayerUI.centerPane.add(form.getPanel());
+		PlayerUI.panel.add(form.getBoard(),BorderLayout.SOUTH);
+		PlayerUI.centerPane.repaint();
 		//UserUI.panel.add(board.getRightSidebar(),BorderLayout.WEST);
 		//UserUI.panel.add(board.getLeftSidebar(),BorderLayout.EAST);
 		//UserUI.panel.add(board.getFooter(),BorderLayout.SOUTH);
@@ -186,14 +185,14 @@ public class UserUI extends JFrame{
 	}
 
 	private void loadSearch() {
-		UserUI.centerPane.removeAll();
-		UserUI.centerPane.revalidate();
+		PlayerUI.centerPane.removeAll();
+		PlayerUI.centerPane.revalidate();
 		var wrapper = new JPanel();
-		wrapper.add(UserUI.searchBox);
-		wrapper.add(UserUI.launchSearch);
+		wrapper.add(PlayerUI.searchBox);
+		wrapper.add(PlayerUI.launchSearch);
 		wrapper.setAlignmentX(CENTER_ALIGNMENT);
-		UserUI.centerPane.add(wrapper);
-		UserUI.centerPane.repaint();
+		PlayerUI.centerPane.add(wrapper);
+		PlayerUI.centerPane.repaint();
 	}
 	
 	/** 
@@ -203,10 +202,10 @@ public class UserUI extends JFrame{
 		elements.stream()
 			.forEach(e -> {
 				e.setAlignmentX(CENTER_ALIGNMENT);
-				e.setBorder(new EmptyBorder((int)(UserUI.screen.height * UserUI.PADDING),
-						(int)(UserUI.screen.height * UserUI.PADDING),
-						(int)(UserUI.screen.height * UserUI.PADDING),
-						(int)(UserUI.screen.height * UserUI.PADDING)));
+				e.setBorder(new EmptyBorder((int)(PlayerUI.screen.height * PlayerUI.PADDING),
+						(int)(PlayerUI.screen.height * PlayerUI.PADDING),
+						(int)(PlayerUI.screen.height * PlayerUI.PADDING),
+						(int)(PlayerUI.screen.height * PlayerUI.PADDING)));
 				});
 		var wrapper = new JPanel();
 		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));

@@ -27,7 +27,7 @@ public class RefereeUI extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private static final Dimension screen = new Dimension(700,700);
 	private static final JPanel panel = new JPanel(new BorderLayout()), centerPane = new JPanel();
-	private static final ImageIcon logo = new ImageIcon(UserUI.class.getResource("/icons/logo.png"));
+	private static final ImageIcon logo = new ImageIcon(PlayerUI.class.getResource("/icons/logo.png"));
 	private static final JMenuBar navbar = new JMenuBar();
 	private static final JMenu games = new JMenu("Designations");
 	private static final JMenu stats = new JMenu("Statistics");

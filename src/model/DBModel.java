@@ -1,18 +1,25 @@
 package model;
 
 import java.sql.Connection;
-import java.util.Objects;
+import java.sql.SQLException;
+
+import data.DAOException;
+import data.DAOUtils;
 
 public class DBModel {
 	
-	private final Connection connection;
-
-	public DBModel(final Connection connection) {
-		Objects.requireNonNull(connection, "Trying to load DB with null connection");
-		this.connection = connection;
+	private static final Connection connection = DAOUtils.localMySQLConnection("chessorg", "root", "");
+	
+	public static Connection getConnection() {
+		return DBModel.connection;
 	}
 	
-	
-	
+	public static void closeConnection() {
+		try {
+			DBModel.connection.close();
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		}
+	}
 	
 }
