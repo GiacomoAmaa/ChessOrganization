@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 
 import util.Pair;
+import util.TextPrompt;
 import util.UserType;
 import util.loaders.FontLoader;
 
@@ -41,6 +42,9 @@ public class LoginForm extends JFrame {
 	private static final JPanel panel = new JPanel(new BorderLayout());
 	private static final JLabel title = new JLabel("Chess Org");
 	private static final JTextField username = new JTextField(LoginForm.MAX_LENGTH),
+			name = new JTextField(LoginForm.MAX_LENGTH),
+			lastname = new JTextField(LoginForm.MAX_LENGTH),
+			cf = new JTextField(LoginForm.MAX_LENGTH),
 			cardNumber = new JTextField(LoginForm.MAX_LENGTH);
 	private static final JComboBox<UserType> role = new JComboBox<>(UserType.values());
 	private static final JButton login = new JButton("LOG IN"),
@@ -97,6 +101,9 @@ public class LoginForm extends JFrame {
 	public void Error() {
 		LoginForm.username.setText("");
 		LoginForm.password.setText("");
+		LoginForm.name.setText("");
+		LoginForm.lastname.setText("");
+		LoginForm.cf.setText("");
 		updateType();
 		JOptionPane.showMessageDialog(null, "Username or password are not valid, please try again.");
 	}
@@ -117,8 +124,14 @@ public class LoginForm extends JFrame {
 		LoginForm.panel.add(wrap(List.of(LoginForm.title, new JLabel(LoginForm.logo))), BorderLayout.NORTH);
 		// initializing center panel
 		JPanel centerPanel = new JPanel();
+		List.of(LoginForm.name, LoginForm.lastname, LoginForm.cf).stream().forEach((text) -> {
+			new TextPrompt("just for registration", text);
+		});
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-		centerPanel.add(wrap(List.of(new JLabel("submit as\t"), role)));
+		centerPanel.add(wrap(List.of(new JLabel("submit as\t"), LoginForm.role)));
+		centerPanel.add(wrap(List.of(new JLabel("name\t"), LoginForm.name)));
+		centerPanel.add(wrap(List.of(new JLabel("lastname\t"), LoginForm.lastname)));
+		centerPanel.add(wrap(List.of(new JLabel("CF\t"), LoginForm.cf)));
 		centerPanel.add(wrap(List.of(new JLabel("username\t"), LoginForm.username)));
 		centerPanel.add(wrap(List.of(new JLabel("password\t"), LoginForm.password)));
 		centerPanel.add(wrap(List.of(new JLabel("card num.\t"), LoginForm.cardNumber)));
@@ -149,6 +162,9 @@ public class LoginForm extends JFrame {
 		LoginForm.cardNumber.setEnabled(selectedType.equals(UserType.REFEREE));
 		LoginForm.cardNumber.setText(selectedType.equals(UserType.REFEREE) ? "" : "----");
 		LoginForm.register.setEnabled(selectedType.equals(UserType.PLAYER));
+		LoginForm.name.setEnabled(selectedType.equals(UserType.PLAYER));
+		LoginForm.lastname.setEnabled(selectedType.equals(UserType.PLAYER));
+		LoginForm.cf.setEnabled(selectedType.equals(UserType.PLAYER));
 	}
 	
 	private Map<String, String> getUserData() {
