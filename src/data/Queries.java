@@ -18,6 +18,6 @@ public class Queries {
 			+ "and password = ? ";
 	public static final String PLAYER_REGISTER = 
 			"insert into giocatori(idgiocatore, punteggio, username, password, cf, nome, cognome)"
-			+ "(null, 0, ?, ?, ?, ?, ?)";
+			+ "values (null, 0, ?, ?, ?, ?, ?)";
 
 }

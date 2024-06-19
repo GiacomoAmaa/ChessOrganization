@@ -94,5 +94,14 @@ public final class Player {
 				throw new DAOException(e);
 			}
 		}
+		
+		public static void newInstance(Connection conn, String name, String lastname, String cf, String username, String password) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.PLAYER_REGISTER, username, password, cf, name, lastname)) {
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				System.out.println(e);
+				throw new DAOException(e);
+			}
+		}
 	}
 }

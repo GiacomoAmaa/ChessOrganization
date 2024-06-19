@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -70,7 +71,6 @@ public class LoginForm extends JFrame {
 			}
 		});
 		setVisible(true);
-		
 	}
 	
 	public void setRegisterHandler(Consumer<Map<String, String>> handler) {
@@ -78,7 +78,7 @@ public class LoginForm extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				handler.accept(getUserData());
+				handler.accept(getRegisterData());
 			}
 			
 		});
@@ -89,7 +89,7 @@ public class LoginForm extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				handler.accept(new Pair<UserType, Map<String, String>>((UserType)LoginForm.role.getSelectedItem(), getUserData()));
+				handler.accept(new Pair<UserType, Map<String, String>>((UserType)LoginForm.role.getSelectedItem(), getLoginData()));
 			}
 			
 		});
@@ -107,6 +107,33 @@ public class LoginForm extends JFrame {
 		updateType();
 		JOptionPane.showMessageDialog(null, "Username or password are not valid, please try again.");
 	}
+
+	/**
+	 * shows a registration error
+	 */
+	public void missingData() {
+		LoginForm.username.setText("");
+		LoginForm.password.setText("");
+		LoginForm.name.setText("");
+		LoginForm.lastname.setText("");
+		LoginForm.cf.setText("");
+		updateType();
+		JOptionPane.showMessageDialog(null,
+			"This data are required in order to register\n\t"
+			+ "- name\n\t- lastname\n\t- cf\n\t- username\n\t"
+			+ "password\nSome data is missing!"
+		);
+	}
+	
+	public void alreadyExist() {
+		LoginForm.username.setText("");
+		LoginForm.password.setText("");
+		LoginForm.name.setText("");
+		LoginForm.lastname.setText("");
+		LoginForm.cf.setText("");
+		updateType();
+		JOptionPane.showMessageDialog(null, "This player already exists, please try again.");
+	}	
 
 	/**
 	 * Sets up the frame.
@@ -129,12 +156,12 @@ public class LoginForm extends JFrame {
 		});
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		centerPanel.add(wrap(List.of(new JLabel("submit as\t"), LoginForm.role)));
-		centerPanel.add(wrap(List.of(new JLabel("name\t"), LoginForm.name)));
-		centerPanel.add(wrap(List.of(new JLabel("lastname\t"), LoginForm.lastname)));
-		centerPanel.add(wrap(List.of(new JLabel("CF\t"), LoginForm.cf)));
-		centerPanel.add(wrap(List.of(new JLabel("username\t"), LoginForm.username)));
-		centerPanel.add(wrap(List.of(new JLabel("password\t"), LoginForm.password)));
-		centerPanel.add(wrap(List.of(new JLabel("card num.\t"), LoginForm.cardNumber)));
+		centerPanel.add(wrapH(List.of(new JLabel("name\t"), LoginForm.name)));
+		centerPanel.add(wrapH(List.of(new JLabel("lastname\t"), LoginForm.lastname)));
+		centerPanel.add(wrapH(List.of(new JLabel("CF\t"), LoginForm.cf)));
+		centerPanel.add(wrapH(List.of(new JLabel("username\t"), LoginForm.username)));
+		centerPanel.add(wrapH(List.of(new JLabel("password\t"), LoginForm.password)));
+		centerPanel.add(wrapH(List.of(new JLabel("card num.\t"), LoginForm.cardNumber)));
 		LoginForm.panel.add(centerPanel, BorderLayout.CENTER);
 		// initializing southern panel
 		JPanel southernPanel = new JPanel();
@@ -154,6 +181,15 @@ public class LoginForm extends JFrame {
 		return wrapper;
 	}
 	
+	/** 
+	 * Wraps components into panels containing them, with horizontal disposition on the right.
+	 */
+	private JComponent wrapH(Collection<JComponent> elements) {
+		var wrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		elements.stream().forEach(e -> wrapper.add(e));
+		return wrapper;
+	}
+	
 	/**
 	 * Updates the login form based on the type of user chosen.
 	 */
@@ -167,16 +203,28 @@ public class LoginForm extends JFrame {
 		LoginForm.cf.setEnabled(selectedType.equals(UserType.PLAYER));
 	}
 	
-	private Map<String, String> getUserData() {
+	private Map<String, String> getLoginData() {
 		if(((UserType)LoginForm.role.getSelectedItem()).equals(UserType.REFEREE)) {
 			return Map.of("username", LoginForm.username.getText(),
-					"password", String.valueOf(LoginForm.password.getPassword()),
-					"cardNumber", LoginForm.cardNumber.getText());
+				"password", String.valueOf(LoginForm.password.getPassword()),
+				"cardNumber", LoginForm.cardNumber.getText());
 		}
 		else {
 			return Map.of("username", LoginForm.username.getText(),
 					"password", String.valueOf(LoginForm.password.getPassword()));
 		}
+	}
+	
+	private Map<String, String> getRegisterData() {
+		if (List.of(LoginForm.name, LoginForm.lastname, LoginForm.cf, LoginForm.username, LoginForm.password).stream()
+			.map(t -> t.getText())
+			.allMatch(s -> s.length() != 0)
+		) {
+			return Map.of("name", LoginForm.name.getText(),"lastname", LoginForm.lastname.getText(),
+					"cf", LoginForm.cf.getText(), "username", LoginForm.username.getText(),
+					"password", String.valueOf(LoginForm.password.getPassword()));
+		}
+		return Map.of();
 	}
 	
 	/**
@@ -200,10 +248,6 @@ public class LoginForm extends JFrame {
 					flag = false;
 				}
 			}
-			
-		}
-
-		
+		}		
 	}
-	
 }

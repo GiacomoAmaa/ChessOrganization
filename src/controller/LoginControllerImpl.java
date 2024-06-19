@@ -52,5 +52,18 @@ public class LoginControllerImpl implements LoginController {
 		 * returns true if the new user is added successfully, returns false if the
 		 * user name is already existing.
 		 */
+		// it means that there's no information missing
+		if (data.entrySet().size() == 5) {
+			System.out.println(data.get("password"));
+			if (!LoginControllerImpl.model.registration(data.get("name"), data.get("lastname"), data.get("cf"),
+					data.get("username"), data.get("password"))
+			) {
+				LoginControllerImpl.view.alreadyExist();
+			}
+			else {
+				new PlayerControllerImpl();
+			}
+		}
+		LoginControllerImpl.view.missingData();
 	}
 }
