@@ -3,6 +3,7 @@ package data;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A representation of a data instance of a player in the database
@@ -17,9 +18,10 @@ public final class Player {
 	private static String name;
 	private static String lastname;
 	
-	public Player(int id, int elo, String password, String cf, String name, String lastname) {
+	public Player(int id, int elo, String username, String password, String cf, String name, String lastname) {
 		Player.id = id;
 		Player.elo = elo;
+		Player.username = username;
 		Player.password = password;
 		Player.cf = cf;
 		Player.name = name;
@@ -82,13 +84,16 @@ public final class Player {
 			return null;
 		}
 		
-		public static boolean exists(Connection conn, String username, String password) {
+		public static Optional<Player> exists(Connection conn, String username, String password) {
 			try (var stmt = DAOUtils.prepare(conn, Queries.PLAYER_EXISTS, username, password)) {
 				var resultSet = stmt.executeQuery();
 				while(resultSet.next()) {
-					return true;
+					var p = new Player(resultSet.getInt("idgiocatore"), resultSet.getInt("punteggio"),
+						resultSet.getString("username"), resultSet.getString("password"),
+						resultSet.getString("cf"), resultSet.getString("nome"), resultSet.getString("cognome"));
+					return Optional.of(p);
 				}
-				return false;
+				return Optional.empty();
 				
 			} catch (SQLException e) {
 				throw new DAOException(e);

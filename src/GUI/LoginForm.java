@@ -55,7 +55,7 @@ public class LoginForm extends JFrame {
 	private static final UpdateAgent agent = new UpdateAgent();
 	private static final FontLoader fontload = new FontLoader();
 	
-	public LoginForm(Runnable onClose) {
+	public LoginForm() {
 		super("Chess Organization");
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		setResizable(false);
@@ -65,11 +65,6 @@ public class LoginForm extends JFrame {
 		initialize();
 		setLocationRelativeTo(null);
 		updateType();
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				onClose.run();
-			}
-		});
 		setVisible(true);
 	}
 	

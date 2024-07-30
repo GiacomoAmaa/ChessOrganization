@@ -1,19 +1,26 @@
 package controller;
 
 import GUI.PlayerUI;
-import controller.api.UserController;
+import controller.api.PlayerController;
+import data.Player;
 
-public class PlayerControllerImpl implements UserController{
+public class PlayerControllerImpl implements PlayerController{
 	
-	// private static final User model = new User();
+	private static Player model;
 	private static final PlayerUI view = new PlayerUI();
 	
-	public PlayerControllerImpl() {
-		
+	public PlayerControllerImpl(Player p) {
+		PlayerControllerImpl.model = p;
 	}
 
 	@Override
-	public void search(String input) {
+	public void searchGames(String input) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void searchPlayers(String input) {
 		// TODO Auto-generated method stub
 		
 	}

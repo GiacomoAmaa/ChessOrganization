@@ -10,9 +10,7 @@ import util.UserType;
 public class LoginControllerImpl implements LoginController {
 	
 	private static final Login model = new Login();
-	private static final LoginForm view = new LoginForm(() -> {
-		LoginControllerImpl.model.close();
-	});
+	private static final LoginForm view = new LoginForm();
 	
 	public LoginControllerImpl() {
 		view.setRegisterHandler(data -> registrationAttempt(data));
@@ -26,24 +24,35 @@ public class LoginControllerImpl implements LoginController {
 	 */
 	@Override
 	public void loginAttempt(UserType type, Map<String, String> data) {
-		if (LoginControllerImpl.model.attempt(type, data.get("username"), data.get("password"), data.get("code"))) {
-			LoginControllerImpl.view.setVisible(false);
-			switch(type) {
+		switch(type) {
 			case ADMIN:
-				//new AdminControllerImpl();
+				
+				var a = LoginControllerImpl.model.adminAttempt(data.get("username"), data.get("password"));
+				if(a.isPresent()) {
+					//new AdminControllerImpl(a.get());
+				} else {
+					LoginControllerImpl.view.Error();
+				}
 				break;
 			case PLAYER:
-				new PlayerControllerImpl();
+				var p = LoginControllerImpl.model.playerAttempt(data.get("username"), data.get("password"));
+				if(p.isPresent()) {
+					new PlayerControllerImpl(p.get());
+				} else {
+					LoginControllerImpl.view.Error();
+				}
 				break;
 			case REFEREE:
-				//new RefereeControllerImpl();
+				/*
+				var r = LoginControllerImpl.model.refereeAttempt(data.get("username"), data.get("password"), data.get("code"));
+				if(r.isPresent()) {
+					new PlayerControllerImpl(r.get());
+				} else {
+					LoginControllerImpl.view.Error();
+				}
+				*/
 				break;
-			}
-			LoginControllerImpl.model.close();
-		} else {
-			LoginControllerImpl.view.Error();
 		}
-		
 	}
 
 	@Override
@@ -61,7 +70,8 @@ public class LoginControllerImpl implements LoginController {
 				LoginControllerImpl.view.alreadyExist();
 			}
 			else {
-				new PlayerControllerImpl();
+				var p = LoginControllerImpl.model.playerAttempt(data.get("username"), data.get("password"));
+				new PlayerControllerImpl(p.get());
 			}
 		}
 		LoginControllerImpl.view.missingData();

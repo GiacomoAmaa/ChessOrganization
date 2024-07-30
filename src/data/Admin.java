@@ -2,6 +2,7 @@ package data;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class Admin {
 	
@@ -52,13 +53,20 @@ public class Admin {
 	}
 	
 	public final static class DAO {
-		public static boolean exists(Connection conn, String username, String password) {
+		public static Optional<Admin> exists(Connection conn, String username, String password) {
 			try (var stmt = DAOUtils.prepare(conn, Queries.ADMIN_EXISTS, username, password)) {
 				var resultSet = stmt.executeQuery();
 				while (resultSet.next()) {
-					return true;
+					int id = resultSet.getInt("idadmin");
+					String usr = resultSet.getString("username"),
+						pwd = resultSet.getString("password"),
+						cf = resultSet.getString("cf"),
+						nome = resultSet.getString("nome"),
+						cognome  = resultSet.getString("cognome");
+							
+					return Optional.of(new Admin(id, usr, pwd, nome, cognome, cf));
 				}
-				return false;
+				return Optional.empty();
 			} catch (SQLException e) {
 				throw new DAOException(e);
 			}

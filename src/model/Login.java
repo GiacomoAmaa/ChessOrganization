@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Optional;
+
 import data.Admin;
 import data.DAOException;
 import data.Player;
@@ -7,22 +9,22 @@ import util.UserType;
 
 public class Login {
 	
-	public boolean attempt(UserType type, String username, String password, String code) {
-		switch(type) {
-		case ADMIN:
-			return Admin.DAO.exists(DBModel.getConnection(), username, password);
-		case PLAYER:
-			return Player.DAO.exists(DBModel.getConnection(), username, password);
-		case REFEREE:
-			// a method with the same template
-			break;
-		
-		}
-		return false;
+	/*
+	public Optional<Referee> refereeAttempt(String username, String password, String code) {
+		return Referee.DAO.exists(DBModel.getConnection(), username, password, code);
+	}
+	*/
+	
+	public Optional<Player> playerAttempt(String username, String password) {
+		return Player.DAO.exists(DBModel.getConnection(), username, password);
+	}
+	
+	public Optional<Admin> adminAttempt(String username, String password) {
+		return Admin.DAO.exists(DBModel.getConnection(), username, password);
 	}
 	
 	public boolean registration(String name, String lastname, String cf, String username, String password) {
-		if (!Player.DAO.exists(DBModel.getConnection(), username, password)) {
+		if (Player.DAO.exists(DBModel.getConnection(), username, password).isEmpty()) {
 			try {
 				Player.DAO.newInstance(DBModel.getConnection(), name, lastname, cf, username, password);
 				// the return statement is executed only if the insert has positive result
@@ -30,9 +32,5 @@ public class Login {
 			} catch (DAOException e) {}
 		}
 		return false;
-	}
-	
-	public void close() {
-		DBModel.closeConnection();
 	}
 }
