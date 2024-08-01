@@ -88,10 +88,11 @@ public final class Player {
 			try (var stmt = DAOUtils.prepare(conn, Queries.PLAYER_EXISTS, username, password)) {
 				var resultSet = stmt.executeQuery();
 				while(resultSet.next()) {
-					var p = new Player(resultSet.getInt("idgiocatore"), resultSet.getInt("punteggio"),
-						resultSet.getString("username"), resultSet.getString("password"),
-						resultSet.getString("cf"), resultSet.getString("nome"), resultSet.getString("cognome"));
-					return Optional.of(p);
+					int id = resultSet.getInt("idgiocatore"), elo = resultSet.getInt("punteggio");
+					String cf =	resultSet.getString("cf"),
+						name = resultSet.getString("nome"),
+						lastname = resultSet.getString("cognome");
+					return Optional.of(new Player(id, elo, username, password, name, lastname, cf));
 				}
 				return Optional.empty();
 				

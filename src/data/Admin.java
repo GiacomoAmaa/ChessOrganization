@@ -58,13 +58,10 @@ public class Admin {
 				var resultSet = stmt.executeQuery();
 				while (resultSet.next()) {
 					int id = resultSet.getInt("idadmin");
-					String usr = resultSet.getString("username"),
-						pwd = resultSet.getString("password"),
-						cf = resultSet.getString("cf"),
+					String cf = resultSet.getString("cf"),
 						nome = resultSet.getString("nome"),
 						cognome  = resultSet.getString("cognome");
-							
-					return Optional.of(new Admin(id, usr, pwd, nome, cognome, cf));
+					return Optional.of(new Admin(id, username, password, nome, cognome, cf));
 				}
 				return Optional.empty();
 			} catch (SQLException e) {

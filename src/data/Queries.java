@@ -16,8 +16,19 @@ public class Queries {
 			+ "from organizzatori "
 			+ "where username = ? "
 			+ "and password = ? ";
+	public static final String REFEREE_EXISTS = 
+			"select *"
+			+ "from arbitri"
+			+ "where username = ?"
+			+ "and password = ?"
+			+ "and numtessera = ?";
 	public static final String PLAYER_REGISTER = 
 			"insert into giocatori(idgiocatore, punteggio, username, password, cf, nome, cognome)"
 			+ "values (null, 0, ?, ?, ?, ?, ?)";
-
+	public static final String GAMES_FOR_PLAYER = 
+			"select *"
+			+ "from partite p, partecipanti pa, iscrizioni i"
+			+ "where p.idpartita = pa.idpartita"
+			+ "and pa.idiscrizione = i.idiscrizione"
+			+ "and i.idgiocatore = ?";
 }

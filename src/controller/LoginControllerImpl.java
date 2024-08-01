@@ -25,8 +25,7 @@ public class LoginControllerImpl implements LoginController {
 	@Override
 	public void loginAttempt(UserType type, Map<String, String> data) {
 		switch(type) {
-			case ADMIN:
-				
+			case ADMIN:	
 				var a = LoginControllerImpl.model.adminAttempt(data.get("username"), data.get("password"));
 				if(a.isPresent()) {
 					//new AdminControllerImpl(a.get());
@@ -43,14 +42,12 @@ public class LoginControllerImpl implements LoginController {
 				}
 				break;
 			case REFEREE:
-				/*
 				var r = LoginControllerImpl.model.refereeAttempt(data.get("username"), data.get("password"), data.get("code"));
 				if(r.isPresent()) {
-					new PlayerControllerImpl(r.get());
+					//new ControllerImpl(r.get()); need to do a referee UI
 				} else {
 					LoginControllerImpl.view.Error();
 				}
-				*/
 				break;
 		}
 	}

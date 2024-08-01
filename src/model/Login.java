@@ -5,15 +5,14 @@ import java.util.Optional;
 import data.Admin;
 import data.DAOException;
 import data.Player;
-import util.UserType;
+import data.Referee;
 
 public class Login {
 	
-	/*
 	public Optional<Referee> refereeAttempt(String username, String password, String code) {
-		return Referee.DAO.exists(DBModel.getConnection(), username, password, code);
+		// i'll convert code to int, because the db contains int card numbers
+		return Referee.DAO.exists(DBModel.getConnection(), username, password, Integer.valueOf(code));
 	}
-	*/
 	
 	public Optional<Player> playerAttempt(String username, String password) {
 		return Player.DAO.exists(DBModel.getConnection(), username, password);
