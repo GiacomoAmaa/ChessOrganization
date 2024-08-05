@@ -26,8 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import board.Game;
-import util.Pair;
 import util.loaders.FontLoader;
 
 public class UserUI extends JFrame{
@@ -258,12 +256,14 @@ public class UserUI extends JFrame{
 
 	private void loadGames() {
 		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("P:e2:::e4","P:e7:#::e5"))));
+		final JPanel games = new GamesTable().getPanel();
 		final RegisterGameUI form= new RegisterGameUI();
 		UserUI.centerPane.removeAll();
 		UserUI.centerPane.revalidate();
 		//UserUI.centerPane.add(board.getBoard());
-		UserUI.centerPane.add(form.getPanel());
-		UserUI.panel.add(form.getBoard(),BorderLayout.SOUTH);
+		UserUI.centerPane.add(games);
+		//UserUI.centerPane.add(form.getPanel());
+		//UserUI.panel.add(form.getBoard(),BorderLayout.SOUTH);
 		UserUI.centerPane.repaint();
 		//UserUI.panel.add(board.getRightSidebar(),BorderLayout.WEST);
 		//UserUI.panel.add(board.getLeftSidebar(),BorderLayout.EAST);
