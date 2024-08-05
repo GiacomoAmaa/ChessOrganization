@@ -1,7 +1,6 @@
 package GUI;
 
-import controller.LoginControllerImpl;
-import data.DAOUtils;
+
 import util.loaders.FontLoader;
 import util.loaders.SoundManager;
 
@@ -10,7 +9,7 @@ public class App {
 	public static final SoundManager SOUND = new SoundManager();
 
 	public static void main(String[] args) {
-		var login = new LoginControllerImpl();
-		//var test = new UserUI();
+		//var login = new LoginControllerImpl();
+		var test = new PlayerUI();
 	}
 }
