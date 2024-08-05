@@ -187,6 +187,7 @@ public class RegisterGameUI {
     }
 
     private String packMoveInfo() {
+    	boolean missing = false;
 		String result, attacker, defender, from, to, type ;
 		result = attacker = defender = from = to = type = "";
 
@@ -198,7 +199,7 @@ public class RegisterGameUI {
 				result = player.isWhite() ? "e1:c1:" + MoveSymbols.CASTLING.getSymbol() + ":a1:d1":
 					"e8:c8:"+ MoveSymbols.CASTLING.getSymbol() +":a8:d8";
 			} else {
-				JOptionPane.showMessageDialog(null,"Required field Missing");
+				missing = true;
 				return "";
 			}
 		} else if (
@@ -208,7 +209,7 @@ public class RegisterGameUI {
 
     		if(promotionCheck.isSelected()) {
     			if(promotedPieceField.getSelectedItem().equals(PieceType.UNKNOWN)) {
-    				JOptionPane.showMessageDialog(null,"Required field Missing");
+    				missing = true;
     				return "";
     			} else {
     				type = MoveSymbols.PROMOTION.getSymbol();
@@ -220,7 +221,7 @@ public class RegisterGameUI {
 
     		if(captureCheck.isSelected()) {
     			if(capturedPieceField.getSelectedItem().equals(PieceType.UNKNOWN)) {
-    				JOptionPane.showMessageDialog(null,"Required field Missing");
+    				missing = true;
     				return "";
     			} else {
     				type += MoveSymbols.CAPTURE.getSymbol();
@@ -230,7 +231,7 @@ public class RegisterGameUI {
 
     		if(endgameCheck.isSelected()) {
     			if(endgameField.getSelectedItem().equals(MoveSymbols.UNKNOWN)) {
-    				JOptionPane.showMessageDialog(null,"Required field Missing");
+    				missing = true;
     				return "";
     			} else {
     				type += ((MoveSymbols)endgameField.getSelectedItem()).getSymbol();
@@ -242,10 +243,13 @@ public class RegisterGameUI {
         	to = toField.getSelectedItem().toString();
         	result = attacker + SEP + from + SEP + type + SEP + defender + SEP + to;
     	} else {
-    		JOptionPane.showMessageDialog(null,"Required field Missing");
+    		missing = true;
     		return "";
     	}
 
+		if(missing) 
+			JOptionPane.showMessageDialog(null,"Required field Missing");
+		
 		resetForm();
     	return result;
     }

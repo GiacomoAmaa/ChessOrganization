@@ -180,7 +180,7 @@ public class PlayerUI extends JFrame{
 		PlayerUI.centerPane.removeAll();
 		PlayerUI.centerPane.revalidate();
 		//UserUI.centerPane.add(board.getBoard());
-		PlayerUI.centerPane.add(games);
+		PlayerUI.centerPane.add(form.getPanel());
 		PlayerUI.panel.add(form.getBoard(),BorderLayout.SOUTH);
 		PlayerUI.centerPane.repaint();
 		//UserUI.panel.add(board.getRightSidebar(),BorderLayout.WEST);
