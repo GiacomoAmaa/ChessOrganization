@@ -31,4 +31,24 @@ public class Queries {
 			+ "where p.idpartita = pa.idpartita"
 			+ "and pa.idiscrizione = i.idiscrizione"
 			+ "and i.idgiocatore = ?";
+	// could be all in one, needs optimization - - -
+	public static final String GAMES_PLAYED = 
+			"select count distinct *"
+			+ "from partecipanti p, iscrizioni i"
+			+ "where p.idiscrizione = i.idiscrizione"
+			+ "and i.idgiocatore = ?";
+	public static final String GAMES_AS_WHITE = 
+			"select count distinct *"
+			+ "from partecipanti p, iscrizioni i"
+			+ "where p.idiscrizione = i.idiscrizione"
+			+ "and p.fazione = 'Bianco'"
+			+ "and i.idgiocatore = ?";
+	public static final String GAMES_AS_BLACK = 
+			"select count distinct *"
+			+ "from partecipanti p, iscrizioni i"
+			+ "where p.idiscrizione = i.idiscrizione"
+			+ "and p.fazione = 'Nero'"
+			+ "and i.idgiocatore = ?";
+	// now i need wins in general, or wins as white/black
+	// - - - - - - - - - - - - - - - - - - - - - -
 }

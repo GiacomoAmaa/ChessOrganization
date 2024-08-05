@@ -9,8 +9,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -79,16 +81,25 @@ public class PlayerUI extends JFrame{
 		});
 	}
 	
+	public void setStatsHandler(Supplier<Map<String, Number>> handler) {
+		PlayerUI.stats.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PlayerUI.selected = Optional.of(stats);
+				update();
+				loadStats(handler.get());
+			}
+			
+		});
+		
+	}
+	
 	private void initialize() {
 		// initializing components
 		setHandler(PlayerUI.games, () -> {
 			loadGames();
 			PlayerUI.selected = Optional.of(PlayerUI.games);
-			update();
-		});
-		setHandler(PlayerUI.stats, () -> {
-			loadStats();
-			PlayerUI.selected = Optional.of(stats);
 			update();
 		});
 		setHandler(PlayerUI.tourn, () -> {
@@ -158,6 +169,10 @@ public class PlayerUI extends JFrame{
 				}
 			});
 	}
+	
+	private void loadStats(Map<String, Number> data) {
+		// TODO implementation
+	}
 
 	private void loadGames() {
 		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("P:e2:::e4","P:e7:#::e5"))));
@@ -172,11 +187,6 @@ public class PlayerUI extends JFrame{
 		//UserUI.panel.add(board.getLeftSidebar(),BorderLayout.EAST);
 		//UserUI.panel.add(board.getFooter(),BorderLayout.SOUTH);
 		//pack();
-	}
-	
-	private void loadStats() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	private void loadTournaments() {

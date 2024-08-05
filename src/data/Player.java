@@ -3,6 +3,7 @@ package data;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -63,6 +64,11 @@ public final class Player {
 	}
 	
 	public final static class DAO {
+		
+		public static Map<String, Number> stats(Connection conn, int playerId) {
+			// TODO implementation
+			return null;
+		}
 		
 		public static List<Game> gamesForPlayer(Connection conn, int playerId) {
 			// TODO implementation

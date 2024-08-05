@@ -1,4 +1,4 @@
-INSERT INTO giocatori (idgiocatore, punteggio, username, password, cf, name, cognome) VALUES
+INSERT INTO giocatori (idgiocatore, punteggio, username, password, cf, nome, cognome) VALUES
 (NULL, 0, 'aliceW', 'pwdAlice1', 'WHTLCA80A01H501T', 'Alice', 'White'),
 (NULL, 0, 'bobM', 'pwdBob2', 'MRTBBN85M01H501B', 'Bob', 'Martin'),
 (NULL, 0, 'charlieS', 'pwdCharlie3', 'SMTHCL90L01H501S', 'Charlie', 'Smith'),

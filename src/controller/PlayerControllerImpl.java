@@ -3,6 +3,7 @@ package controller;
 import GUI.PlayerUI;
 import controller.api.PlayerController;
 import data.Player;
+import model.DBModel;
 
 public class PlayerControllerImpl implements PlayerController{
 	
