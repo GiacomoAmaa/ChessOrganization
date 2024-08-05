@@ -3,13 +3,13 @@ package controller;
 import java.util.Map;
 
 import GUI.LoginForm;
-import GUI.UserUI;
 import controller.api.LoginController;
+import model.Login;
 import util.UserType;
 
 public class LoginControllerImpl implements LoginController {
 	
-	// private static final "LoginLogics" logic
+	private static final Login model = new Login();
 	private static final LoginForm view = new LoginForm();
 	
 	public LoginControllerImpl() {
@@ -17,20 +17,41 @@ public class LoginControllerImpl implements LoginController {
 		view.setLogInHandler(pair -> loginAttempt(pair.getX(), pair.getY()));
 	}
 
+	/* data is a map with every String is associated with the field name:
+	 * "username" -> actual username
+	 * "passowrd" -> actual password
+	 * "code" -> actual code/null
+	 */
 	@Override
 	public void loginAttempt(UserType type, Map<String, String> data) {
-		var username = data.get("username");
-		var password = data.get("password");
-		/*
-		 * dummy database query
-		 */
-		if(type.equals(UserType.ADMIN) && username.equals("admin") &&
-				password.hashCode() == String.valueOf("root").hashCode()) {
-			var ui = new UserUI();
-			LoginControllerImpl.view.setVisible(false);
-		}
-		else {
-			LoginControllerImpl.view.Error();
+		switch(type) {
+			case ADMIN:	
+				var a = LoginControllerImpl.model.adminAttempt(data.get("username"), data.get("password"));
+				if(a.isPresent()) {
+					view.setVisible(false);
+					new AdminControllerImpl(a.get());
+				} else {
+					LoginControllerImpl.view.Error();
+				}
+				break;
+			case PLAYER:
+				var p = LoginControllerImpl.model.playerAttempt(data.get("username"), data.get("password"));
+				if(p.isPresent()) {
+					view.setVisible(false);
+					new PlayerControllerImpl(p.get());
+				} else {
+					LoginControllerImpl.view.Error();
+				}
+				break;
+			case REFEREE:
+				var r = LoginControllerImpl.model.refereeAttempt(data.get("username"), data.get("password"), data.get("code"));
+				if(r.isPresent()) {
+					view.setVisible(false);
+					//new RefereeControllerImpl(r.get()); need to do a referee UI
+				} else {
+					LoginControllerImpl.view.Error();
+				}
+				break;
 		}
 	}
 
@@ -40,5 +61,19 @@ public class LoginControllerImpl implements LoginController {
 		 * returns true if the new user is added successfully, returns false if the
 		 * user name is already existing.
 		 */
+		// it means that there's no information missing
+		if (data.entrySet().size() == 5) {
+			System.out.println(data.get("password"));
+			if (!LoginControllerImpl.model.registration(data.get("name"), data.get("lastname"), data.get("cf"),
+					data.get("username"), data.get("password"))
+			) {
+				LoginControllerImpl.view.alreadyExist();
+			}
+			else {
+				var p = LoginControllerImpl.model.playerAttempt(data.get("username"), data.get("password"));
+				new PlayerControllerImpl(p.get());
+			}
+		}
+		LoginControllerImpl.view.missingData();
 	}
 }

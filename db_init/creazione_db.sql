@@ -8,7 +8,8 @@ USE `ChessOrg`;
 -- Table `ChessOrg`.`organizzatori`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`organizzatori` (
-    `idadmin` INT NOT NULL,
+    `idadmin` INT NOT NULL AUTO_INCREMENT,
+    `username` CHAR(30) NOT NULL,
     `password` VARCHAR(512) NOT NULL,
     `cf` CHAR(16) NOT NULL,
     `nome` CHAR(30) NOT NULL,
@@ -20,8 +21,9 @@ ENGINE = InnoDB;
 -- Table `ChessOrg`.`giocatori`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`giocatori` (
-    `idgiocatore` INT NOT NULL, -- DA MODIFICARE numgiocatore 
+    `idgiocatore` INT NOT NULL AUTO_INCREMENT,
     `punteggio` INT NOT NULL,
+    `username` CHAR(30) NOT NULL,
     `password` VARCHAR(512) NOT NULL,
     `cf` CHAR(16) NOT NULL,
     `nome` CHAR(30) NOT NULL,
@@ -33,7 +35,8 @@ ENGINE = InnoDB;
 -- Table `ChessOrg`.`arbitri`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`arbitri` (
-    `numtessera` INT NOT NULL,
+    `numtessera` INT NOT NULL AUTO_INCREMENT,
+    `username` CHAR(30) NOT NULL,
     `password` VARCHAR(512) NOT NULL,
     `cf` CHAR(16) NOT NULL,
     `nome` CHAR(30) NOT NULL,
@@ -120,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`partite` (
     `codpartita` INT NOT NULL AUTO_INCREMENT,
     `codtorneo` INT NOT NULL, -- da eliminare livello
     `data` DATE NOT NULL,
+    `vincitore` VARCHAR(20) NOT NULL CHECK(`vincitore` IN ('Bianco', 'Nero')),
     PRIMARY KEY (`codpartita`),
     FOREIGN KEY (`codtorneo`) REFERENCES `ChessOrg`.`tornei` (`codtorneo`))
 ENGINE = InnoDB;
