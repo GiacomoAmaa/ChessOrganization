@@ -51,4 +51,8 @@ public class Queries {
 			+ "and i.idgiocatore = ?";
 	// now i need wins in general, or wins as white/black
 	// - - - - - - - - - - - - - - - - - - - - - -
+	public static final String POST_ANNOUNCE = 
+			"insert into annunci (idannuncio, indirizzo, scadenza,"
+			+ "maxiscrizioni, miniscrizioni, idadmin)"
+			+ "values (NULL, ?, ?, ?, ?, ?)";
 }

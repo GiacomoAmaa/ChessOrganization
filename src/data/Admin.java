@@ -1,6 +1,7 @@
 package data;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -22,27 +23,27 @@ public class Admin {
 		Admin.cf = cf;
 	}
 
-	public static int getIdAdmin() {
+	public int getIdAdmin() {
 		return idAdmin;
 	}
 
-	public static String getUsername() {
+	public String getUsername() {
 		return username;
 	}
 
-	public static String getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
-	public static String getName() {
+	public String getName() {
 		return name;
 	}
 
-	public static String getLastname() {
+	public String getLastname() {
 		return lastname;
 	}
 
-	public static String getCf() {
+	public String getCf() {
 		return cf;
 	}
 
@@ -53,6 +54,16 @@ public class Admin {
 	}
 	
 	public final static class DAO {
+		
+		public static boolean postAnnounce(Connection conn, String address, Date expiringDate, int maxSubs, int minSubs, int idAdmin) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.POST_ANNOUNCE, address, expiringDate, maxSubs, minSubs, idAdmin)) {
+				stmt.executeQuery();
+				return true;
+			} catch (SQLException e) {
+				return false;
+			}
+		}
+		
 		public static Optional<Admin> exists(Connection conn, String username, String password) {
 			try (var stmt = DAOUtils.prepare(conn, Queries.ADMIN_EXISTS, username, password)) {
 				var resultSet = stmt.executeQuery();

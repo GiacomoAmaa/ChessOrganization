@@ -1,9 +1,11 @@
 package controller;
 
+import java.sql.Date;
+
 import GUI.AdminUI;
 import controller.api.AdminController;
 import data.Admin;
-import data.Player;
+import model.DBModel;
 
 public class AdminControllerImpl implements AdminController{
 	
@@ -12,18 +14,6 @@ public class AdminControllerImpl implements AdminController{
 
 	public AdminControllerImpl(Admin a) {
 		AdminControllerImpl.model = a;
-	}
-
-	@Override
-	public void tournaments() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void games() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -36,6 +26,12 @@ public class AdminControllerImpl implements AdminController{
 	public void searchGames(String input) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void postAnnounce(String address, Date expiringDate, int maxSubs, int minSubs) {
+		Admin.DAO.postAnnounce(DBModel.getConnection(), address, expiringDate,
+			maxSubs, minSubs, model.getIdAdmin());
 	}
 
 }

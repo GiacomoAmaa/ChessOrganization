@@ -2,11 +2,14 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -23,7 +27,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
 import util.loaders.FontLoader;
@@ -43,12 +49,19 @@ public class AdminUI extends JFrame {
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
 	private static final JMenuBar menu = new JMenuBar();
 	private static final JMenu search = new JMenu("Search"),
-			tourn = new JMenu("Create tournaments"),
+			tourn = new JMenu("Post announce"),
 			logout = new JMenu("Logout");
 	private static final JMenuItem searchPlayers = new JMenuItem("Search players"),
 			searchGames = new JMenuItem("Search games");
-	private static final JButton launchSearch = new JButton(new ImageIcon(AdminUI.class.getResource("/icons/magnifying-glass.png")));
-	private static final JTextField searchBox = new JTextField("", 50);
+	private static final JButton launchSearch = new JButton(new ImageIcon(AdminUI.class.getResource("/icons/magnifying-glass.png"))),
+			postAnnounce = new JButton("POST ANNOUNCE");
+	private static final JTextField searchBox = new JTextField("", 50),
+			address = new JTextField("", 30);
+	private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+	private static final JFormattedTextField exprDate = new JFormattedTextField(df);
+	private static final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(2, 2, 32, 1);
+	private static final JSpinner maxSubs = new JSpinner(AdminUI.spinnerModel),
+			minSubs = new JSpinner(AdminUI.spinnerModel);
 	private static final FontLoader fontLoad = new FontLoader();
 	private static Optional<JMenu> selected = Optional.empty();
 	
@@ -113,6 +126,7 @@ public class AdminUI extends JFrame {
 			}
 			
 		});
+		AdminUI.exprDate.setColumns(30);
 		// adding every menu item to its corresponding menu
 		AdminUI.search.add(AdminUI.searchPlayers);
 		AdminUI.search.add(AdminUI.searchGames);
@@ -136,8 +150,22 @@ public class AdminUI extends JFrame {
 	}
 	
 	private void loadTournaments() {
-		// TODO Auto-generated method stub
-		
+		AdminUI.centerPane.removeAll();
+		AdminUI.centerPane.revalidate();
+		var address = wrapH(List.of(new JLabel("address"), AdminUI.address));
+		var exprDate = wrapH(List.of(new JLabel("expires"), AdminUI.exprDate));
+		var max = wrapH(List.of(new JLabel("max. subscriptions"), AdminUI.maxSubs));
+		var min = wrapH(List.of(new JLabel("min. subscriptions"), AdminUI.minSubs));
+		max.setAlignmentX(Component.LEFT_ALIGNMENT);
+		min.setAlignmentX(Component.LEFT_ALIGNMENT);
+		var wrapper = new JPanel();
+		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
+		List.of(address, exprDate, max, min, AdminUI.postAnnounce)
+			.forEach(e -> wrapper.add(e));
+		AdminUI.centerPane.add(wrapper);
+		wrapper.setAlignmentX(LEFT_ALIGNMENT);
+		wrapper.setAlignmentY(CENTER_ALIGNMENT);
+		AdminUI.centerPane.repaint();
 	}
 
 	private void loadSearch() {
@@ -178,6 +206,15 @@ public class AdminUI extends JFrame {
 		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
 		wrapper.setAlignmentX(CENTER_ALIGNMENT);
 		wrapper.setAlignmentY(CENTER_ALIGNMENT);
+		elements.stream().forEach(e -> wrapper.add(e));
+		return wrapper;
+	}
+	
+	/** 
+	 * Wraps components into panels containing them, with horizontal disposition on the right.
+	 */
+	private JComponent wrapH(Collection<JComponent> elements) {
+		var wrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		elements.stream().forEach(e -> wrapper.add(e));
 		return wrapper;
 	}

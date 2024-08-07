@@ -180,8 +180,23 @@ public class PlayerUI extends JFrame{
 		PlayerUI.centerPane.removeAll();
 		PlayerUI.centerPane.revalidate();
 		//UserUI.centerPane.add(board.getBoard());
-		PlayerUI.centerPane.add(form.getPanel());
-		PlayerUI.panel.add(form.getBoard(),BorderLayout.SOUTH);
+		/*
+		 * Samu: il codice qui sotto l'ho aggiunto io per prova
+		 */
+		var wrapper = new JPanel();
+		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
+		wrapper.setAlignmentX(CENTER_ALIGNMENT);
+		wrapper.setAlignmentY(CENTER_ALIGNMENT);
+		wrapper.add(form.getPanel());
+		wrapper.add(form.getBoard());
+		PlayerUI.centerPane.add(wrapper);
+		/*
+		 * Samu: non occupare la parte sud del del pannello, è più difficile da ripulire
+		 * metti tutto al centro con un wrapper, il tuo codice è commentato qui sotto.
+		 * 
+		 * PlayerUI.centerPane.add(form.getPanel());
+		 * PlayerUI.panel.add(form.getBoard(),BorderLayout.SOUTH);
+		 */
 		PlayerUI.centerPane.repaint();
 		//UserUI.panel.add(board.getRightSidebar(),BorderLayout.WEST);
 		//UserUI.panel.add(board.getLeftSidebar(),BorderLayout.EAST);
