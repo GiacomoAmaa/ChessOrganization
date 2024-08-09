@@ -14,6 +14,11 @@ public class AdminControllerImpl implements AdminController{
 
 	public AdminControllerImpl(Admin a) {
 		AdminControllerImpl.model = a;
+		view.setPostHandler(map -> {
+			return postAnnounce((String)map.get("address"),
+					(Date)map.get("date"), (Integer)map.get("min"),
+					(Integer)map.get("max"));
+		});
 	}
 
 	@Override
@@ -29,8 +34,8 @@ public class AdminControllerImpl implements AdminController{
 	}
 
 	@Override
-	public void postAnnounce(String address, Date expiringDate, int maxSubs, int minSubs) {
-		Admin.DAO.postAnnounce(DBModel.getConnection(), address, expiringDate,
+	public boolean postAnnounce(String address, Date expiringDate, int maxSubs, int minSubs) {
+		return Admin.DAO.postAnnounce(DBModel.getConnection(), address, expiringDate,
 			maxSubs, minSubs, model.getIdAdmin());
 	}
 

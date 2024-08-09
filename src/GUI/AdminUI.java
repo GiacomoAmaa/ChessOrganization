@@ -5,13 +5,21 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -28,16 +36,21 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
+
+import com.toedter.calendar.IDateEditor;
+import com.toedter.calendar.JDateChooser;
 
 import util.loaders.FontLoader;
 
 public class AdminUI extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
-	private static final Dimension screen = new Dimension(700, 700);
+	private static final Dimension screen = new Dimension(700, 700),
+			dateChooser = new Dimension(305, 20);
 	private static final double PADDING = 0.067;
 	private static final float TEXT_SIZE = 15,
 			TITLE_SIZE = 18;
@@ -57,11 +70,13 @@ public class AdminUI extends JFrame {
 			postAnnounce = new JButton("POST ANNOUNCE");
 	private static final JTextField searchBox = new JTextField("", 50),
 			address = new JTextField("", 30);
-	private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-	private static final JFormattedTextField exprDate = new JFormattedTextField(df);
-	private static final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(2, 2, 32, 1);
-	private static final JSpinner maxSubs = new JSpinner(AdminUI.spinnerModel),
-			minSubs = new JSpinner(AdminUI.spinnerModel);
+	//private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+	//private static final JFormattedTextField exprDate = new JFormattedTextField(df);
+	private static final JDateChooser exprDate = new JDateChooser(); 
+	private static final SpinnerNumberModel minModel = new SpinnerNumberModel(2, 2, 32, 1),
+			maxModel = new SpinnerNumberModel(32, 2, 32, 1);
+	private static final JSpinner maxSubs = new JSpinner(AdminUI.maxModel),
+			minSubs = new JSpinner(AdminUI.minModel);
 	private static final FontLoader fontLoad = new FontLoader();
 	private static Optional<JMenu> selected = Optional.empty();
 	
@@ -86,6 +101,43 @@ public class AdminUI extends JFrame {
 				// show results
 			}
 			
+		});
+	}
+	
+	public void setPostHandler(Function<Map<String, Object>, Boolean> handler) {
+		AdminUI.postAnnounce.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+					var date = Optional.ofNullable(AdminUI.exprDate.getDate());
+					if (date.isEmpty()) {
+						AdminUI.minSubs.setValue(2);
+						AdminUI.maxSubs.setValue(32);
+						AdminUI.address.setText("");
+						JOptionPane.showMessageDialog(null, "A date must be set",
+								"Date Error", JOptionPane.ERROR_MESSAGE);
+					}
+				if((int) AdminUI.minSubs.getValue() <= (int) AdminUI.maxSubs.getValue() &&
+						AdminUI.exprDate.getDate().toInstant().atZone(ZoneId.systemDefault())
+						.toLocalDateTime().compareTo(LocalDateTime.now())>= 0 &&
+						!AdminUI.address.getText().equals("")) {
+					if(handler.apply(Map.of("address", AdminUI.address.getText(),
+							"date", new java.sql.Date(AdminUI.exprDate.getDate().getTime()),
+							"min", (Integer)AdminUI.minSubs.getValue(),
+							"max", (Integer)AdminUI.maxSubs.getValue()))) {
+						AdminUI.minSubs.setValue(2);
+						AdminUI.maxSubs.setValue(32);
+						AdminUI.address.setText("");
+						JOptionPane.showMessageDialog(null, "Announce succesfully posted");
+					}
+					JOptionPane.showMessageDialog(null, "Check the correct pattern of a post:\n"
+							+ "- address cannot be empty\n- date cannot be past\n"
+							+ "- min must be lower/equal than max subscribers"
+							+ "- subscribers number can only be integers", "Pattern errors",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}
 		});
 	}
 	
@@ -126,7 +178,19 @@ public class AdminUI extends JFrame {
 			}
 			
 		});
-		AdminUI.exprDate.setColumns(30);
+		// making components not editable by keyboard
+		AdminUI.exprDate.setPreferredSize(AdminUI.dateChooser);
+		AdminUI.exprDate.setDate(new Date());
+		AdminUI.exprDate.setMinSelectableDate(new Date());
+		JComponent editor = AdminUI.minSubs.getEditor();
+        JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
+        textField.setEditable(false);
+        editor = AdminUI.maxSubs.getEditor();
+        textField = ((JSpinner.DefaultEditor) editor).getTextField();
+        textField.setEditable(false);
+        var comp = (IDateEditor)AdminUI.exprDate.getDateEditor().getUiComponent();
+        ((Component) comp).setFocusable(false);
+		AdminUI.postAnnounce.setAlignmentX(Component.CENTER_ALIGNMENT);
 		// adding every menu item to its corresponding menu
 		AdminUI.search.add(AdminUI.searchPlayers);
 		AdminUI.search.add(AdminUI.searchGames);
@@ -154,17 +218,20 @@ public class AdminUI extends JFrame {
 		AdminUI.centerPane.revalidate();
 		var address = wrapH(List.of(new JLabel("address"), AdminUI.address));
 		var exprDate = wrapH(List.of(new JLabel("expires"), AdminUI.exprDate));
-		var max = wrapH(List.of(new JLabel("max. subscriptions"), AdminUI.maxSubs));
-		var min = wrapH(List.of(new JLabel("min. subscriptions"), AdminUI.minSubs));
-		max.setAlignmentX(Component.LEFT_ALIGNMENT);
-		min.setAlignmentX(Component.LEFT_ALIGNMENT);
-		var wrapper = new JPanel();
-		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
-		List.of(address, exprDate, max, min, AdminUI.postAnnounce)
-			.forEach(e -> wrapper.add(e));
+		var subs = wrapH(List.of(new JLabel("max. subscriptions"), AdminUI.maxSubs,
+			new JLabel("min. subscriptions"), AdminUI.minSubs));
+		var wrapper = new JPanel(new GridBagLayout());
+		var gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+		wrapper.setAlignmentY(Component.CENTER_ALIGNMENT);
+		var list = List.of(address, exprDate, subs, AdminUI.postAnnounce);
+			list.forEach(e -> {
+				e.setAlignmentX(CENTER_ALIGNMENT);
+				gbc.gridy = list.indexOf(e);
+				wrapper.add(e, gbc);
+			});
 		AdminUI.centerPane.add(wrapper);
-		wrapper.setAlignmentX(LEFT_ALIGNMENT);
-		wrapper.setAlignmentY(CENTER_ALIGNMENT);
 		AdminUI.centerPane.repaint();
 	}
 

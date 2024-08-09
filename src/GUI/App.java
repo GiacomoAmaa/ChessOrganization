@@ -14,5 +14,6 @@ public class App {
 	public static void main(String[] args) {
 		//var login = new LoginControllerImpl();
 		var UI = new AdminControllerImpl(new Admin(1, null, null, null, null, null));
+		//var UI = new PlayerUI();
 	}
 }

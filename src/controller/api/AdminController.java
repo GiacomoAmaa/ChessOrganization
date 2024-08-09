@@ -26,5 +26,5 @@ public interface AdminController {
 	 * @param newTour new tournament announce to post
 	 * Lets the admin post a tournament announce
 	 */
-	public void postAnnounce(String address, Date expiringDate, int maxSubs, int minSubs);
+	public boolean postAnnounce(String address, Date expiringDate, int maxSubs, int minSubs);
 }
