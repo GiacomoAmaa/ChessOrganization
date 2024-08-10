@@ -1,7 +1,9 @@
 package data;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -112,6 +114,31 @@ public final class Player {
 				stmt.executeUpdate();
 			} catch (SQLException e) {
 				System.out.println(e);
+				throw new DAOException(e);
+			}
+		}
+		
+		public static List<List<String>> getAnnounces(Connection conn) {
+			var ret = new ArrayList<List<String>>();
+			try (var stmt = DAOUtils.prepare(conn, Queries.GET_ANNOUNCES)) {
+				var resultSet = stmt.executeQuery();
+				while(resultSet.next()) {
+					var location = resultSet.getString("indirizzo");
+					var name = resultSet.getString("nome");
+					var date = ((Date)resultSet.getObject("scadenza")).toString();
+					var capacity = "";
+					try {
+						int subs = Announce.DAO.subsPerAnnounce(conn, resultSet.getInt("idannuncio"));
+						capacity += Integer.toString(subs)+"/";
+					} catch (Exception e) {
+						capacity += "0/";
+					}
+					int max = resultSet.getInt("maxiscrizioni");
+					capacity += Integer.toString(max);
+					ret.add(List.of(name, location, date, capacity));
+				}
+				return ret;
+			} catch (SQLException e) {
 				throw new DAOException(e);
 			}
 		}

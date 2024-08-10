@@ -1,6 +1,8 @@
 package data;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 
 public class Announce {
 	
@@ -45,6 +47,17 @@ public class Announce {
 		return idAdmin;
 	}
 	
-	
+	public static final class DAO {
+		
+		public static int subsPerAnnounce(Connection conn, int idAnnounce) {
+			try(var stmt = DAOUtils.prepare(conn, Queries.SUBS_PER_ANNOUNCE, idAnnounce)) {
+				var resultSet = stmt.executeQuery();
+				// it's a count-type query, so there's only a record
+				return resultSet.getInt("total");
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}
+	}
 	
 }

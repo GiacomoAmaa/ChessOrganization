@@ -1,5 +1,7 @@
 package controller.api;
 
+import java.util.List;
+
 /**
  * The controller of the User profile, a user must be able to see his games, his stats,
  * to sign in for available tournaments and also search for other users
@@ -24,8 +26,9 @@ public interface PlayerController {
 	
 	/**
 	 * Shows all the tournaments where the user can subscribe to or is already signed to.
+	 * @return 
 	 */
-	public void tournaments();
+	public List<List<String>> tournaments();
 	
 	/**
 	 * Shows to the player all of his/her stats:

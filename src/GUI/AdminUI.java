@@ -72,7 +72,8 @@ public class AdminUI extends JFrame {
 			postAnnounce = new JButton("POST ANNOUNCE"),
 			addLocation = new JButton("ADD NEW LOCATION");
 	private static final JTextField searchBox = new JTextField("", 50),
-			newAddress = new JTextField("", 50);
+			newAddress = new JTextField("", 50),
+			announceName = new JTextField("", 30);
 	private static DefaultComboBoxModel<String> cbm = new DefaultComboBoxModel<>(new String[] {"---"});
 	private static final JComboBox<String> address = new JComboBox<>(AdminUI.cbm);
 	private static final JTextArea description = new JTextArea("", 4, 50);
@@ -117,8 +118,11 @@ public class AdminUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if((int) AdminUI.minSubs.getValue() <= (int) AdminUI.maxSubs.getValue() &&
 						AdminUI.exprDate.getDate().compareTo(new Date()) >= 0 &&
-						!AdminUI.address.getSelectedItem().equals("---")) {
-					if(handler.apply(Map.of("address", AdminUI.address.getSelectedItem(),
+						!AdminUI.address.getSelectedItem().equals("---") &&
+						AdminUI.announceName.getText() != "" &&
+						AdminUI.announceName.getText().length() <= 30) {
+					if(handler.apply(Map.of("name", AdminUI.announceName.getText(),
+							"address", AdminUI.address.getSelectedItem(),
 							"date", new java.sql.Date(AdminUI.exprDate.getDate().getTime()),
 							"min", (Integer)AdminUI.minSubs.getValue(),
 							"max", (Integer)AdminUI.maxSubs.getValue()))) {
@@ -129,10 +133,11 @@ public class AdminUI extends JFrame {
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Check the correct pattern of a post:\n"
-							+ "- address cannot be empty\n"
+							+ "- name cannot be longer than 30 characters\n"
 							+ "- min must be lower/equal than max subscribers", "Pattern errors",
 							JOptionPane.ERROR_MESSAGE);
 				}
+				AdminUI.announceName.setText("");
 				AdminUI.minSubs.setValue(2);
 				AdminUI.maxSubs.setValue(32);
 				AdminUI.address.setSelectedIndex(-1);
@@ -163,33 +168,6 @@ public class AdminUI extends JFrame {
 	}
 	
 	public void updateLocationHandler(Supplier<List<String>> handler) {
-		/*AdminUI.address.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {}
-
-			@Override
-			public void mousePressed(MouseEvent e) {}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				var choices = handler.get();
-				choices.add("---");
-				AdminUI.cbm.removeAllElements();
-				AdminUI.cbm.addAll(choices);
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				var choices = handler.get();
-				choices.add("---");
-				AdminUI.cbm.removeAllElements();
-				AdminUI.cbm.addAll(choices);
-			}
-		});*/
 		var agent = new UpdateAgent(handler);
 		agent.start();
 	}
@@ -272,6 +250,7 @@ public class AdminUI extends JFrame {
 	private void loadTournaments() {
 		AdminUI.centerPane.removeAll();
 		AdminUI.centerPane.revalidate();
+		var name = wrapH(List.of(new JLabel("name"), AdminUI.announceName));
 		var address = wrapH(List.of(new JLabel("address"), AdminUI.address));
 		var exprDate = wrapH(List.of(new JLabel("expires"), AdminUI.exprDate));
 		var subs = wrapH(List.of(new JLabel("max. subscriptions"), AdminUI.maxSubs,
@@ -281,7 +260,7 @@ public class AdminUI extends JFrame {
         gbc.gridx = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 		wrapper.setAlignmentY(Component.CENTER_ALIGNMENT);
-		var list = List.of(address, exprDate, subs, AdminUI.postAnnounce);
+		var list = List.of(name, address, exprDate, subs, AdminUI.postAnnounce);
 			list.forEach(e -> {
 				e.setAlignmentX(CENTER_ALIGNMENT);
 				gbc.gridy = list.indexOf(e);

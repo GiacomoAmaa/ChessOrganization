@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import board.Game;
@@ -94,16 +97,19 @@ public class PlayerUI extends JFrame{
 		
 	}
 	
+	public void setTournamentsHandler(Supplier<List<List<String>>> handler) {
+		setHandler(PlayerUI.tourn, () -> {
+			loadTournaments(handler.get());
+			PlayerUI.selected = Optional.of(tourn);
+			update();
+		});
+	}
+	
 	private void initialize() {
 		// initializing components
 		setHandler(PlayerUI.games, () -> {
 			loadGames();
 			PlayerUI.selected = Optional.of(PlayerUI.games);
-			update();
-		});
-		setHandler(PlayerUI.tourn, () -> {
-			loadTournaments();
-			PlayerUI.selected = Optional.of(tourn);
 			update();
 		});
 		setHandler(PlayerUI.logout, () -> {
@@ -204,9 +210,21 @@ public class PlayerUI extends JFrame{
 		//pack();
 	}
 	
-	private void loadTournaments() {
-		// TODO Auto-generated method stub
-		
+	private void loadTournaments(List<List<String>> data) {
+		PlayerUI.centerPane.removeAll();
+		PlayerUI.centerPane.revalidate();
+		var dataArray = new Object [data.size()] [!data.isEmpty() ? data.get(0).size() : 0];
+		if(!data.isEmpty()) {
+			data.stream().forEach(e -> {
+				e.stream().forEach(elem -> {
+					dataArray[data.indexOf(e)][e.indexOf(elem)] = elem;
+				});
+			});
+		}
+		var table = new JTable(dataArray, new Object[] {"Name", "Location", "Date", "Capacity"});
+		var scroll = new JScrollPane(table);
+		PlayerUI.centerPane.add(scroll);
+		PlayerUI.centerPane.repaint();
 	}
 
 	private void loadSearch() {

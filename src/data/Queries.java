@@ -1,5 +1,8 @@
 package data;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 /**
  * this class contains all the queries to launch in the DB as public Strings
  */
@@ -52,19 +55,25 @@ public class Queries {
 	// now i need wins in general, or wins as white/black
 	// - - - - - - - - - - - - - - - - - - - - - -
 	public static final String POST_ANNOUNCE = 
-			"insert into annunci (idannuncio, indirizzo, scadenza,"
+			"insert into annunci (idannuncio, nome, indirizzo, scadenza,"
 			+ "maxiscrizioni, miniscrizioni, idadmin)"
-			+ "values (NULL, ?, ?, ?, ?, ?)";
+			+ "values (NULL, ?, ?, ?, ?, ?, ?)";
 	public static final String ADD_LOCATION =
 			"insert into sedi (indirizzo, indicazioni) "
 			+ "values (?, ?)";
-
 	public static final String LOCATION_EXISTS = 
 			"select * "
 			+ "from sedi "
 			+ "where indirizzo = ?";
-
 	public static final String GET_ADDRESSES = 
 			"select indirizzo "
 			+ "from sedi";
+	public static final String SUBS_PER_ANNOUNCE =
+			"select count distinct i.idgiocatore as 'total' "
+			+ "from iscrizioni i"
+			+ "where i.idannuncio = ?";
+	public static final String GET_ANNOUNCES =
+			"select * "
+			+ "from annunci "
+			+ "where DATE(scadenza) > " + Date.valueOf(LocalDate.now()).toString();
 }

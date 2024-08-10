@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import GUI.PlayerUI;
 import controller.api.PlayerController;
 import data.Player;
@@ -12,6 +14,9 @@ public class PlayerControllerImpl implements PlayerController{
 	
 	public PlayerControllerImpl(Player p) {
 		PlayerControllerImpl.model = p;
+		view.setTournamentsHandler(() -> {
+			return tournaments();
+		});
 	}
 
 	@Override
@@ -27,9 +32,8 @@ public class PlayerControllerImpl implements PlayerController{
 	}
 
 	@Override
-	public void tournaments() {
-		// TODO Auto-generated method stub
-		
+	public List<List<String>> tournaments() {
+		return Player.DAO.getAnnounces(DBModel.getConnection());
 	}
 
 	@Override

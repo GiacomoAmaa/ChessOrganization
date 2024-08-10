@@ -55,9 +55,9 @@ public class Admin {
 	
 	public final static class DAO {
 		
-		public static boolean postAnnounce(Connection conn, String address, Date expiringDate, int maxSubs, int minSubs, int idAdmin) {
-			try (var stmt = DAOUtils.prepare(conn, Queries.POST_ANNOUNCE, address, expiringDate, maxSubs, minSubs, idAdmin)) {
-				stmt.executeQuery();
+		public static boolean postAnnounce(Connection conn, String name, String address, Date expiringDate, int maxSubs, int minSubs, int idAdmin) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.POST_ANNOUNCE, name, address, expiringDate, maxSubs, minSubs, idAdmin)) {
+				stmt.executeUpdate();
 				return true;
 			} catch (SQLException e) {
 				return false;
