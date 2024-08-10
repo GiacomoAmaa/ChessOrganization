@@ -88,6 +88,7 @@ public class SearchUI {
                             {false, "Player C","Player D", "Draw", "2023-06-10", "Torneo 2"},
                             {false, "Player E","Player F", "Player F", "2023-07-15", "Torneo 3"},
                         };
+                    table.clearTable();
                     table.addRows(data);
                 	//TODO chiama interfaccia con database e passa risultato query a table
                 } else {

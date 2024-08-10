@@ -123,6 +123,11 @@ public class Table {
         }
     }
 
+    // Method to remove all rows from the table
+    public void clearTable() {
+        tableModel.setRowCount(0);
+    }
+
 	public JPanel getPanel() {
 		return panel;
 	}
