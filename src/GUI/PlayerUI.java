@@ -30,7 +30,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import board.Game;
 import util.loaders.FontLoader;
 
 public class PlayerUI extends JFrame{
@@ -181,7 +180,7 @@ public class PlayerUI extends JFrame{
 
 	private void loadGames() {
 		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("P:e2:::e4","P:e7:#::e5"))));
-		final JPanel games = new GamesTable().getPanel();
+		final JPanel games = new Table().getPanel();
 		final RegisterGameUI form= new RegisterGameUI();
 		PlayerUI.centerPane.removeAll();
 		PlayerUI.centerPane.revalidate();
@@ -231,11 +230,14 @@ public class PlayerUI extends JFrame{
 		PlayerUI.centerPane.removeAll();
 		PlayerUI.centerPane.revalidate();
 		var wrapper = new JPanel();
-		wrapper.add(PlayerUI.searchBox);
-		wrapper.add(PlayerUI.launchSearch);
+		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
+		final SearchUI form= new SearchUI();
+		wrapper.add(form.getPanel());
+		wrapper.add(form.getBoard());
 		wrapper.setAlignmentX(CENTER_ALIGNMENT);
 		PlayerUI.centerPane.add(wrapper);
 		PlayerUI.centerPane.repaint();
+
 	}
 	
 	/** 
