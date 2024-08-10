@@ -64,6 +64,16 @@ public class Admin {
 			}
 		}
 		
+		public static boolean addLocation(Connection conn, String address, String description) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.ADD_LOCATION, address, description)) {
+				stmt.executeUpdate();
+				return true;
+			} catch (SQLException e) {
+				return false;
+				
+			}
+		}
+		
 		public static Optional<Admin> exists(Connection conn, String username, String password) {
 			try (var stmt = DAOUtils.prepare(conn, Queries.ADMIN_EXISTS, username, password)) {
 				var resultSet = stmt.executeQuery();

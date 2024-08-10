@@ -7,27 +7,26 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -37,13 +36,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
-import com.toedter.calendar.IDateEditor;
 import com.toedter.calendar.JDateChooser;
 
+import data.Location;
 import util.loaders.FontLoader;
 
 public class AdminUI extends JFrame {
@@ -54,6 +54,7 @@ public class AdminUI extends JFrame {
 	private static final double PADDING = 0.067;
 	private static final float TEXT_SIZE = 15,
 			TITLE_SIZE = 18;
+	private static boolean tournSection = false;
 	private static final JPanel panel = new JPanel(new BorderLayout()),
 			// centerPane represents the center section of pane
 			centerPane = new JPanel();
@@ -62,14 +63,19 @@ public class AdminUI extends JFrame {
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
 	private static final JMenuBar menu = new JMenuBar();
 	private static final JMenu search = new JMenu("Search"),
-			tourn = new JMenu("Post announce"),
+			tourn = new JMenu("Create tournament"),
+			locations = new JMenu("Add location"),
 			logout = new JMenu("Logout");
 	private static final JMenuItem searchPlayers = new JMenuItem("Search players"),
 			searchGames = new JMenuItem("Search games");
 	private static final JButton launchSearch = new JButton(new ImageIcon(AdminUI.class.getResource("/icons/magnifying-glass.png"))),
-			postAnnounce = new JButton("POST ANNOUNCE");
+			postAnnounce = new JButton("POST ANNOUNCE"),
+			addLocation = new JButton("ADD NEW LOCATION");
 	private static final JTextField searchBox = new JTextField("", 50),
-			address = new JTextField("", 30);
+			newAddress = new JTextField("", 50);
+	private static DefaultComboBoxModel<String> cbm = new DefaultComboBoxModel<>(new String[] {"---"});
+	private static final JComboBox<String> address = new JComboBox<>(AdminUI.cbm);
+	private static final JTextArea description = new JTextArea("", 4, 50);
 	//private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 	//private static final JFormattedTextField exprDate = new JFormattedTextField(df);
 	private static final JDateChooser exprDate = new JDateChooser(); 
@@ -109,36 +115,83 @@ public class AdminUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					var date = Optional.ofNullable(AdminUI.exprDate.getDate());
-					if (date.isEmpty()) {
-						AdminUI.minSubs.setValue(2);
-						AdminUI.maxSubs.setValue(32);
-						AdminUI.address.setText("");
-						JOptionPane.showMessageDialog(null, "A date must be set",
-								"Date Error", JOptionPane.ERROR_MESSAGE);
-					}
 				if((int) AdminUI.minSubs.getValue() <= (int) AdminUI.maxSubs.getValue() &&
-						AdminUI.exprDate.getDate().toInstant().atZone(ZoneId.systemDefault())
-						.toLocalDateTime().compareTo(LocalDateTime.now())>= 0 &&
-						!AdminUI.address.getText().equals("")) {
-					if(handler.apply(Map.of("address", AdminUI.address.getText(),
+						AdminUI.exprDate.getDate().compareTo(new Date()) >= 0 &&
+						!AdminUI.address.getSelectedItem().equals("---")) {
+					if(handler.apply(Map.of("address", AdminUI.address.getSelectedItem(),
 							"date", new java.sql.Date(AdminUI.exprDate.getDate().getTime()),
 							"min", (Integer)AdminUI.minSubs.getValue(),
 							"max", (Integer)AdminUI.maxSubs.getValue()))) {
-						AdminUI.minSubs.setValue(2);
-						AdminUI.maxSubs.setValue(32);
-						AdminUI.address.setText("");
 						JOptionPane.showMessageDialog(null, "Announce succesfully posted");
+					} else {
+						JOptionPane.showMessageDialog(null, "The announce can't be posted",
+								"Error occurred", JOptionPane.ERROR_MESSAGE);
 					}
+				} else {
 					JOptionPane.showMessageDialog(null, "Check the correct pattern of a post:\n"
-							+ "- address cannot be empty\n- date cannot be past\n"
-							+ "- min must be lower/equal than max subscribers"
-							+ "- subscribers number can only be integers", "Pattern errors",
+							+ "- address cannot be empty\n"
+							+ "- min must be lower/equal than max subscribers", "Pattern errors",
 							JOptionPane.ERROR_MESSAGE);
 				}
-				
+				AdminUI.minSubs.setValue(2);
+				AdminUI.maxSubs.setValue(32);
+				AdminUI.address.setSelectedIndex(-1);
 			}
 		});
+	}
+	
+	public void setLocationHandler(BiFunction<String, String, Boolean> handler) {
+		AdminUI.addLocation.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!AdminUI.newAddress.getText().equals("") &&
+						!Location.DAO.exists(AdminUI.newAddress.getText())) {
+					if(handler.apply(AdminUI.newAddress.getText(),
+							AdminUI.description.getText())) {
+						JOptionPane.showMessageDialog(null, "a new Location has been correctly added");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "An error occurred\n- The address field cannot"
+							+ "be empty\n- The current location may already exist", "Data error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				AdminUI.newAddress.setText("");
+				AdminUI.description.setText("");
+			}
+		});
+	}
+	
+	public void updateLocationHandler(Supplier<List<String>> handler) {
+		/*AdminUI.address.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {}
+
+			@Override
+			public void mousePressed(MouseEvent e) {}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				var choices = handler.get();
+				choices.add("---");
+				AdminUI.cbm.removeAllElements();
+				AdminUI.cbm.addAll(choices);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				var choices = handler.get();
+				choices.add("---");
+				AdminUI.cbm.removeAllElements();
+				AdminUI.cbm.addAll(choices);
+			}
+		});*/
+		var agent = new UpdateAgent(handler);
+		agent.start();
 	}
 	
 	private void initialize() {
@@ -147,6 +200,7 @@ public class AdminUI extends JFrame {
 			loadTournaments();
 			AdminUI.selected = Optional.of(tourn);
 			update();
+			AdminUI.tournSection = true;
 		});
 		setHandler(AdminUI.logout, () -> {
 			AdminUI.selected = Optional.of(AdminUI.logout);
@@ -157,6 +211,12 @@ public class AdminUI extends JFrame {
 				System.exit(0);
 			}
 		});
+		setHandler(AdminUI.locations, () -> {
+			loadLocations();
+			AdminUI.selected = Optional.of(AdminUI.locations);
+			update();
+			AdminUI.tournSection = false;
+		});
 		AdminUI.searchGames.addActionListener(new ActionListener() {
 
 			@Override
@@ -165,6 +225,7 @@ public class AdminUI extends JFrame {
 				loadSearch();
 				AdminUI.selected = Optional.of(search);
 				update();
+				AdminUI.tournSection = false;
 			}
 			
 		});
@@ -175,6 +236,7 @@ public class AdminUI extends JFrame {
 				loadSearch();
 				AdminUI.selected = Optional.of(search);
 				update();
+				AdminUI.tournSection = false;
 			}
 			
 		});
@@ -182,15 +244,9 @@ public class AdminUI extends JFrame {
 		AdminUI.exprDate.setPreferredSize(AdminUI.dateChooser);
 		AdminUI.exprDate.setDate(new Date());
 		AdminUI.exprDate.setMinSelectableDate(new Date());
-		JComponent editor = AdminUI.minSubs.getEditor();
-        JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
-        textField.setEditable(false);
-        editor = AdminUI.maxSubs.getEditor();
-        textField = ((JSpinner.DefaultEditor) editor).getTextField();
-        textField.setEditable(false);
-        var comp = (IDateEditor)AdminUI.exprDate.getDateEditor().getUiComponent();
-        ((Component) comp).setFocusable(false);
-		AdminUI.postAnnounce.setAlignmentX(Component.CENTER_ALIGNMENT);
+		((DefaultEditor) AdminUI.minSubs.getEditor()).getTextField().setEditable(false);
+		((DefaultEditor) AdminUI.maxSubs.getEditor()).getTextField().setEditable(false);
+        AdminUI.exprDate.getDateEditor().getUiComponent().setFocusable(false);
 		// adding every menu item to its corresponding menu
 		AdminUI.search.add(AdminUI.searchPlayers);
 		AdminUI.search.add(AdminUI.searchGames);
@@ -199,7 +255,7 @@ public class AdminUI extends JFrame {
 		// TODO il font non carica
 		AdminUI.defText.setFont(AdminUI.fontLoad.getTextFont().deriveFont(AdminUI.TEXT_SIZE));
 		// initializing northern panel
-		List.of(tourn, search, logout, searchPlayers, searchGames).stream()
+		List.of(tourn, locations, search, logout, searchPlayers, searchGames).stream()
 			.forEach(elem -> {
 				if (elem instanceof JMenu) {
 					AdminUI.menu.add(elem);
@@ -246,8 +302,28 @@ public class AdminUI extends JFrame {
 		AdminUI.centerPane.repaint();
 	}
 	
+	private void loadLocations() {
+		AdminUI.centerPane.removeAll();
+		AdminUI.centerPane.revalidate();
+		var address = wrapH(List.of(new JLabel("address"), AdminUI.newAddress));
+		var description = wrapH(List.of(new JLabel("description"), AdminUI.description));
+		var wrapper = new JPanel(new GridBagLayout());
+		var gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+		wrapper.setAlignmentY(Component.CENTER_ALIGNMENT);
+		var list = List.of(address, description, AdminUI.addLocation);
+			list.forEach(e -> {
+				e.setAlignmentX(CENTER_ALIGNMENT);
+				gbc.gridy = list.indexOf(e);
+				wrapper.add(e, gbc);
+			});
+		AdminUI.centerPane.add(wrapper);
+		AdminUI.centerPane.repaint();
+	}
+	
 	private void update() {
-		List.of(AdminUI.search, AdminUI.tourn).stream()
+		List.of(AdminUI.search, AdminUI.tourn, AdminUI.locations).stream()
 			.forEach(btn -> {
 				if(AdminUI.selected.equals(Optional.of(btn))) {
 					btn.setForeground(Color.BLUE);
@@ -316,5 +392,26 @@ public class AdminUI extends JFrame {
 			
 		});
 	}
-
+	private static class UpdateAgent extends Thread {
+		
+		private static Supplier<List<String>> handler;
+		
+		public UpdateAgent(Supplier<List<String>> handler) {
+			UpdateAgent.handler = handler;
+		}
+		
+		public void run() {
+			while(true) {
+				while (AdminUI.tournSection) {}
+				try {
+					var choices = handler.get();
+					choices.add("---");
+					AdminUI.cbm.removeAllElements();
+					AdminUI.cbm.addAll(choices);
+					TimeUnit.MILLISECONDS.sleep(500);
+				} catch (InterruptedException e) {
+				}
+			}
+		}
+	}
 }
