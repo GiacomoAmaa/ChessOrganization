@@ -4,8 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -13,25 +12,34 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.toedter.calendar.JDateChooser;
+
 public class SearchUI {
 	
 	private final JPanel panel = new JPanel(new GridLayout(0, 5));
-	private final GamesTable table = new GamesTable();
+	private final Table table = new Table();
 
     private static final JComboBox<String> searchType =
     		new JComboBox<>(new String[] {"Players", "Games"});
+    
+    private static final String[] players = {"Name:   ", "Surname:   "};
+    private static final String[] games = {"White:   ", "Black:   "};
+    
+    private static final JLabel label1 = new JLabel(players[0], SwingConstants.RIGHT),
+    		label2 = new JLabel(players[1], SwingConstants.RIGHT);
 
     private static final JTextField firstName = new JTextField(),
-    		secondName = new JTextField(), firstDate = new JTextField("dd/mm/yyyy"),
-    		secondDate = new JTextField("dd/mm/yyyy");
+    		secondName = new JTextField();
+	private static final JDateChooser firstDate = new JDateChooser(),
+			secondDate = new JDateChooser(); 
     
     private static final JButton searchButton = new JButton("Search");
     
     public SearchUI() {
         this.panel.add(searchType);
-        this.panel.add(new JLabel("Name:   ", SwingConstants.RIGHT));
+        this.panel.add(label1);
         this.panel.add(firstName);
-        this.panel.add(new JLabel("Surname:   ", SwingConstants.RIGHT));
+        this.panel.add(label2);
         this.panel.add(secondName);
         this.panel.add(new JLabel("Since:   ", SwingConstants.RIGHT));
         this.panel.add(firstDate);
@@ -42,22 +50,51 @@ public class SearchUI {
     }
 
     private void setupForm() {
-    	
-        searchButton.addActionListener(new ActionListener() {
+    	final Date today = new Date();
+    	SearchUI.secondDate.setMaxSelectableDate(today);
+    	SearchUI.secondDate.setDate(today);
+    	// TODO SearchUI.firstDate.setMinSelectableDate(today); da recuperare dal database
+        SearchUI.firstDate.getDateEditor().getUiComponent().setFocusable(false);       
+        SearchUI.secondDate.getDateEditor().getUiComponent().setFocusable(false);
+        SearchUI.firstDate.setEnabled(false);       
+        SearchUI.secondDate.setEnabled(false);
+        
+        searchType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
-                sdf.setLenient(false);
-                try {
-                    Date date1 = sdf.parse(firstDate.getText());
-                    Date date2 = sdf.parse(secondDate.getText());
-
-                } catch (ParseException ex) {
-
+            	String type = (String) searchType.getSelectedItem();
+                if(type.equals("Players")){
+                	label1.setText(players[0]);
+                	label2.setText(players[1]);
+                    SearchUI.firstDate.setEnabled(false);       
+                    SearchUI.secondDate.setEnabled(false);
+                    table.setTableModel(type);
+                } else {
+                	label1.setText(games[0]);
+                	label2.setText(games[1]);
+                    SearchUI.firstDate.setEnabled(true);       
+                    SearchUI.secondDate.setEnabled(true);
+                    table.setTableModel(type);
                 }
             }
         });
-
+        
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(searchType.getSelectedItem().equals("Players")){
+                    Object[][] data = {
+                            {false, "Player A","Player B", "Player A", "2023-05-20", "Torneo 1"},
+                            {false, "Player C","Player D", "Draw", "2023-06-10", "Torneo 2"},
+                            {false, "Player E","Player F", "Player F", "2023-07-15", "Torneo 3"},
+                        };
+                    table.addRows(data);
+                	//TODO chiama interfaccia con database e passa risultato query a table
+                } else {
+                	//TODO chiama interfaccia con database e passa risultato query a table
+                }
+            }
+        });
     }
     
 	public JPanel getPanel() {

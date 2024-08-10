@@ -174,7 +174,7 @@ public class PlayerUI extends JFrame{
 
 	private void loadGames() {
 		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("P:e2:::e4","P:e7:#::e5"))));
-		final JPanel games = new GamesTable().getPanel();
+		final JPanel games = new Table().getPanel();
 		final RegisterGameUI form= new RegisterGameUI();
 		PlayerUI.centerPane.removeAll();
 		PlayerUI.centerPane.revalidate();
