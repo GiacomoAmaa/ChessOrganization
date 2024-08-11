@@ -58,6 +58,15 @@ public class Announce {
 				throw new DAOException(e);
 			}
 		}
+		
+		public static boolean subscription(Connection conn, int idAnnounce, int playerId) {
+			try(var stmt = DAOUtils.prepare(conn, Queries.SUBSCRIPTION, idAnnounce, playerId)) {
+				stmt.executeUpdate();
+				return true;
+			} catch(SQLException e) {
+				return false;
+			}
+		}
 	}
 	
 }

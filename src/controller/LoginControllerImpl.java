@@ -28,7 +28,7 @@ public class LoginControllerImpl implements LoginController {
 			case ADMIN:	
 				var a = LoginControllerImpl.model.adminAttempt(data.get("username"), data.get("password"));
 				if(a.isPresent()) {
-					view.setVisible(false);
+					view.close();
 					new AdminControllerImpl(a.get());
 				} else {
 					LoginControllerImpl.view.Error();
@@ -37,7 +37,7 @@ public class LoginControllerImpl implements LoginController {
 			case PLAYER:
 				var p = LoginControllerImpl.model.playerAttempt(data.get("username"), data.get("password"));
 				if(p.isPresent()) {
-					view.setVisible(false);
+					view.close();
 					new PlayerControllerImpl(p.get());
 				} else {
 					LoginControllerImpl.view.Error();
@@ -46,7 +46,7 @@ public class LoginControllerImpl implements LoginController {
 			case REFEREE:
 				var r = LoginControllerImpl.model.refereeAttempt(data.get("username"), data.get("password"), data.get("code"));
 				if(r.isPresent()) {
-					view.setVisible(false);
+					view.close();
 					//new RefereeControllerImpl(r.get()); need to do a referee UI
 				} else {
 					LoginControllerImpl.view.Error();

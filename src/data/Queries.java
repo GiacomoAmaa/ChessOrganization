@@ -76,4 +76,14 @@ public class Queries {
 			"select * "
 			+ "from annunci "
 			+ "where DATE(scadenza) > " + Date.valueOf(LocalDate.now()).toString();
+	public static final String SUBSCRIPTION =
+			"insert into iscrizioni (idiscrizione, idannuncio,"
+			+ " idgiocatore, data) "
+			+ "values (NULL, ?, ?, "
+			+ Date.valueOf(LocalDate.now()).toString() + ")";
+	public static final String IS_PLAYER_SUBSCRIBED =
+			"select * "
+			+ "from iscrizioni "
+			+ "where idgiocatore = ?"
+			+ "and idannuncio = ?";
 }

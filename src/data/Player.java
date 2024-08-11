@@ -123,6 +123,7 @@ public final class Player {
 			try (var stmt = DAOUtils.prepare(conn, Queries.GET_ANNOUNCES)) {
 				var resultSet = stmt.executeQuery();
 				while(resultSet.next()) {
+					var id = Integer.toString(resultSet.getInt("idannuncio"));
 					var location = resultSet.getString("indirizzo");
 					var name = resultSet.getString("nome");
 					var date = ((Date)resultSet.getObject("scadenza")).toString();
@@ -135,9 +136,21 @@ public final class Player {
 					}
 					int max = resultSet.getInt("maxiscrizioni");
 					capacity += Integer.toString(max);
-					ret.add(List.of(name, location, date, capacity));
+					ret.add(List.of(name, location, date, capacity, id));
 				}
 				return ret;
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}
+		
+		public static boolean isSubscribed(Connection conn, int playerId, int idAnnounce) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.IS_PLAYER_SUBSCRIBED, playerId, idAnnounce)) {
+				var resultSet = stmt.executeQuery();
+				if(resultSet.next()) {
+					return true;
+				}
+				return false;
 			} catch (SQLException e) {
 				throw new DAOException(e);
 			}

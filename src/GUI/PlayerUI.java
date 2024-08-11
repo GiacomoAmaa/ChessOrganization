@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import controller.PlayerControllerImpl;
+import GUI.Table;
+import data.Announce;
 import util.loaders.FontLoader;
 
 public class PlayerUI extends JFrame{
@@ -104,6 +109,10 @@ public class PlayerUI extends JFrame{
 		});
 	}
 	
+	public void close() {
+		setVisible(false);
+	}
+	
 	private void initialize() {
 		// initializing components
 		setHandler(PlayerUI.games, () -> {
@@ -117,6 +126,7 @@ public class PlayerUI extends JFrame{
 			int dialogButton = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?","WARNING",JOptionPane.YES_NO_OPTION);
 
 			if(dialogButton == JOptionPane.YES_OPTION) {
+				close();
 				System.exit(0);
 			}
 		});
@@ -212,16 +222,20 @@ public class PlayerUI extends JFrame{
 	private void loadTournaments(List<List<String>> data) {
 		PlayerUI.centerPane.removeAll();
 		PlayerUI.centerPane.revalidate();
-		var dataArray = new Object [data.size()] [!data.isEmpty() ? data.get(0).size() : 0];
+		var dataArray = new ArrayList<List<String>>();
+		var keys = new ArrayList<String>();
 		if(!data.isEmpty()) {
 			data.stream().forEach(e -> {
-				e.stream().forEach(elem -> {
-					dataArray[data.indexOf(e)][e.indexOf(elem)] = elem;
-				});
+				dataArray.add(List.of(Arrays.copyOfRange(e.toArray(new String[4]), 0, 4)));
+				keys.add(e.get(4));
 			});
 		}
-		var table = new JTable(dataArray, new Object[] {"Name", "Location", "Date", "Capacity"});
-		var scroll = new JScrollPane(table);
+		var table = new Table(e -> {
+			return PlayerControllerImpl.isSub(e);
+		}, a -> {
+			return PlayerControllerImpl.subscribe(a);
+		}, dataArray, keys);
+		var scroll = new JScrollPane(table.getPanel());
 		PlayerUI.centerPane.add(scroll);
 		PlayerUI.centerPane.repaint();
 	}

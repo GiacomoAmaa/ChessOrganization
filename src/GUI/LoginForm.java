@@ -222,6 +222,11 @@ public class LoginForm extends JFrame {
 		return Map.of();
 	}
 	
+	public void close() {
+		LoginForm.agent.interrupt();
+		setVisible(false);
+	}
+	
 	/**
 	 * need a thread to refresh the GUI every time the type gets changed.
 	 */
