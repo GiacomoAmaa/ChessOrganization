@@ -190,7 +190,6 @@ public class PlayerUI extends JFrame{
 
 	private void loadGames() {
 		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("P:e2:::e4","P:e7:#::e5"))));
-		final JPanel games = new Table().getPanel();
 		final RegisterGameUI form= new RegisterGameUI();
 		PlayerUI.centerPane.removeAll();
 		PlayerUI.centerPane.revalidate();
@@ -222,22 +221,26 @@ public class PlayerUI extends JFrame{
 	private void loadTournaments(List<List<String>> data) {
 		PlayerUI.centerPane.removeAll();
 		PlayerUI.centerPane.revalidate();
-		var dataArray = new ArrayList<List<String>>();
+		var table = new Table("Announces");
+		/*var dataArray = new Object[data.size()][5];
 		var keys = new ArrayList<String>();
 		if(!data.isEmpty()) {
 			data.stream().forEach(e -> {
-				dataArray.add(List.of(Arrays.copyOfRange(e.toArray(new String[4]), 0, 4)));
-				keys.add(e.get(4));
+				e.stream().forEach(elem -> {
+					if(e.indexOf(elem) == 0) {
+						dataArray[data.inde 
+					}
+				});
 			});
-		}
-		var table = new Table(e -> {
-			return PlayerControllerImpl.isSub(e);
-		}, a -> {
-			return PlayerControllerImpl.subscribe(a);
-		}, dataArray, keys);
-		var scroll = new JScrollPane(table.getPanel());
-		PlayerUI.centerPane.add(scroll);
-		PlayerUI.centerPane.repaint();
+		}*/
+		Object[][] datA = {
+                {"Player A","Player Babidasyuvdasuyvdukfvfahvhkfhkvfkhuvfhasvfakoufebebvfskbvfjfvbejknjkrnbkjrbvkjfbrvkjebvjvvkbevbjjebrvjekvbofkewoiqwnownfoijbfuiwbjiewkbfewibuweufcbewufbewiufbewiu", "Player A", "2023-05-20"},
+                {"Player C","Player D", "Draw", "2023-06-10"},
+                {"Player E","Player F", "Player F", "2023-07-15"},
+            };
+		table.addRows(datA, false);
+		PlayerUI.centerPane.add(table.getPanel());
+		repaint();
 	}
 
 	private void loadSearch() {

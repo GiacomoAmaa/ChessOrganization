@@ -17,7 +17,7 @@ import com.toedter.calendar.JDateChooser;
 public class SearchUI {
 	
 	private final JPanel panel = new JPanel(new GridLayout(0, 5));
-	private final Table table = new Table();
+	private final Table table = new Table("");
 
     private static final JComboBox<String> searchType =
     		new JComboBox<>(new String[] {"Players", "Games"});
@@ -84,12 +84,12 @@ public class SearchUI {
             public void actionPerformed(ActionEvent e) {
                 if(searchType.getSelectedItem().equals("Players")){
                     Object[][] data = {
-                            {false, "Player A","Player B", "Player A", "2023-05-20", "Torneo 1"},
-                            {false, "Player C","Player D", "Draw", "2023-06-10", "Torneo 2"},
-                            {false, "Player E","Player F", "Player F", "2023-07-15", "Torneo 3"},
+                            {"Player A","Player B", "Player A", "2023-05-20", "Torneo 1"},
+                            {"Player C","Player D", "Draw", "2023-06-10", "Torneo 2"},
+                            {"Player E","Player F", "Player F", "2023-07-15", "Torneo 3"},
                         };
                     table.clearTable();
-                    table.addRows(data);
+                    table.addRows(data, false);
                 	//TODO chiama interfaccia con database e passa risultato query a table
                 } else {
                 	//TODO chiama interfaccia con database e passa risultato query a table
