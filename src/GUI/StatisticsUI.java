@@ -25,7 +25,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import board.Board;
 
-public class  StatisticsUI {
+public class  StatisticsUI implements UserInterface {
 	
 	private final JPanel stats = new JPanel(new GridLayout(0, 4));
 	private final JPanel chessBoard = new JPanel(new GridLayout(0, Board.BOARD_DIM));
@@ -128,12 +128,13 @@ public class  StatisticsUI {
         return dataset;
     }
 
-	public JPanel getGraphs() {
-		return this.graphs;
-	}
-
-	public JPanel getPanel() {
+	@Override
+	public JPanel getNorth() {
 		return this.stats;
 	}
 
+	@Override
+	public JPanel getCenter() {
+		return this.graphs;
+	}
 }

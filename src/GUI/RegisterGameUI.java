@@ -19,7 +19,7 @@ import util.Color;
 import util.MoveSymbols;
 import util.PieceType;
 
-public class RegisterGameUI {
+public class RegisterGameUI implements UserInterface {
 
 	private final JPanel panel = new JPanel(new GridLayout(0, 6));
 	private final Game game = new Game();
@@ -272,11 +272,13 @@ public class RegisterGameUI {
         playerLabel.setText(player.isWhite()? "White to play" : "Black to play");
     }
 
-	public JPanel getPanel() {
+	@Override
+	public JPanel getNorth() {
 		return panel;
 	}
 
-	public JPanel getBoard() {
+	@Override
+	public JPanel getCenter() {
 		return board.getBoard();
 	}
 }

@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 
 import com.toedter.calendar.JDateChooser;
 
-public class SearchUI {
+public class SearchUI implements UserInterface {
 	
 	private final JPanel panel = new JPanel(new GridLayout(0, 5));
 	private final Table table = new Table("");
@@ -97,13 +97,14 @@ public class SearchUI {
             }
         });
     }
-    
-	public JPanel getPanel() {
+
+	@Override
+	public JPanel getNorth() {
 		return panel;
 	}
 
-	public JPanel getBoard() {
+	@Override
+	public JPanel getCenter() {
 		return this.table.getPanel();
 	}
-
 }
