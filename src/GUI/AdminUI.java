@@ -63,11 +63,13 @@ public class AdminUI extends JFrame {
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
 	private static final JMenuBar menu = new JMenuBar();
 	private static final JMenu search = new JMenu("Search"),
-			tourn = new JMenu("Create tournament"),
+			tourn = new JMenu("Tournaments"),
 			locations = new JMenu("Add location"),
+			referee = new JMenu("Referees management"),
 			logout = new JMenu("Logout");
-	private static final JMenuItem searchPlayers = new JMenuItem("Search players"),
-			searchGames = new JMenuItem("Search games");
+	private static final JMenuItem post = new JMenuItem("Post announce"),
+			create = new JMenuItem("Create torunament"),
+			register = new JMenuItem("Register referee");
 	private static final JButton launchSearch = new JButton(new ImageIcon(AdminUI.class.getResource("/icons/magnifying-glass.png"))),
 			postAnnounce = new JButton("POST ANNOUNCE"),
 			addLocation = new JButton("ADD NEW LOCATION");
@@ -174,8 +176,8 @@ public class AdminUI extends JFrame {
 	
 	private void initialize() {
 		// initializing components
-		setHandler(AdminUI.tourn, () -> {
-			loadTournaments();
+		setHandler(AdminUI.post, () -> {
+			loadAnnounce();
 			AdminUI.selected = Optional.of(tourn);
 			update();
 			AdminUI.tournSection = true;
@@ -195,29 +197,9 @@ public class AdminUI extends JFrame {
 			update();
 			AdminUI.tournSection = false;
 		});
-		AdminUI.searchGames.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO should be a different method
-				loadSearch();
-				AdminUI.selected = Optional.of(search);
-				update();
-				AdminUI.tournSection = false;
-			}
-			
-		});
-		AdminUI.searchPlayers.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				loadSearch();
-				AdminUI.selected = Optional.of(search);
-				update();
-				AdminUI.tournSection = false;
-			}
-			
-		});
+		AdminUI.tourn.add(AdminUI.post);
+		AdminUI.tourn.add(AdminUI.create);
+		AdminUI.referee.add(AdminUI.register);
 		// making components not editable by keyboard
 		AdminUI.exprDate.setPreferredSize(AdminUI.dateChooser);
 		AdminUI.exprDate.setDate(new Date());
@@ -225,15 +207,12 @@ public class AdminUI extends JFrame {
 		((DefaultEditor) AdminUI.minSubs.getEditor()).getTextField().setEditable(false);
 		((DefaultEditor) AdminUI.maxSubs.getEditor()).getTextField().setEditable(false);
         AdminUI.exprDate.getDateEditor().getUiComponent().setFocusable(false);
-		// adding every menu item to its corresponding menu
-		AdminUI.search.add(AdminUI.searchPlayers);
-		AdminUI.search.add(AdminUI.searchGames);
 		// inserting centerPane into pane
 		AdminUI.panel.add(centerPane, BorderLayout.CENTER);
 		// TODO il font non carica
 		AdminUI.defText.setFont(AdminUI.fontLoad.getTextFont().deriveFont(AdminUI.TEXT_SIZE));
 		// initializing northern panel
-		List.of(tourn, locations, search, logout, searchPlayers, searchGames).stream()
+		List.of(tourn, locations, search, referee, logout, post, create, register).stream()
 			.forEach(elem -> {
 				if (elem instanceof JMenu) {
 					AdminUI.menu.add(elem);
@@ -247,7 +226,7 @@ public class AdminUI extends JFrame {
 		//UserUI.panel.add(board.getGui(), BorderLayout.CENTER);
 	}
 	
-	private void loadTournaments() {
+	private void loadAnnounce() {
 		AdminUI.centerPane.removeAll();
 		AdminUI.centerPane.revalidate();
 		var name = wrapH(List.of(new JLabel("name"), AdminUI.announceName));
