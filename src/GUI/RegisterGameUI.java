@@ -26,38 +26,38 @@ public class RegisterGameUI implements UserInterface {
 	private final BoardGUI board = new BoardGUI(game);
 
 	private static final String SEP = ":";
-    private static final JCheckBox captureCheck = new JCheckBox("Capture"),
+    private final JCheckBox captureCheck = new JCheckBox("Capture"),
     		castlingCheck = new JCheckBox("Castling"),
     		promotionCheck = new JCheckBox("Promotion"),
     		checkCheck  = new JCheckBox("Check"),
     		endgameCheck = new JCheckBox("Final Move");
 
-    private static final JLabel turnLabel = new JLabel(),
+    private final JLabel turnLabel = new JLabel(),
     		playerLabel = new JLabel();
-    private static final JComboBox<String> toField  = new JComboBox<>(Board.SQUARES),
+    private final JComboBox<String> toField  = new JComboBox<>(Board.SQUARES),
     		fromField = new JComboBox<>(Board.SQUARES),
     		castleField = new JComboBox<>(new String[] {"--", "Long", "Short"});
-    private static final JComboBox<PieceType>
+    private final JComboBox<PieceType>
     		attackingPieceField = new JComboBox<>(),
     		capturedPieceField = new JComboBox<>(),
     		promotedPieceField = new JComboBox<>();
-    private static final JComboBox<MoveSymbols>
+    private final JComboBox<MoveSymbols>
     		endgameField = new JComboBox<>();
     
-    private static final JButton submitMoveButton = new JButton("Submit Move"),
+    private final JButton submitMoveButton = new JButton("Submit Move"),
     		backButton = new JButton("Undo Move ");
     private int turn;
     private Color player;
 
     public RegisterGameUI() {
     	List.of(PieceType.UNKNOWN, PieceType.PAWN, PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN,PieceType.KING)
-    		.forEach( x -> RegisterGameUI.attackingPieceField.addItem(x));
+    		.forEach( x -> this.attackingPieceField.addItem(x));
     	List.of(PieceType.UNKNOWN, PieceType.PAWN, PieceType.KNIGHT, PieceType.BISHOP,	PieceType.ROOK, PieceType.QUEEN)
-    		.forEach( x -> RegisterGameUI.capturedPieceField.addItem(x));
+    		.forEach( x -> this.capturedPieceField.addItem(x));
     	List.of(PieceType.UNKNOWN, PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN)
-    		.forEach( x -> RegisterGameUI.promotedPieceField.addItem(x));
+    		.forEach( x -> this.promotedPieceField.addItem(x));
     	List.of(MoveSymbols.UNKNOWN, MoveSymbols.CHECKMATE, MoveSymbols.STALEMATE, MoveSymbols.DRAW, MoveSymbols.CONCEDE)
-		.forEach( x -> RegisterGameUI.endgameField.addItem(x));
+		.forEach( x -> this.endgameField.addItem(x));
     	this.turn = 1;
     	this.player = Color.WHITE;
     	setupForm();

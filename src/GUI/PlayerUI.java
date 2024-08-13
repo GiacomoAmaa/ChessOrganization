@@ -82,6 +82,7 @@ public class PlayerUI extends JFrame{
 		PlayerUI.games.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				PlayerUI.selected = Optional.of(PlayerUI.personal);
 				loadUI(new RegisterGameUI());
 				update();
 			}
@@ -90,6 +91,7 @@ public class PlayerUI extends JFrame{
 		PlayerUI.stats.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				PlayerUI.selected = Optional.of(PlayerUI.personal);
 				loadUI(new StatisticsUI());
 				update();
 			}
@@ -111,7 +113,7 @@ public class PlayerUI extends JFrame{
 				System.exit(0);
 			}
 		});
-
+		
 		// adding every menu item to its corresponding menu
 		PlayerUI.personal.add(PlayerUI.games);
 		PlayerUI.personal.add(PlayerUI.stats);
