@@ -3,6 +3,7 @@ package data;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +121,7 @@ public final class Player {
 		
 		public static List<List<String>> getAnnounces(Connection conn) {
 			var ret = new ArrayList<List<String>>();
-			try (var stmt = DAOUtils.prepare(conn, Queries.GET_ANNOUNCES)) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.GET_ANNOUNCES, Date.valueOf(LocalDate.now()))) {
 				var resultSet = stmt.executeQuery();
 				while(resultSet.next()) {
 					var id = Integer.toString(resultSet.getInt("idannuncio"));

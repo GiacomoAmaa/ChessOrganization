@@ -3,6 +3,7 @@ package data;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class Announce {
 	
@@ -60,10 +61,12 @@ public class Announce {
 		}
 		
 		public static boolean subscription(Connection conn, int idAnnounce, int playerId) {
-			try(var stmt = DAOUtils.prepare(conn, Queries.SUBSCRIPTION, idAnnounce, playerId)) {
+			try(var stmt = DAOUtils.prepare(conn, Queries.SUBSCRIPTION, idAnnounce, playerId, Date.valueOf(LocalDate.now()))) {
+				System.out.println(Date.valueOf(LocalDate.now()).toString());
 				stmt.executeUpdate();
 				return true;
 			} catch(SQLException e) {
+				e.printStackTrace();
 				return false;
 			}
 		}

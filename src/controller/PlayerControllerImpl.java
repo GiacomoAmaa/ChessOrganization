@@ -17,6 +17,10 @@ public class PlayerControllerImpl implements PlayerController{
 		PlayerControllerImpl.model = p;
 		view.setTournamentsHandler(() -> {
 			return tournaments();
+		}, id -> {
+			return isSub(id);
+		}, id -> {
+			return subscribe(id);
 		});
 	}
 	
@@ -25,7 +29,7 @@ public class PlayerControllerImpl implements PlayerController{
 	 * the player subscription in
 	 * @return true if the player is subscribed, false if not
 	 */
-	public static boolean isSub(int idAnnounce) {
+	private boolean isSub(int idAnnounce) {
 		return Player.DAO.isSubscribed(DBModel.getConnection(), model.getId(), idAnnounce);
 	}
 	
@@ -34,7 +38,7 @@ public class PlayerControllerImpl implements PlayerController{
 	 * @return true if the player has been succesfully subscribed,
 	 * false if an error occurred
 	 */
-	public static boolean subscribe(int idAnnounce) {
+	private boolean subscribe(int idAnnounce) {
 		return Announce.DAO.subscription(DBModel.getConnection(), idAnnounce, model.getId());
 		
 	}

@@ -3,10 +3,13 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.datatransfer.SystemFlavorMap;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -101,9 +104,10 @@ public class PlayerUI extends JFrame{
 		
 	}
 	
-	public void setTournamentsHandler(Supplier<List<List<String>>> handler) {
+	public void setTournamentsHandler(Supplier<List<List<String>>> handler, Function<Integer, Boolean> isSub,
+			Function<Integer, Boolean> subscribe) {
 		setHandler(PlayerUI.tourn, () -> {
-			loadTournaments(handler.get());
+			loadTournaments(handler.get(), isSub, subscribe);
 			PlayerUI.selected = Optional.of(tourn);
 			update();
 		});
@@ -218,27 +222,46 @@ public class PlayerUI extends JFrame{
 		//pack();
 	}
 	
-	private void loadTournaments(List<List<String>> data) {
+	private void loadTournaments(List<List<String>> data, Function<Integer, Boolean> isSub,
+			Function<Integer, Boolean> subscribe) {
 		PlayerUI.centerPane.removeAll();
 		PlayerUI.centerPane.revalidate();
 		var table = new Table("Announces");
-		/*var dataArray = new Object[data.size()][5];
-		var keys = new ArrayList<String>();
-		if(!data.isEmpty()) {
-			data.stream().forEach(e -> {
-				e.stream().forEach(elem -> {
-					if(e.indexOf(elem) == 0) {
-						dataArray[data.inde 
-					}
+		var keys = new ArrayList<Integer>();
+		if(data.size() != 0) {
+			var dataArray = new Object[data.size()][data.get(0).size()];
+				data.stream().forEach(e -> {
+					e.stream().forEach(elem -> {
+						if(e.indexOf(elem) != 4) {
+							dataArray[data.indexOf(e)][e.indexOf(elem)] = elem;
+						} else {
+							keys.add(Integer.valueOf(elem));
+						}
 				});
 			});
-		}*/
-		Object[][] datA = {
-                {"Player A","Player Babidasyuvdasuyvdukfvfahvhkfhkvfkhuvfhasvfakoufebebvfskbvfjfvbejknjkrnbkjrbvkjfbrvkjebvjvvkbevbjjebrvjekvbofkewoiqwnownfoijbfuiwbjiewkbfewibuweufcbewufbewiufbewiu", "Player A", "2023-05-20"},
-                {"Player C","Player D", "Draw", "2023-06-10"},
-                {"Player E","Player F", "Player F", "2023-07-15"},
-            };
-		table.addRows(datA, false);
+			table.addRows(dataArray, false);
+		}
+		var btn = table.getButton();
+		btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int index = table.getSelectedRowIndex();
+				if (index != -1) {
+					var subs = Integer.valueOf(data.get(index).get(3).split("/")[0]);
+					var max = Integer.valueOf(data.get(index).get(3).split("/")[1]);
+					if(!isSub.apply(keys.get(index)) && 
+							subs <  max) {
+						if (subscribe.apply(keys.get(index)))
+							JOptionPane.showMessageDialog(null, "You succesfully subscribed!");
+					} else {
+						JOptionPane.showMessageDialog(null, "The announce is already full, or you're"
+								+ " already subscribed", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+			
+		});
 		PlayerUI.centerPane.add(table.getPanel());
 		repaint();
 	}
