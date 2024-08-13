@@ -68,7 +68,7 @@ public class RefereeUI extends JFrame{
 				updateNavbar();
 				RefereeUI.centerPane.removeAll();
 				RefereeUI.centerPane.revalidate();
-				RefereeUI.centerPane.add(new RegisterGameUI().getPanel());
+				RefereeUI.centerPane.add(new RegisterGameUI().getNorth());
 				RefereeUI.centerPane.repaint();
 			}
 		});
