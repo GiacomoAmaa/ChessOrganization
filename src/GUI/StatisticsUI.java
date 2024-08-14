@@ -28,8 +28,8 @@ import board.Board;
 public class  StatisticsUI implements UserInterface {
 	
 	private final JPanel stats = new JPanel(new GridLayout(0, 4));
-	private final JPanel chessBoard = new JPanel(new GridLayout(0, Board.BOARD_DIM));
 	private final JPanel graphs = new JPanel();
+	private final JPanel chessBoard = new JPanel(new GridLayout(0, Board.BOARD_DIM));
 
 	
     private static final TreeMap<Double, Color> percentageColorMap = new TreeMap<Double, Color>( 
@@ -40,13 +40,13 @@ public class  StatisticsUI implements UserInterface {
     				Double.MAX_VALUE, new Color(139, 0, 0) // Rosso
     				));
 
-    private static final JComboBox<String> searchType =
+    private final JComboBox<String> searchType =
     		new JComboBox<>(new String[] {"HeatMap", "Elo"});
     
     private ChartPanel eloChart ;
 
     private List<JButton> squares = new LinkedList<>();
-    private static final JLabel name = new JLabel("Name:"),
+    private final JLabel name = new JLabel("Name:"),
     surname = new JLabel("Surname:"), gamesPlayed = new JLabel("Games Played:"),
     wlRatio = new JLabel("Win/Loss ratio:"), wlWhiteRatio = new JLabel("White pieces W/L:"),
     wlBlackRatio = new JLabel("Black pieces W/L:");
@@ -129,12 +129,13 @@ public class  StatisticsUI implements UserInterface {
     }
 
 	@Override
-	public JPanel getNorth() {
+	public JPanel getUpperPanel() {
 		return this.stats;
 	}
 
 	@Override
-	public JPanel getCenter() {
+	public JPanel getLowerPanel() {
 		return this.graphs;
 	}
+
 }

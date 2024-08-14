@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 
 import javax.swing.table.TableColumnModel;
 
-public class Table {
+public class Table implements UserInterface{
 	private static final String[] GAMES = {"Select", "White Player", "Black Player", "Winner",
 			"Date", "Tournament"};
 	private static final String[] PLAYERS = {"Select", "Name", "Surname", "Elo",
@@ -20,7 +20,9 @@ public class Table {
     private static final JButton confirm = new JButton("Confirm");
     private static final JButton subscribe = new JButton("Subscribe");
     
-	private final JPanel panel = new JPanel(new BorderLayout());
+	private JPanel northpanel = new JPanel(),
+			centerPanel =  new JPanel(new BorderLayout());
+	private boolean confirmed = false;
 	private List<String> ids = new ArrayList<>();
 	private String[] columns;
 	private String searchType;
@@ -39,20 +41,22 @@ public class Table {
     		setTableModel("Players");
     		break;
     	}
-    	
+
     	confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	int index = getSelectedRowIndex();
             	if (index != -1) {
-                	String id  = ids.get(index);
-                	if(searchType.equals("Players")) {
-                		System.out.println(id);
-                		// TODO use id and show player stats
-                	} else {
-                		// TODO use id and show game
-                		System.out.println(id);
-                	}
+                	UserInterface ui = searchType.equals("Players") ? new StatisticsUI() : new BoardGUI();
+                	northpanel.removeAll();
+                	northpanel.add(ui.getUpperPanel());
+                	northpanel.revalidate();
+                	northpanel.repaint();
+                	centerPanel.removeAll();
+                	centerPanel.add(ui.getLowerPanel());
+                	centerPanel.revalidate();
+                	centerPanel.repaint();
+                	
             	} else {
             		return;
             	}
@@ -60,7 +64,30 @@ public class Table {
             }
         });
     }
-    
+
+    public Table(UserInterface userInt , String type) {
+    	this(type);
+    	this.northpanel = userInt.getUpperPanel();
+
+    	confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	int index = getSelectedRowIndex();
+            	if (index != -1) {
+                	UserInterface ui = searchType.equals("Players") ? new StatisticsUI() : new BoardGUI();
+                	centerPanel.removeAll();
+                	centerPanel.add(ui.getLowerPanel());
+                	centerPanel.revalidate();
+                	centerPanel.repaint();
+                	
+            	} else {
+            		return;
+            	}
+
+            }
+        });
+    }
+
 	public void setTableModel(String searchType) {
     	this.searchType = searchType;
     	if(!searchType.equals("Announces"))
@@ -115,13 +142,13 @@ public class Table {
     }
 
 	private void resetPanel() {
-        this.panel.removeAll();
-        this.panel.add(table.getTableHeader(), BorderLayout.NORTH);
-        this.panel.add(table, BorderLayout.CENTER);
+        this.centerPanel.removeAll();
+        this.centerPanel.add(table.getTableHeader(), BorderLayout.NORTH);
+        this.centerPanel.add(table, BorderLayout.CENTER);
         if(searchType.equals("Announces")) {
-        	this.panel.add(subscribe, BorderLayout.SOUTH);
+        	this.centerPanel.add(subscribe, BorderLayout.SOUTH);
         } else {
-        	this.panel.add(confirm, BorderLayout.SOUTH);
+        	this.centerPanel.add(confirm, BorderLayout.SOUTH);
         }
     }
 
@@ -162,8 +189,14 @@ public class Table {
         tableModel.setRowCount(0);
     }
 
-	public JPanel getPanel() {
-		return panel;
+	@Override
+	public JPanel getUpperPanel() {
+		return this.northpanel;
+	}
+
+	@Override
+	public JPanel getLowerPanel() {
+		return this.centerPanel;
 	}
     
 }

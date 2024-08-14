@@ -15,33 +15,31 @@ import board.Tile;
 import util.Pair;
 import util.loaders.PieceLoader;
 
-public class BoardGUI {
+public class BoardGUI implements UserInterface{
 	//Panels
     private final JPanel chessBoard = new JPanel(new GridLayout(0, Board.BOARD_DIM));
-    private final JScrollPane rightSidebar = new JScrollPane();
-    private final JScrollPane leftSidebar = new JScrollPane();
-    private final JPanel footer = new JPanel(new GridLayout(1, 3));
+    private final JPanel footer = new JPanel(new GridLayout(0, 2));
 	//chessBoard
     private final PieceLoader images = new PieceLoader();
     private final Color lightGray = new Color(215, 215, 215);
     private final Color darkGray = new Color(140, 140, 140);
     private List<JButton> squares = new LinkedList<>();
-	//sidebar
-    private final DefaultListModel<String> whiteMoves = new DefaultListModel<>();
-    private final JList<String> whiteList = new JList<>(whiteMoves);
-    private final DefaultListModel<String> blackMoves = new DefaultListModel<>();
-    private final JList<String> blackList = new JList<>(blackMoves);
 	//footer
     JButton prevMoveButton = new JButton("Previous Move");
     JButton nextMoveButton = new JButton("Next Move");
-    JButton backButton = new JButton("Back");
     //util
 	private final Game game;
 
     public BoardGUI(Game game) {
     	this.game = game;
         initializeChessBoard();
-        initializeSidebars();
+        initializeFooter();
+    }
+
+    public BoardGUI() {
+    	//TODO get game from database
+    	this.game = new Game();
+        initializeChessBoard();
         initializeFooter();
     }
 
@@ -67,15 +65,6 @@ public class BoardGUI {
         }
     }
 
-	private void initializeSidebars() {
-		for(Pair<String,String> turn : this.game.getMoves()){
-			whiteMoves.addElement(turn.getX());
-			blackMoves.addElement(turn.getY());
-		}
-		this.leftSidebar.add(whiteList);
-		this.rightSidebar.add(blackList);
-	}
-
     private void initializeFooter() {
    	 prevMoveButton.addActionListener(new ActionListener() {
 			@Override
@@ -93,15 +82,8 @@ public class BoardGUI {
 			}
         });
 
-        backButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-			}
-        });
         this.footer.add(this.prevMoveButton);
         this.footer.add(this.nextMoveButton);
-        this.footer.add(this.backButton);
 	}
 
     public final void displayMove() {
@@ -117,20 +99,13 @@ public class BoardGUI {
         }
     }
 
-    public final JPanel getBoard() {
-        return chessBoard;
-    }
-
-	public JScrollPane getRightSidebar() {
-		return rightSidebar;
+	@Override
+	public JPanel getUpperPanel() {
+		return chessBoard;
 	}
 
-	public JScrollPane getLeftSidebar() {
-		return leftSidebar;
-	}
-
-	public JPanel getFooter() {
+	@Override
+	public JPanel getLowerPanel() {
 		return footer;
-	}
-    
+	}   
 }

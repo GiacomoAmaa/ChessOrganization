@@ -83,7 +83,7 @@ public class PlayerUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlayerUI.selected = Optional.of(PlayerUI.personal);
-				loadUI(new RegisterGameUI());
+				loadUI(new MyGamesUI());
 				update();
 			}
 		});
@@ -131,8 +131,6 @@ public class PlayerUI extends JFrame{
 		PlayerUI.panel.add(PlayerUI.menu, BorderLayout.NORTH);
 		// initializing center panel
 		PlayerUI.centerPane.add(wrapV(List.of(PlayerUI.defText, new JLabel(PlayerUI.defIcon))), BorderLayout.CENTER);
-		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("",""))));
-		//UserUI.panel.add(board.getGui(), BorderLayout.CENTER);
 	}
 	
 	private void update() {
@@ -153,8 +151,8 @@ public class PlayerUI extends JFrame{
 		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
 		wrapper.setAlignmentX(CENTER_ALIGNMENT);
 		wrapper.setAlignmentY(CENTER_ALIGNMENT);
-		wrapper.add(ui.getNorth());
-		wrapper.add(ui.getCenter());
+		wrapper.add(ui.getUpperPanel());
+		wrapper.add(ui.getLowerPanel());
 		PlayerUI.centerPane.add(wrapper);
 		PlayerUI.centerPane.repaint();
 	}
@@ -200,7 +198,7 @@ public class PlayerUI extends JFrame{
 			}
 			
 		});
-		PlayerUI.centerPane.add(table.getPanel());
+		PlayerUI.centerPane.add(table.getLowerPanel());
 		repaint();
 	}
 	
