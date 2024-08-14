@@ -1,8 +1,6 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,7 +9,7 @@ import javax.swing.table.DefaultTableModel;
 
 import javax.swing.table.TableColumnModel;
 
-public class Table implements UserInterface{
+public class Table {
 	private static final String[] GAMES = {"Select", "White Player", "Black Player", "Winner",
 			"Date", "Tournament"};
 	private static final String[] PLAYERS = {"Select", "Name", "Surname", "Elo",
@@ -20,9 +18,7 @@ public class Table implements UserInterface{
     private static final JButton confirm = new JButton("Confirm");
     private static final JButton subscribe = new JButton("Subscribe");
     
-	private JPanel northpanel = new JPanel(),
-			centerPanel =  new JPanel(new BorderLayout());
-	private boolean confirmed = false;
+	private final JPanel panel =  new JPanel(new BorderLayout());
 	private List<String> ids = new ArrayList<>();
 	private String[] columns;
 	private String searchType;
@@ -41,52 +37,9 @@ public class Table implements UserInterface{
     		setTableModel("Players");
     		break;
     	}
-
-    	confirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	int index = getSelectedRowIndex();
-            	if (index != -1) {
-                	UserInterface ui = searchType.equals("Players") ? new StatisticsUI() : new BoardGUI();
-                	northpanel.removeAll();
-                	northpanel.add(ui.getUpperPanel());
-                	northpanel.revalidate();
-                	northpanel.repaint();
-                	centerPanel.removeAll();
-                	centerPanel.add(ui.getLowerPanel());
-                	centerPanel.revalidate();
-                	centerPanel.repaint();
-                	
-            	} else {
-            		return;
-            	}
-
-            }
-        });
+    	
     }
 
-    public Table(UserInterface userInt , String type) {
-    	this(type);
-    	this.northpanel = userInt.getUpperPanel();
-
-    	confirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	int index = getSelectedRowIndex();
-            	if (index != -1) {
-                	UserInterface ui = searchType.equals("Players") ? new StatisticsUI() : new BoardGUI();
-                	centerPanel.removeAll();
-                	centerPanel.add(ui.getLowerPanel());
-                	centerPanel.revalidate();
-                	centerPanel.repaint();
-                	
-            	} else {
-            		return;
-            	}
-
-            }
-        });
-    }
 
 	public void setTableModel(String searchType) {
     	this.searchType = searchType;
@@ -142,13 +95,13 @@ public class Table implements UserInterface{
     }
 
 	private void resetPanel() {
-        this.centerPanel.removeAll();
-        this.centerPanel.add(table.getTableHeader(), BorderLayout.NORTH);
-        this.centerPanel.add(table, BorderLayout.CENTER);
+        this.panel.removeAll();
+        this.panel.add(table.getTableHeader(), BorderLayout.NORTH);
+        this.panel.add(table, BorderLayout.CENTER);
         if(searchType.equals("Announces")) {
-        	this.centerPanel.add(subscribe, BorderLayout.SOUTH);
+        	this.panel.add(subscribe, BorderLayout.SOUTH);
         } else {
-        	this.centerPanel.add(confirm, BorderLayout.SOUTH);
+        	this.panel.add(confirm, BorderLayout.SOUTH);
         }
     }
 
@@ -160,6 +113,11 @@ public class Table implements UserInterface{
             }
         }
         return -1; // Return -1 if no row is selected
+    }
+
+    // Method to get the index of the selected row
+    public String getSearchType() {
+        return this.searchType;
     }
     
     public JButton getButton() {
@@ -189,14 +147,8 @@ public class Table implements UserInterface{
         tableModel.setRowCount(0);
     }
 
-	@Override
-	public JPanel getUpperPanel() {
-		return this.northpanel;
-	}
-
-	@Override
 	public JPanel getLowerPanel() {
-		return this.centerPanel;
+		return this.panel;
 	}
     
 }

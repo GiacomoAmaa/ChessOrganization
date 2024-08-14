@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +17,7 @@ import com.toedter.calendar.JDateChooser;
 
 public class MyGamesUI implements UserInterface {
 	private final JPanel panel = new JPanel(new GridLayout(0, 4));
-	private final Table table = new Table(this, "Games");
+	private final Table table = new Table("Games");
     
     private final JLabel label1 = new JLabel("Black:   ", SwingConstants.CENTER),
     		label2 = new JLabel("White:   ", SwingConstants.CENTER);
@@ -56,6 +57,29 @@ public class MyGamesUI implements UserInterface {
                     };
                 table.clearTable();
                 table.addRows(data, false);
+            }
+        });
+        
+    	this.table.getButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	int index = table.getSelectedRowIndex();
+            	if (index != -1) {
+                	UserInterface ui = table.getSearchType().equals("Players") ? new StatisticsUI() : new BoardGUI();
+                	panel.removeAll();
+                	panel.setLayout(new FlowLayout());
+                	panel.add(ui.getUpperPanel());
+                	table.getLowerPanel().removeAll();
+                	table.getLowerPanel().add(ui.getLowerPanel());
+                	table.getLowerPanel().revalidate();
+                	table.getLowerPanel().repaint();
+                	panel.revalidate();
+                	panel.repaint();
+
+            	} else {
+            		return;
+            	}
+
             }
         });
     }
