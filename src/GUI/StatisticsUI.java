@@ -27,7 +27,8 @@ import board.Board;
 
 public class  StatisticsUI implements UserInterface {
 	
-	private final JPanel stats = new JPanel(new GridLayout(0, 4));
+	private final Dimension formSize = new Dimension(624, 85);
+	private final JPanel stats = new JPanel(new GridLayout(0, 2));
 	private final JPanel graphs = new JPanel();
 	private final JPanel chessBoard = new JPanel(new GridLayout(0, Board.BOARD_DIM));
 
@@ -64,6 +65,7 @@ public class  StatisticsUI implements UserInterface {
     }
     
     private void setup() {
+    	this.stats.setPreferredSize(formSize);
     	initHeatMap();
     	initCharts();
         searchType.addActionListener(new ActionListener() {

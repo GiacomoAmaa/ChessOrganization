@@ -1,14 +1,11 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +36,6 @@ public class LoginForm extends JFrame {
 			RENDER = 50;
 	private static final int MAX_LENGTH = 30;
 	private static final int FONT_SIZE = 36;
-	private static final int ERROR_SIZE = 15;
 	private static final JPanel panel = new JPanel(new BorderLayout());
 	private static final JLabel title = new JLabel("Chess Org");
 	private static final JTextField username = new JTextField(LoginForm.MAX_LENGTH),

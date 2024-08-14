@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -110,13 +109,14 @@ public class SearchUI implements UserInterface {
             	int index = table.getSelectedRowIndex();
             	if (index != -1) {
                 	UserInterface ui = table.getSearchType().equals("Players") ? new StatisticsUI() : new BoardGUI();
-                	panel.removeAll();
-                	panel.setLayout(new FlowLayout());
-                	panel.add(ui.getUpperPanel());
+
                 	table.getLowerPanel().removeAll();
                 	table.getLowerPanel().add(ui.getLowerPanel());
                 	table.getLowerPanel().revalidate();
                 	table.getLowerPanel().repaint();
+                	panel.removeAll();
+                	panel.setLayout(new FlowLayout());
+                	panel.add(ui.getUpperPanel());
                 	panel.revalidate();
                 	panel.repaint();
 

@@ -14,7 +14,8 @@ import data.Location;
 
 public class LocationUI implements UserInterface {
 	
-	private final JPanel north = new JPanel();
+	private final JPanel north = new JPanel(),
+			center = new JPanel();
 	
 	private final JButton addLocation = new JButton("ADD NEW LOCATION");
 	
@@ -50,13 +51,13 @@ public class LocationUI implements UserInterface {
 	}
 
 	@Override
-	public JPanel getNorth() {
+	public JPanel getUpperPanel() {
 		return this.north;
 	}
 
 	@Override
-	public JPanel getCenter() {
-		return new JPanel();
+	public JPanel getLowerPanel() {
+		return this.center;
 	}
 
 }
