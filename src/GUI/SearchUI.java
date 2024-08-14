@@ -16,24 +16,24 @@ import com.toedter.calendar.JDateChooser;
 
 public class SearchUI implements UserInterface {
 	
-	private final JPanel panel = new JPanel(new GridLayout(0, 5));
-	private final Table table = new Table("");
+	public final JPanel panel = new JPanel(new GridLayout(0, 5));
+	private final Table table = new Table(this, "");
 
-    private static final JComboBox<String> searchType =
+    private final JComboBox<String> searchType =
     		new JComboBox<>(new String[] {"Players", "Games"});
     
     private static final String[] players = {"Name:   ", "Surname:   "};
     private static final String[] games = {"White:   ", "Black:   "};
     
-    private static final JLabel label1 = new JLabel(players[0], SwingConstants.RIGHT),
+    private final JLabel label1 = new JLabel(players[0], SwingConstants.RIGHT),
     		label2 = new JLabel(players[1], SwingConstants.RIGHT);
 
-    private static final JTextField firstName = new JTextField(),
+    private final JTextField firstName = new JTextField(),
     		secondName = new JTextField();
-	private static final JDateChooser firstDate = new JDateChooser(),
+	private final JDateChooser firstDate = new JDateChooser(),
 			secondDate = new JDateChooser(); 
     
-    private static final JButton searchButton = new JButton("Search");
+    private final JButton searchButton = new JButton("Search");
     
     public SearchUI() {
         this.panel.add(searchType);
@@ -51,13 +51,13 @@ public class SearchUI implements UserInterface {
 
     private void setupForm() {
     	final Date today = new Date();
-    	SearchUI.secondDate.setMaxSelectableDate(today);
-    	SearchUI.secondDate.setDate(today);
+    	this.secondDate.setMaxSelectableDate(today);
+    	this.secondDate.setDate(today);
     	// TODO SearchUI.firstDate.setMinSelectableDate(today); da recuperare dal database
-        SearchUI.firstDate.getDateEditor().getUiComponent().setFocusable(false);       
-        SearchUI.secondDate.getDateEditor().getUiComponent().setFocusable(false);
-        SearchUI.firstDate.setEnabled(false);       
-        SearchUI.secondDate.setEnabled(false);
+    	this.firstDate.getDateEditor().getUiComponent().setFocusable(false);       
+    	this.secondDate.getDateEditor().getUiComponent().setFocusable(false);
+    	this.firstDate.setEnabled(false);       
+    	this.secondDate.setEnabled(false);
         
         searchType.addActionListener(new ActionListener() {
             @Override
@@ -66,14 +66,14 @@ public class SearchUI implements UserInterface {
                 if(type.equals("Players")){
                 	label1.setText(players[0]);
                 	label2.setText(players[1]);
-                    SearchUI.firstDate.setEnabled(false);       
-                    SearchUI.secondDate.setEnabled(false);
+                	firstDate.setEnabled(false);       
+                	secondDate.setEnabled(false);
                     table.setTableModel(type);
                 } else {
                 	label1.setText(games[0]);
                 	label2.setText(games[1]);
-                    SearchUI.firstDate.setEnabled(true);       
-                    SearchUI.secondDate.setEnabled(true);
+                	firstDate.setEnabled(true);       
+                	secondDate.setEnabled(true);
                     table.setTableModel(type);
                 }
             }
@@ -84,6 +84,14 @@ public class SearchUI implements UserInterface {
             public void actionPerformed(ActionEvent e) {
                 if(searchType.getSelectedItem().equals("Players")){
                     Object[][] data = {
+                            {"Anatoly","Karpov", "2850", "10000", "80%"},
+                            {"Gary","Kasparov", "2860", "10000", "81%"}
+                        };
+                    table.clearTable();
+                    table.addRows(data, false);
+                	//TODO chiama interfaccia con database e passa risultato query a table
+                } else {
+                    Object[][] data = {
                             {"Player A","Player B", "Player A", "2023-05-20", "Torneo 1"},
                             {"Player C","Player D", "Draw", "2023-06-10", "Torneo 2"},
                             {"Player E","Player F", "Player F", "2023-07-15", "Torneo 3"},
@@ -91,20 +99,18 @@ public class SearchUI implements UserInterface {
                     table.clearTable();
                     table.addRows(data, false);
                 	//TODO chiama interfaccia con database e passa risultato query a table
-                } else {
-                	//TODO chiama interfaccia con database e passa risultato query a table
                 }
             }
         });
     }
 
 	@Override
-	public JPanel getNorth() {
-		return panel;
+	public JPanel getUpperPanel() {
+		return this.panel;
 	}
 
 	@Override
-	public JPanel getCenter() {
-		return this.table.getPanel();
+	public JPanel getLowerPanel() {
+		return this.table.getLowerPanel();
 	}
 }

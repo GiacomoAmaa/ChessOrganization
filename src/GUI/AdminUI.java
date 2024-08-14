@@ -195,8 +195,8 @@ public class AdminUI extends JFrame {
 		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
 		wrapper.setAlignmentX(CENTER_ALIGNMENT);
 		wrapper.setAlignmentY(CENTER_ALIGNMENT);
-		wrapper.add(ui.getNorth());
-		wrapper.add(ui.getCenter());
+		wrapper.add(ui.getUpperPanel());
+		wrapper.add(ui.getLowerPanel());
 		AdminUI.centerPane.add(wrapper);
 		AdminUI.centerPane.repaint();
 	}

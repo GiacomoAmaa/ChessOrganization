@@ -121,12 +121,12 @@ public class AnnounceUI implements UserInterface {
 	}
 	
 	@Override
-	public JPanel getNorth() {
+	public JPanel getUpperPanel() {
 		return this.north;
 	}
 
 	@Override
-	public JPanel getCenter() {
+	public JPanel getLowerPanel() {
 		return new JPanel(); 
 	}
 

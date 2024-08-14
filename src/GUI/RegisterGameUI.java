@@ -21,7 +21,7 @@ import util.PieceType;
 
 public class RegisterGameUI implements UserInterface {
 
-	private final JPanel panel = new JPanel(new GridLayout(0, 6));
+	private JPanel panel = new JPanel(new GridLayout(0, 6));
 	private final Game game = new Game();
 	private final BoardGUI board = new BoardGUI(game);
 
@@ -273,12 +273,12 @@ public class RegisterGameUI implements UserInterface {
     }
 
 	@Override
-	public JPanel getNorth() {
+	public JPanel getUpperPanel() {
 		return panel;
 	}
 
 	@Override
-	public JPanel getCenter() {
-		return board.getBoard();
+	public JPanel getLowerPanel() {
+		return board.getUpperPanel();
 	}
 }
