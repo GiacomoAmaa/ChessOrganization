@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`partite` (
     `codpartita` INT NOT NULL AUTO_INCREMENT,
     `codtorneo` INT NOT NULL, -- da eliminare livello
     `data` DATE NOT NULL,
-    `vincitore` VARCHAR(20) NOT NULL CHECK(`vincitore` IN ('Bianco', 'Nero')),
+    `vincitore` VARCHAR(20) CHECK(`vincitore` IN ('Bianco', 'Nero', 'Pari')),
     PRIMARY KEY (`codpartita`),
     FOREIGN KEY (`codtorneo`) REFERENCES `ChessOrg`.`tornei` (`codtorneo`))
 ENGINE = InnoDB;

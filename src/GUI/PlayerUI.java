@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import util.UserType;
 import util.loaders.FontLoader;
 
 public class PlayerUI extends JFrame{
@@ -83,7 +84,7 @@ public class PlayerUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlayerUI.selected = Optional.of(PlayerUI.personal);
-				loadUI(new MyGamesUI());
+				loadUI(new MyGamesUI(UserType.PLAYER));
 				update();
 			}
 		});

@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import util.UserType;
 import util.loaders.FontLoader;
 
 public class RefereeUI extends JFrame{
@@ -39,9 +40,8 @@ public class RefereeUI extends JFrame{
 	private static final JLabel defText = new JLabel("Welcome to Chess Org");
 
 	private static final JMenuBar menu = new JMenuBar();
-	private static final JMenu designations = new JMenu("Designations"),
-			search = new JMenu("Search"),
-			games = new JMenu("My Games"),
+	private static final JMenu search = new JMenu("Search"),
+			designations = new JMenu("My Designations"),
 			logout = new JMenu("Logout");
 
 	private static final FontLoader fontLoad = new FontLoader();
@@ -72,6 +72,13 @@ public class RefereeUI extends JFrame{
 			update();
 		});
 
+		setHandler(RefereeUI.designations, () -> {
+			loadUI(new MyGamesUI(UserType.REFEREE));
+			RefereeUI.selected = Optional.of(RefereeUI.search);
+			update();
+		});
+
+
 		setHandler(RefereeUI.logout, () -> {
 			RefereeUI.selected = Optional.of(RefereeUI.logout);
 			update();
@@ -87,7 +94,7 @@ public class RefereeUI extends JFrame{
 		RefereeUI.panel.add(centerPane, BorderLayout.CENTER);
 		RefereeUI.defText.setFont(RefereeUI.fontLoad.getTextFont().deriveFont(RefereeUI.TEXT_SIZE));
 		// initializing northern panel
-		List.of(designations, games, search, logout).stream()
+		List.of(designations, search, logout).stream()
 			.forEach(elem -> {
 				if (elem instanceof JMenu) {
 					RefereeUI.menu.add(elem);
@@ -100,7 +107,7 @@ public class RefereeUI extends JFrame{
 	}
 	
 	private void update() {
-		List.of(RefereeUI.designations, RefereeUI.search, RefereeUI.games).stream()
+		List.of(RefereeUI.designations, RefereeUI.search).stream()
 			.forEach(btn -> {
 				if(RefereeUI.selected.equals(Optional.of(btn))) {
 					btn.setForeground(Color.BLUE);

@@ -15,6 +15,8 @@ import javax.swing.SwingConstants;
 
 import com.toedter.calendar.JDateChooser;
 
+import util.UserType;
+
 public class MyGamesUI implements UserInterface {
 	private final JPanel panel = new JPanel(new GridLayout(0, 4));
 	private final Table table = new Table("Games");
@@ -28,7 +30,7 @@ public class MyGamesUI implements UserInterface {
     
     private final JButton searchButton = new JButton("Search");
     
-    public MyGamesUI() {
+    public MyGamesUI(UserType user) {
         this.panel.add(label1);
         this.panel.add(firstName);
         this.panel.add(label2);
@@ -37,10 +39,10 @@ public class MyGamesUI implements UserInterface {
         this.panel.add(firstDate);
         this.panel.add(new JLabel(""));
         this.panel.add(searchButton);
-    	setupForm();
+    	setupForm(user);
     }
 
-    private void setupForm() {
+    private void setupForm(UserType user) {
     	final Date today = new Date();
     	this.firstDate.setMaxSelectableDate(today);
     	this.firstDate.setDate(today);
@@ -59,13 +61,18 @@ public class MyGamesUI implements UserInterface {
                 table.addRows(data, false);
             }
         });
-        
+
     	this.table.getButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	int index = table.getSelectedRowIndex();
             	if (index != -1) {
-                	UserInterface ui = table.getSearchType().equals("Players") ? new StatisticsUI() : new BoardGUI();
+            		UserInterface ui ;
+            		if (user.equals(UserType.PLAYER)) {
+            			ui = table.getSearchType().equals("Players") ? new StatisticsUI() : new BoardGUI();
+            		} else {
+            			ui = new RegisterGameUI();
+            		}
                 	panel.removeAll();
                 	panel.setLayout(new FlowLayout());
                 	panel.add(ui.getUpperPanel());
