@@ -145,6 +145,7 @@ public class LoginForm extends JFrame {
 		List.of(LoginForm.name, LoginForm.lastname, LoginForm.cf).stream().forEach((text) -> {
 			new TextPrompt("just for registration", text);
 		});
+		new TextPrompt("----", LoginForm.cardNumber);
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		centerPanel.add(wrap(List.of(new JLabel("submit as\t"), LoginForm.role)));
 		centerPanel.add(wrapH(List.of(new JLabel("name\t"), LoginForm.name)));
@@ -187,7 +188,8 @@ public class LoginForm extends JFrame {
 	private static void updateType() {
 		var selectedType = (UserType)LoginForm.role.getSelectedItem();
 		LoginForm.cardNumber.setEnabled(selectedType.equals(UserType.REFEREE));
-		LoginForm.cardNumber.setText(selectedType.equals(UserType.REFEREE) ? "" : "----");
+		if (!selectedType.equals(UserType.REFEREE))
+			LoginForm.cardNumber.setText("");
 		LoginForm.register.setEnabled(selectedType.equals(UserType.PLAYER));
 		LoginForm.name.setEnabled(selectedType.equals(UserType.PLAYER));
 		LoginForm.lastname.setEnabled(selectedType.equals(UserType.PLAYER));

@@ -44,7 +44,7 @@ public class LoginControllerImpl implements LoginController {
 				}
 				break;
 			case REFEREE:
-				var r = LoginControllerImpl.model.refereeAttempt(data.get("username"), data.get("password"), data.get("code"));
+				var r = LoginControllerImpl.model.refereeAttempt(data.get("username"), data.get("password"), data.get("cardNumber"));
 				if(r.isPresent()) {
 					view.close();
 					//new RefereeControllerImpl(r.get()); need to do a referee UI
