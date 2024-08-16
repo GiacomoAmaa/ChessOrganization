@@ -21,6 +21,10 @@ public class AdminControllerImpl implements AdminController{
 					(Date)map.get("date"), (Integer)map.get("max"),
 					(Integer)map.get("min"));
 		});
+		view.setAddRefereeHandler(map -> {
+			return addReferee(map.get("name"), map.get("lastname"), map.get("cf"),
+					map.get("username"), map.get("password"), map.get("address"));
+		});
 		view.setLocationHandler((add, desc) -> {
 			return addLocation(add, desc);
 		});
@@ -45,6 +49,11 @@ public class AdminControllerImpl implements AdminController{
 	public boolean postAnnounce(String name, String address, Date expiringDate, int maxSubs, int minSubs) {
 		return Admin.DAO.postAnnounce(DBModel.getConnection(), name, address, expiringDate,
 			maxSubs, minSubs, model.getIdAdmin());
+	}
+	
+	public int addReferee(String name, String lastname, String cf,
+				String username, String password, String address) {
+		return Admin.DAO.addReferee(DBModel.getConnection(), name, lastname, cf, username, password, address);
 	}
 	
 	public boolean addLocation(String address, String description) {

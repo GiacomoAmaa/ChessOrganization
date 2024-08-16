@@ -85,4 +85,17 @@ public class Queries {
 			+ "from iscrizioni "
 			+ "where idgiocatore = ? "
 			+ "and idannuncio = ?";
+	public static final String ADD_REFEREE =
+			"insert into arbitri (numtessera, nome, cognome, cf, "
+			+ "username, password) "
+			+ "values (NULL, ?, ?, ?, ?, ?)";
+	public static final String REF_GET_ID =
+			"select numtessera "
+			+ "from arbitri "
+			+ "where username = ? "
+			+ "and password = ?";
+	public static final String ASSIGN_REF =
+			"insert into gestione "
+			+ "(indirizzo, numtessera) "
+			+ "values (?, ?)";
 }

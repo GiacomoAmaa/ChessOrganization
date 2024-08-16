@@ -74,6 +74,22 @@ public class Admin {
 			}
 		}
 		
+		public static int addReferee(Connection conn, String name, String lastname, String cf,
+				String username, String password, String address) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.ADD_REFEREE, name, lastname, cf, username, password)) {
+				stmt.executeUpdate();
+				int id = Referee.DAO.getId(conn, username, password);
+				var stmt1 = DAOUtils.prepare(conn, Queries.ASSIGN_REF, address, id);
+				stmt1.executeUpdate();
+				stmt1.close();
+				return id;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return -1;
+			} finally {
+			}
+		}
+		
 		public static Optional<Admin> exists(Connection conn, String username, String password) {
 			try (var stmt = DAOUtils.prepare(conn, Queries.ADMIN_EXISTS, username, password)) {
 				var resultSet = stmt.executeQuery();

@@ -53,6 +53,18 @@ public final static class DAO {
 			return null;
 		}
 		
+		public static int getId(Connection conn, String username, String password) {
+			try (var stmt = DAOUtils.prepare(conn,  Queries.REF_GET_ID, username, password)) {
+				var resultSet = stmt.executeQuery();
+				if (resultSet.next()) {
+					return resultSet.getInt("numtessera");
+				}
+				return -1;
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}
+		
 		public static Optional<Referee> exists(Connection conn, String username, String password, int cardNumber) {
 			try (var stmt = DAOUtils.prepare(conn, Queries.REFEREE_EXISTS, username, password, cardNumber)) {
 				var resultSet = stmt.executeQuery();
