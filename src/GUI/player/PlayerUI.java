@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -40,6 +41,11 @@ public class PlayerUI extends JFrame{
 	private static final double PADDING = 0.067;
 	private static final float TEXT_SIZE = 15,
 			TITLE_SIZE = 18;
+	private Supplier<List<List<String>>> getAnn;
+	private Function<Integer, Boolean> isSub;
+	private Function<Integer, Boolean> subscribe;
+	private Consumer<Integer> unsubscribe;
+	
 	private static final JPanel panel = new JPanel(new BorderLayout()),
 			// centerPane represents the center section of pane
 			centerPane = new JPanel();
@@ -72,12 +78,11 @@ public class PlayerUI extends JFrame{
 	}
 	
 	public void setTournamentsHandler(Supplier<List<List<String>>> handler, Function<Integer, Boolean> isSub,
-			Function<Integer, Boolean> subscribe) {
-		setHandler(PlayerUI.tournaments, () -> {
-			loadTournaments(handler.get(), isSub, subscribe);
-			PlayerUI.selected = Optional.of(tournaments);
-			update();
-		});
+			Function<Integer, Boolean> subscribe, Consumer<Integer> unsubscribe) {
+		this.getAnn = handler;
+		this.isSub = isSub;
+		this.subscribe = subscribe;
+		this.unsubscribe = unsubscribe;
 	}
 	
 	public void close() {
@@ -126,6 +131,12 @@ public class PlayerUI extends JFrame{
 			}
 		});
 		
+		setHandler(PlayerUI.tournaments, () -> {
+			loadUI(new TournamentsUI(getAnn, isSub, subscribe, unsubscribe));
+			PlayerUI.selected = Optional.of(tournaments);
+			update();
+		});
+		
 		// adding every menu item to its corresponding menu
 		PlayerUI.personal.add(PlayerUI.games);
 		PlayerUI.personal.add(PlayerUI.stats);
@@ -169,7 +180,7 @@ public class PlayerUI extends JFrame{
 		PlayerUI.centerPane.repaint();
 	}
 
-	
+	/*
 	private void loadTournaments(List<List<String>> data, Function<Integer, Boolean> isSub,
 			Function<Integer, Boolean> subscribe) {
 		PlayerUI.centerPane.removeAll();
@@ -212,7 +223,7 @@ public class PlayerUI extends JFrame{
 		});
 		PlayerUI.centerPane.add(table.getLowerPanel());
 		repaint();
-	}
+	}*/
 	
 	/** 
 	 * Wraps components into vertical panels containing them.

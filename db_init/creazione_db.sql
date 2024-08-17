@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`partite` (
     `codpartita` INT NOT NULL AUTO_INCREMENT,
     `codtorneo` INT NOT NULL, -- da eliminare livello
     `data` DATE NOT NULL,
-    `vincitore` VARCHAR(20) CHECK(`vincitore` IN ('Bianco', 'Nero', 'Pari')),
+    `vincitore` VARCHAR(20) CHECK(`vincitore` IN ('Bianco', 'Nero', 'Pari','')),
     PRIMARY KEY (`codpartita`),
     FOREIGN KEY (`codtorneo`) REFERENCES `ChessOrg`.`tornei` (`codtorneo`))
 ENGINE = InnoDB;
@@ -165,6 +165,7 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`mosse` (
     `colonnaarrivo` CHAR(1) NOT NULL,
     `rigapartenza` INT NOT NULL,
     `colonnapartenza` CHAR(1) NOT NULL,
+    `stringamossa` VARCHAR NOT NULL,
     PRIMARY KEY (`idmossa`),
     FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`),
     FOREIGN KEY (`rigaarrivo`,`colonnaarrivo`) REFERENCES `ChessOrg`.`caselle` (`riga`,`colonna`),

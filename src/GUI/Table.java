@@ -1,6 +1,8 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,8 @@ public class Table {
     private static final JButton confirm = new JButton("Confirm");
     private static final JButton subscribe = new JButton("Subscribe");
     
-	private final JPanel panel =  new JPanel(new BorderLayout());
+	private final JPanel panel =  new JPanel(new BorderLayout()),
+			buttons = new JPanel();
 	private List<String> ids = new ArrayList<>();
 	private String[] columns;
 	private String searchType;
@@ -93,13 +96,25 @@ public class Table {
         
         this.resetPanel();
     }
-
+	
+	/**
+	 * Lets the user add custom buttons, an added button cannot be get through
+	 * using the metho getButton, since it's a custom component.
+	 * @param btn the button to be added
+	 */
+	public void addButton(JButton btn) {
+		btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		buttons.add(btn);
+	}
+ 
 	private void resetPanel() {
         this.panel.removeAll();
         this.panel.add(table.getTableHeader(), BorderLayout.NORTH);
         this.panel.add(table, BorderLayout.CENTER);
         if(searchType.equals("Announces")) {
-        	this.panel.add(subscribe, BorderLayout.SOUTH);
+        	subscribe.setAlignmentX(Component.CENTER_ALIGNMENT);
+        	buttons.add(subscribe);
+        	this.panel.add(buttons, BorderLayout.SOUTH);
         } else {
         	this.panel.add(confirm, BorderLayout.SOUTH);
         }

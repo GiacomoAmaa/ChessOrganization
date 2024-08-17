@@ -95,9 +95,12 @@ public class Queries {
 			"insert into gestione "
 			+ "(indirizzo, numtessera) "
 			+ "values (?, ?)";
+	public static final String UNSUBSCRIBE =
+			"delete from iscrizioni "
+			+ "where idannuncio = ? "
+			+ "and idgiocatore = ?";
 	public static final String GET_GAME_WHITE ="";
 	public static final String GET_GAME_BLACK ="";
 	public static final String GAME_ADD_MOVE = "";
 	public static final String GAME_ADD_TURN ="";
-
 }

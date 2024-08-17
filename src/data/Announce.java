@@ -63,7 +63,6 @@ public class Announce {
 		
 		public static boolean subscription(Connection conn, int idAnnounce, int playerId) {
 			try(var stmt = DAOUtils.prepare(conn, Queries.SUBSCRIPTION, idAnnounce, playerId, Date.valueOf(LocalDate.now()))) {
-				System.out.println(Date.valueOf(LocalDate.now()).toString());
 				stmt.executeUpdate();
 				return true;
 			} catch(SQLException e) {
@@ -73,7 +72,11 @@ public class Announce {
 		}
 		
 		public static final void unsubscribe(Connection conn, int idAnnounce, int playerId) {
-			
+			try (var stmt = DAOUtils.prepare(conn, Queries.UNSUBSCRIBE, idAnnounce, playerId)) {
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
 		}
 	}
 	
