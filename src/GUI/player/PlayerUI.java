@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,6 @@ import javax.swing.border.EmptyBorder;
 
 import GUI.MyGamesUI;
 import GUI.SearchUI;
-import GUI.Table;
 import GUI.api.UserInterface;
 import util.UserType;
 import util.loaders.FontLoader;
