@@ -21,6 +21,8 @@ public class PlayerControllerImpl implements PlayerController{
 			return isSub(id);
 		}, id -> {
 			return subscribe(id);
+		}, id -> {
+			unsubscribe(id);
 		});
 	}
 	
@@ -41,6 +43,10 @@ public class PlayerControllerImpl implements PlayerController{
 	private boolean subscribe(int idAnnounce) {
 		return Announce.DAO.subscription(DBModel.getConnection(), idAnnounce, model.getId());
 		
+	}
+	
+	private void unsubscribe(int idAnnounce) {
+		Announce.DAO.unsubscribe(DBModel.getConnection(), idAnnounce, model.getId());
 	}
 
 	@Override

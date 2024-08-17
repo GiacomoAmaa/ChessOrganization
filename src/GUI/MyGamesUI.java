@@ -15,7 +15,6 @@ import javax.swing.SwingConstants;
 
 import com.toedter.calendar.JDateChooser;
 
-
 import GUI.api.UserInterface;
 import GUI.player.StatisticsUI;
 import GUI.referee.RegisterGameUI;

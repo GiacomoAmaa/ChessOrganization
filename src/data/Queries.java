@@ -98,4 +98,8 @@ public class Queries {
 			"insert into gestione "
 			+ "(indirizzo, numtessera) "
 			+ "values (?, ?)";
+	public static final String UNSUBSCRIBE =
+			"delete from iscrizioni "
+			+ "where idannuncio = ? "
+			+ "and idgiocatore = ?";
 }
