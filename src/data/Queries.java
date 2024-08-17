@@ -1,8 +1,5 @@
 package data;
 
-import java.sql.Date;
-import java.time.LocalDate;
-
 /**
  * this class contains all the queries to launch in the DB as public Strings
  */
@@ -98,4 +95,9 @@ public class Queries {
 			"insert into gestione "
 			+ "(indirizzo, numtessera) "
 			+ "values (?, ?)";
+	public static final String GET_GAME_WHITE ="";
+	public static final String GET_GAME_BLACK ="";
+	public static final String GAME_ADD_MOVE = "";
+	public static final String GAME_ADD_TURN ="";
+
 }
