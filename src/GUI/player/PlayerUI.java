@@ -1,4 +1,4 @@
-package GUI;
+package GUI.player;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,6 +16,7 @@ import java.util.function.Supplier;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,6 +27,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import GUI.MyGamesUI;
+import GUI.SearchUI;
+import GUI.Table;
+import GUI.api.UserInterface;
 import util.loaders.FontLoader;
 
 public class PlayerUI extends JFrame{

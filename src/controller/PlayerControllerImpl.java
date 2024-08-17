@@ -2,7 +2,7 @@ package controller;
 
 import java.util.List;
 
-import GUI.PlayerUI;
+import GUI.player.PlayerUI;
 import controller.api.PlayerController;
 import data.Announce;
 import data.Player;

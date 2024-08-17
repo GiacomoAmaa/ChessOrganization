@@ -1,4 +1,4 @@
-package GUI;
+package GUI.player;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,6 +23,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import GUI.api.UserInterface;
 import board.Board;
 
 public class  StatisticsUI implements UserInterface {

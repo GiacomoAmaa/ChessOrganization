@@ -1,4 +1,4 @@
-package GUI;
+package GUI.admin;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import GUI.api.UserInterface;
 import util.loaders.FontLoader;
 
 public class AdminUI extends JFrame {

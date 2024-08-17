@@ -1,4 +1,4 @@
-package GUI;
+package GUI.admin;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import GUI.api.UserInterface;
 import data.Location;
 
 public class LocationUI implements UserInterface {

@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import GUI.api.UserInterface;
+
 import java.util.LinkedList;
 import java.util.List;
 

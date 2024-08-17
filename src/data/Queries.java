@@ -69,8 +69,8 @@ public class Queries {
 			"select indirizzo "
 			+ "from sedi";
 	public static final String SUBS_PER_ANNOUNCE =
-			"select count distinct i.idgiocatore as 'total' "
-			+ "from iscrizioni i"
+			"select count(*) as total "
+			+ "from iscrizioni i "
 			+ "where i.idannuncio = ?";
 	public static final String GET_ANNOUNCES =
 			"select * "

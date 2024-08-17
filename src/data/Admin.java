@@ -84,7 +84,6 @@ public class Admin {
 				stmt1.close();
 				return id;
 			} catch (SQLException e) {
-				e.printStackTrace();
 				return -1;
 			} finally {
 			}

@@ -54,6 +54,7 @@ public class Announce {
 			try(var stmt = DAOUtils.prepare(conn, Queries.SUBS_PER_ANNOUNCE, idAnnounce)) {
 				var resultSet = stmt.executeQuery();
 				// it's a count-type query, so there's only a record
+				resultSet.next();
 				return resultSet.getInt("total");
 			} catch (SQLException e) {
 				throw new DAOException(e);
@@ -69,6 +70,10 @@ public class Announce {
 				e.printStackTrace();
 				return false;
 			}
+		}
+		
+		public static final void unsubscribe(Connection conn, int idAnnounce, int playerId) {
+			
 		}
 	}
 	

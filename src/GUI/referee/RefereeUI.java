@@ -1,4 +1,4 @@
-package GUI;
+package GUI.referee;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,6 +21,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import GUI.SearchUI;
+import GUI.api.UserInterface;
 import util.loaders.FontLoader;
 
 public class RefereeUI extends JFrame{

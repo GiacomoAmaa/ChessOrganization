@@ -1,4 +1,4 @@
-package GUI;
+package GUI.admin;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import GUI.api.UserInterface;
 import util.TextPrompt;
 
 public class AddRefereeUI implements UserInterface {
@@ -83,10 +84,10 @@ public class AddRefereeUI implements UserInterface {
 					var id = addRef.apply(Map.of("name", name.getText(), "lastname",
 							lastname.getText(), "cf", cf.getText(),
 							"username", username.getText(), "password",
-							password.getPassword().toString(), "address",
+							String.valueOf(password.getPassword()), "address",
 							address.getSelectedItem().toString()));
 					if (id > 0) {
-						JOptionPane.showMessageDialog(null, "Registration completed, your ID is:" + id);
+						JOptionPane.showMessageDialog(null, "Registration completed, your ID is:  " + id);
 					} else {
 						JOptionPane.showMessageDialog(null, "Impossible to register this user", "Error",
 								JOptionPane.ERROR_MESSAGE);

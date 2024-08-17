@@ -15,6 +15,9 @@ import javax.swing.SwingConstants;
 
 import com.toedter.calendar.JDateChooser;
 
+import GUI.api.UserInterface;
+import GUI.player.StatisticsUI;
+
 public class MyGamesUI implements UserInterface {
 	private final JPanel panel = new JPanel(new GridLayout(0, 4));
 	private final Table table = new Table("Games");

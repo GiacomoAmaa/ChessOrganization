@@ -3,7 +3,7 @@ package controller;
 import java.sql.Date;
 import java.util.List;
 
-import GUI.AdminUI;
+import GUI.admin.AdminUI;
 import controller.api.AdminController;
 import data.Admin;
 import data.Location;

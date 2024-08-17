@@ -1,4 +1,4 @@
-package GUI;
+package GUI.admin;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -26,6 +26,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.JSpinner.DefaultEditor;
 
 import com.toedter.calendar.JDateChooser;
+
+import GUI.api.UserInterface;
 
 
 public class AnnounceUI implements UserInterface {
@@ -88,7 +90,7 @@ public class AnnounceUI implements UserInterface {
 			public void actionPerformed(ActionEvent e) {
 				
 				if((int) minSubs.getValue() <= (int) maxSubs.getValue() && !address.getSelectedItem().equals("---") &&
-						announceName.getText().isEmpty() && announceName.getText().length() <= 30) {
+						!announceName.getText().isEmpty() && announceName.getText().length() <= 30) {
 					
 					if(postAnn.apply(Map.of("name", announceName.getText(), "address", address.getSelectedItem(),
 							"date", new java.sql.Date(exprDate.getDate().getTime()), "min", (Integer)minSubs.getValue(),

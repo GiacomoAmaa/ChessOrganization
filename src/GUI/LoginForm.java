@@ -198,14 +198,20 @@ public class LoginForm extends JFrame {
 	
 	private Map<String, String> getLoginData() {
 		if(((UserType)LoginForm.role.getSelectedItem()).equals(UserType.REFEREE)) {
-			return Map.of("username", LoginForm.username.getText(),
-				"password", String.valueOf(LoginForm.password.getPassword()),
-				"cardNumber", LoginForm.cardNumber.getText());
+			if (!LoginForm.username.getText().isBlank() &&
+				!String.valueOf(LoginForm.password.getPassword()).isBlank() &&
+				!LoginForm.cardNumber.getText().isBlank())
+				return Map.of("username", LoginForm.username.getText(),
+						"password", String.valueOf(LoginForm.password.getPassword()),
+						"cardNumber", LoginForm.cardNumber.getText());
 		}
 		else {
-			return Map.of("username", LoginForm.username.getText(),
-					"password", String.valueOf(LoginForm.password.getPassword()));
+			if (!LoginForm.username.getText().isBlank() &&
+				!String.valueOf(LoginForm.password.getPassword()).isBlank())
+				return Map.of("username", LoginForm.username.getText(),
+						"password", String.valueOf(LoginForm.password.getPassword()));
 		}
+		return Map.of();
 	}
 	
 	private Map<String, String> getRegisterData() {

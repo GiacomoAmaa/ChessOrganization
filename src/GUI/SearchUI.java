@@ -14,6 +14,9 @@ import javax.swing.SwingConstants;
 
 import com.toedter.calendar.JDateChooser;
 
+import GUI.api.UserInterface;
+import GUI.player.StatisticsUI;
+
 public class SearchUI implements UserInterface {
 	
 	public final JPanel panel = new JPanel(new GridLayout(0, 5));

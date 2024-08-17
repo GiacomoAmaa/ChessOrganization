@@ -25,32 +25,38 @@ public class LoginControllerImpl implements LoginController {
 	@Override
 	public void loginAttempt(UserType type, Map<String, String> data) {
 		switch(type) {
-			case ADMIN:	
-				var a = LoginControllerImpl.model.adminAttempt(data.get("username"), data.get("password"));
-				if(a.isPresent()) {
-					view.close();
-					new AdminControllerImpl(a.get());
-				} else {
-					LoginControllerImpl.view.Error();
+			case ADMIN:
+				if (!data.entrySet().isEmpty()) {
+					var admin = LoginControllerImpl.model.adminAttempt(data.get("username"), data.get("password"));
+					if(admin.isPresent()) {
+						view.close();
+						new AdminControllerImpl(admin.get());
+						break;
+					}
 				}
+				LoginControllerImpl.view.Error();
 				break;
 			case PLAYER:
-				var p = LoginControllerImpl.model.playerAttempt(data.get("username"), data.get("password"));
-				if(p.isPresent()) {
-					view.close();
-					new PlayerControllerImpl(p.get());
-				} else {
-					LoginControllerImpl.view.Error();
+				if (!data.entrySet().isEmpty()) {
+					var player = LoginControllerImpl.model.playerAttempt(data.get("username"), data.get("password"));
+					if(player.isPresent()) {
+						view.close();
+						new PlayerControllerImpl(player.get());
+						break;
+					}
 				}
+				LoginControllerImpl.view.Error();
 				break;
 			case REFEREE:
-				var r = LoginControllerImpl.model.refereeAttempt(data.get("username"), data.get("password"), data.get("cardNumber"));
-				if(r.isPresent()) {
-					view.close();
-					//new RefereeControllerImpl(r.get()); need to do a referee UI
-				} else {
-					LoginControllerImpl.view.Error();
+				if (!data.entrySet().isEmpty()) {
+					var referee = LoginControllerImpl.model.refereeAttempt(data.get("username"), data.get("password"), data.get("cardNumber"));
+					if(referee.isPresent()) {
+						view.close();
+						//new RefereeControllerImpl(r.get()); need to do a referee UI
+						break;
+					}
 				}
+				LoginControllerImpl.view.Error();
 				break;
 		}
 	}

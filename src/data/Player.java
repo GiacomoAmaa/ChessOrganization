@@ -133,6 +133,7 @@ public final class Player {
 						int subs = Announce.DAO.subsPerAnnounce(conn, resultSet.getInt("idannuncio"));
 						capacity += Integer.toString(subs)+"/";
 					} catch (Exception e) {
+						e.printStackTrace();
 						capacity += "0/";
 					}
 					int max = resultSet.getInt("maxiscrizioni");

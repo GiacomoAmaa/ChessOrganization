@@ -1,4 +1,4 @@
-package GUI;
+package GUI.referee;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -13,6 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import GUI.BoardGUI;
+import GUI.api.UserInterface;
 import board.Board;
 import board.Game;
 import util.Color;
