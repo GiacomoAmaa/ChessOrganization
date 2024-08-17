@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,6 +30,7 @@ import GUI.MyGamesUI;
 import GUI.SearchUI;
 import GUI.Table;
 import GUI.api.UserInterface;
+import util.UserType;
 import util.loaders.FontLoader;
 
 public class PlayerUI extends JFrame{
@@ -88,7 +88,7 @@ public class PlayerUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlayerUI.selected = Optional.of(PlayerUI.personal);
-				loadUI(new MyGamesUI());
+				loadUI(new MyGamesUI(UserType.PLAYER));
 				update();
 			}
 		});

@@ -156,6 +156,7 @@ public class RegisterGameUI implements UserInterface {
         		if (!move.isEmpty()) {
         			if(endgameCheck.isSelected()) {
         				// TODO chiamare query e aggiornare il database
+        				
         			} else {
             			System.out.println(move);
             			turn = player.isWhite() ? turn : turn + 1;
