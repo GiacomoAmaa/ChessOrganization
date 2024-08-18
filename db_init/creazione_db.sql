@@ -54,18 +54,6 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`sedi` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `ChessOrg`.`tornei`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ChessOrg`.`tornei` (
-    `codtorneo` INT NOT NULL AUTO_INCREMENT,
-    `indirizzo` CHAR(50) NOT NULL,
-    `datainizio` DATE NOT NULL,
-    `numpartecipanti` INT NOT NULL,
-    PRIMARY KEY (`codtorneo`),
-    FOREIGN KEY (`indirizzo`) REFERENCES `ChessOrg`.`sedi` (`indirizzo`))
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
 -- Table `ChessOrg`.`annunci`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`annunci` (
@@ -78,6 +66,20 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`annunci` (
     PRIMARY KEY (`idannuncio`),
     FOREIGN KEY (`indirizzo`) REFERENCES `ChessOrg`.`sedi` (`indirizzo`),
     FOREIGN KEY (`idadmin`) REFERENCES `ChessOrg`.`organizzatori` (`idadmin`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `ChessOrg`.`tornei`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ChessOrg`.`tornei` (
+    `codtorneo` INT NOT NULL AUTO_INCREMENT,
+    `indirizzo` CHAR(50) NOT NULL,
+    `datainizio` DATE NOT NULL,
+    `numpartecipanti` INT NOT NULL,
+    `idannuncio` INT NOT NULL,
+    PRIMARY KEY (`codtorneo`),
+    FOREIGN KEY (`indirizzo`) REFERENCES `ChessOrg`.`sedi` (`indirizzo`),
+    FOREIGN KEY (`idannuncio`) REFERENCES `ChessOrg`.`annunci` (`idannuncio`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
