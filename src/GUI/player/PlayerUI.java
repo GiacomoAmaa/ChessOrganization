@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,6 @@ import javax.swing.border.EmptyBorder;
 
 import GUI.MyGamesUI;
 import GUI.SearchUI;
-import GUI.Table;
 import GUI.api.UserInterface;
 import util.UserType;
 import util.loaders.FontLoader;
@@ -55,6 +53,7 @@ public class PlayerUI extends JFrame{
 	private static final JMenuBar menu = new JMenuBar();
 	private static final JMenu personal = new JMenu("Personal Area"),
 			search = new JMenu("Search"),
+			leaderboard = new JMenu("Leaderboard"),
 			tournaments = new JMenu("Announcements"),
 			logout = new JMenu("Logout");
 	private static final JMenuItem games = new JMenuItem("Games"),
@@ -107,6 +106,12 @@ public class PlayerUI extends JFrame{
 			}
 		});
 
+		setHandler(PlayerUI.leaderboard, () -> {
+			loadUI(new LeaderBoardsUI());
+			PlayerUI.selected = Optional.of(PlayerUI.leaderboard);
+			update();
+		});
+
 		setHandler(PlayerUI.search, () -> {
 			loadUI(new SearchUI());
 			PlayerUI.selected = Optional.of(PlayerUI.search);
@@ -137,7 +142,7 @@ public class PlayerUI extends JFrame{
 		PlayerUI.panel.add(centerPane, BorderLayout.CENTER);
 		PlayerUI.defText.setFont(PlayerUI.fontLoad.getTextFont().deriveFont(PlayerUI.TEXT_SIZE));
 		// initializing northern panel
-		List.of(personal, tournaments, search, logout, games, stats).stream()
+		List.of(personal, leaderboard, tournaments, search, logout, games, stats).stream()
 			.forEach(elem -> {
 				if (elem instanceof JMenu) {
 					PlayerUI.menu.add(elem);
@@ -150,7 +155,7 @@ public class PlayerUI extends JFrame{
 	}
 	
 	private void update() {
-		List.of(PlayerUI.personal, PlayerUI.search, PlayerUI.tournaments).stream()
+		List.of(PlayerUI.personal, PlayerUI.search, PlayerUI.tournaments, PlayerUI.leaderboard).stream()
 			.forEach(btn -> {
 				if(PlayerUI.selected.equals(Optional.of(btn))) {
 					btn.setForeground(Color.BLUE);
