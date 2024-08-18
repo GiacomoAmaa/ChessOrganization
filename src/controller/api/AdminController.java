@@ -1,6 +1,7 @@
 package controller.api;
 
 import java.sql.Date;
+import java.util.List;
 
 import data.Tournament;
 
@@ -23,8 +24,39 @@ public interface AdminController {
 	public void searchGames(String input);
 	
 	/**
-	 * @param newTour new tournament announce to post
-	 * Lets the admin post a tournament announce
+	 * creates a new tournament announce in the db
+	 * @param name name of the torunament
+	 * @param address location of the tournament
+	 * @param expiringDate expiration date
+	 * @param maxSubs
+	 * @param minSubs
+	 * @return true if correctly added, false otherwise.
 	 */
 	public boolean postAnnounce(String name, String address, Date expiringDate, int maxSubs, int minSubs);
+	
+	/**
+	 * adds a new referee to the db
+	 * @param name name of the referee
+	 * @param lastname
+	 * @param cf
+	 * @param username
+	 * @param password
+	 * @param address location to be bonded to the referee
+	 * @return the card number of the new referee, -1 if not added.
+	 */
+	public int addReferee(String name, String lastname, String cf, String username, String password, String address);
+	
+	/**
+	 * adds a new location to the db
+	 * @param address street address of the location
+	 * @param description
+	 * @return true if added, false otherwise.
+	 */
+	public boolean addLocation(String address, String description);
+	
+	/**
+	 * gets a list of all the addresses iin the db
+	 * @return the addresses
+	 */
+	public List<String> getAddresses();
 }

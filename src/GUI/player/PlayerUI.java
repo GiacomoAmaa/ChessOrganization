@@ -173,54 +173,6 @@ public class PlayerUI extends JFrame{
 		PlayerUI.centerPane.repaint();
 	}
 
-	/*
-	private void loadTournaments(List<List<String>> data, Function<Integer, Boolean> isSub,
-			Function<Integer, Boolean> subscribe) {
-		PlayerUI.centerPane.removeAll();
-		PlayerUI.centerPane.revalidate();
-		var table = new Table("Announces");
-		var keys = new ArrayList<Integer>();
-		if(data.size() != 0) {
-			var dataArray = new Object[data.size()][data.get(0).size()];
-				data.stream().forEach(e -> {
-					e.stream().forEach(elem -> {
-						if(e.indexOf(elem) != 4) {
-							dataArray[data.indexOf(e)][e.indexOf(elem)] = elem;
-						} else {
-							keys.add(Integer.valueOf(elem));
-						}
-				});
-			});
-			table.addRows(dataArray, false);
-		}
-		var btn = table.getButton();
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int index = table.getSelectedRowIndex();
-				if (index != -1) {
-					var subs = Integer.valueOf(data.get(index).get(3).split("/")[0]);
-					var max = Integer.valueOf(data.get(index).get(3).split("/")[1]);
-					if(!isSub.apply(keys.get(index)) && 
-							subs <  max) {
-						if (subscribe.apply(keys.get(index)))
-							JOptionPane.showMessageDialog(null, "You succesfully subscribed!");
-					} else {
-						JOptionPane.showMessageDialog(null, "The announce is already full, or you're"
-								+ " already subscribed", "Error", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			}
-			
-		});
-		PlayerUI.centerPane.add(table.getLowerPanel());
-		repaint();
-	}*/
-	
-	/** 
-	 * Wraps components into vertical panels containing them.
-	 */
 	private static JComponent wrapV(Collection<JComponent> elements) {
 		elements.stream()
 			.forEach(e -> {

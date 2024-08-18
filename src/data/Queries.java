@@ -102,4 +102,19 @@ public class Queries {
 			"delete from iscrizioni "
 			+ "where idannuncio = ? "
 			+ "and idgiocatore = ?";
+	public static final String 	GET_EXP_ANNOUNCES =
+			"select * "
+			+ "from annunci "
+			+ "where DATE(scadenza) <= ?";
+	// should also create participants and games;
+	public static final String CREATE_TOURNAMENT =
+			"insert into tornei(codtorneo, indirizzo, nome, "
+			+ "datainizio, numpartecipanti, idannuncio) values "
+			+ "(NULL, ?, ?, ?, ?)";
+	public static String DELETE_ANNOUNCE =
+			"delete from annunci "
+			+ "where idannuncio = ?";
+	public static final String DELETE_SUBS =
+			"delete from iscrizioni "
+			+ "where idannuncio = ?";
 }

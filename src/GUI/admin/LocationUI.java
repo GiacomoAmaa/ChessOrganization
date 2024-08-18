@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 
 import GUI.api.UserInterface;
 import data.Location;
+import model.DBModel;
 
 public class LocationUI implements UserInterface {
 	
@@ -59,7 +60,7 @@ public class LocationUI implements UserInterface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(!newAddress.getText().equals("") &&
-						!Location.DAO.exists(newAddress.getText())) {
+						!Location.DAO.exists(DBModel.getConnection(), newAddress.getText())) {
 					if(handler.apply(newAddress.getText(),
 							description.getText())) {
 						JOptionPane.showMessageDialog(null, "a new Location has been correctly added");

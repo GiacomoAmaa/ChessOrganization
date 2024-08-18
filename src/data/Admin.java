@@ -3,6 +3,9 @@ package data;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class Admin {
@@ -86,6 +89,52 @@ public class Admin {
 			} catch (SQLException e) {
 				return -1;
 			} finally {
+			}
+		}
+		
+		public static List<List<String>> getAnnounces(Connection conn) {
+			var ret = new ArrayList<List<String>>();
+			try (var stmt = DAOUtils.prepare(conn, Queries.GET_EXP_ANNOUNCES, java.sql.Date.valueOf(LocalDate.now()))) {
+				var resultSet = stmt.executeQuery();
+				while(resultSet.next()) {
+					var id = Integer.toString(resultSet.getInt("idannuncio"));
+					var location = resultSet.getString("indirizzo");
+					var name = resultSet.getString("nome");
+					var date = ((Date)resultSet.getObject("scadenza")).toString();
+					var capacity = "";
+					try {
+						int subs = Announce.DAO.subsPerAnnounce(conn, resultSet.getInt("idannuncio"));
+						capacity += Integer.toString(subs)+"/";
+					} catch (Exception e) {
+						e.printStackTrace();
+						capacity += "0/";
+					}
+					int max = resultSet.getInt("maxiscrizioni");
+					capacity += Integer.toString(max);
+					ret.add(List.of(name, location, date, capacity, id));
+				}
+				return ret;
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}
+		
+		public static void createTournament(Connection conn, String address, String name, int numSubs, int idAnnounce) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.CREATE_TOURNAMENT, address, name,
+					Date.valueOf(LocalDate.now()), numSubs, idAnnounce)) {
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}
+		
+		public static void deleteAnnounce(Connection conn, int idAnnounce) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.DELETE_ANNOUNCE, idAnnounce);
+					var stmt1 = DAOUtils.prepare(conn, Queries.DELETE_SUBS, idAnnounce);) {
+				stmt1.executeUpdate();
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				throw new DAOException(e);
 			}
 		}
 		

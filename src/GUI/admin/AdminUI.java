@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -43,6 +44,9 @@ public class AdminUI extends JFrame {
 	private Supplier<List<String>> getLocation;
 	private BiFunction<String, String, Boolean> postLoc;
 	private Function<Map<String, String>, Integer> addRef;
+	private Consumer<Map<String, Object>> createTourn;
+	private Consumer<Integer> deleteAnn;
+	private Supplier<List<List<String>>> getAnnounces;
 	private static final JPanel panel = new JPanel(new BorderLayout()),
 			// centerPane represents the center section of pane
 			centerPane = new JPanel();
@@ -79,6 +83,16 @@ public class AdminUI extends JFrame {
 	
 	private void initialize() {
 		// initializing components
+		AdminUI.create.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadUI(new TournamentUI(getAnnounces, createTourn, deleteAnn));
+				AdminUI.selected = Optional.of(tourn);
+				update();
+			}
+			
+		});
 		setHandler(AdminUI.referee, () -> {
 			loadUI(new AddRefereeUI(getLocation, addRef));
 			AdminUI.selected = Optional.of(referee);
@@ -127,6 +141,13 @@ public class AdminUI extends JFrame {
 		AdminUI.centerPane.add(wrapV(List.of(AdminUI.defText, new JLabel(AdminUI.defIcon))), BorderLayout.CENTER);
 		//final BoardGUI board= new BoardGUI(new Game(List.of(new Pair<>("",""))));
 		//UserUI.panel.add(board.getGui(), BorderLayout.CENTER);
+	}
+	
+	public void setTournamentsHandler(Consumer<Map<String, Object>> createTourn, Consumer<Integer> deleteAnn,
+			Supplier<List<List<String>>> getAnnounces) {
+		this.createTourn = createTourn;
+		this.deleteAnn = deleteAnn;
+		this.getAnnounces = getAnnounces;
 	}
 	
 	public void setLocationHandler(BiFunction<String, String, Boolean> handler) {

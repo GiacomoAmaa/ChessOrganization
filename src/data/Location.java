@@ -1,5 +1,6 @@
 package data;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,8 @@ public class Location {
 	
 	public final static class DAO {
 
-		public static boolean exists(String address) {
-			try (var stmt = DAOUtils.prepare(DBModel.getConnection(), Queries.LOCATION_EXISTS, address)) {
+		public static boolean exists(Connection conn, String address) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.LOCATION_EXISTS, address)) {
 				var resultSet = stmt.executeQuery();
 				if(resultSet.next()) {
 					return true;
@@ -38,8 +39,8 @@ public class Location {
 			}
 		}
 		
-		public static List<String> getAllAdresses() {
-			try (var stmt = DAOUtils.prepare(DBModel.getConnection(), Queries.GET_ADDRESSES)) {
+		public static List<String> getAllAdresses(Connection conn) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.GET_ADDRESSES)) {
 				var resultSet = stmt.executeQuery();
 				List<String> addresses = new ArrayList<>();
 				while(resultSet.next()) {

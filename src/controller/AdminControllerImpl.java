@@ -31,6 +31,14 @@ public class AdminControllerImpl implements AdminController{
 		view.updateLocationHandler(() -> {
 			return getAddresses();
 		});
+		view.setTournamentsHandler(map -> {
+			createTournament(map.get("address").toString(), map.get("name").toString(),
+					((Integer)map.get("numSubs")).intValue(), ((Integer)map.get("idannounce")).intValue());
+		}, id -> {
+			deleteAnnounce(id);
+		}, () -> {
+			return getAnnounces();
+		});
 	}
 
 	@Override
@@ -51,17 +59,32 @@ public class AdminControllerImpl implements AdminController{
 			maxSubs, minSubs, model.getIdAdmin());
 	}
 	
+	@Override
 	public int addReferee(String name, String lastname, String cf,
 				String username, String password, String address) {
 		return Admin.DAO.addReferee(DBModel.getConnection(), name, lastname, cf, username, password, address);
 	}
 	
+	@Override
 	public boolean addLocation(String address, String description) {
 		return Admin.DAO.addLocation(DBModel.getConnection(), address, description);
 	}
 	
+	@Override
 	public List<String> getAddresses() {
-		return Location.DAO.getAllAdresses();
+		return Location.DAO.getAllAdresses(DBModel.getConnection());
+	}
+	
+	public List<List<String>> getAnnounces() {
+		return Admin.DAO.getAnnounces(DBModel.getConnection());
+	}
+	
+	public void createTournament(String address, String name, int numSubs, int idAnnounce) {
+		Admin.DAO.createTournament(DBModel.getConnection(), address, name, numSubs, idAnnounce);
+	}
+	
+	public void deleteAnnounce(int idAnnounce) {
+		Admin.DAO.deleteAnnounce(DBModel.getConnection(), idAnnounce);
 	}
 
 }

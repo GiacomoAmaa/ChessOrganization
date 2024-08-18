@@ -2,7 +2,6 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +35,9 @@ public class Table {
     	case "Announces":
     		setTableModel(type);
     		break;
+    	case "Tournaments":
+    		setTableModel(type);
+    		break;
     	default:
     		setTableModel("Players");
     		break;
@@ -46,11 +48,14 @@ public class Table {
 
 	public void setTableModel(String searchType) {
     	this.searchType = searchType;
-    	if(!searchType.equals("Announces"))
+    	/*if(!searchType.equals("Announces"))
     		this.columns = searchType.equals("Players") ? PLAYERS : GAMES;
     	else {
     		this.columns = ANNOUNCES;
-    	}
+    	}*/
+    	this.columns = searchType.equals("Announces") || searchType.equals("Tournaments") ? ANNOUNCES :
+    		searchType.equals("Players") ? PLAYERS : GAMES;
+    		
 
         // Create the table model
         tableModel = new DefaultTableModel(columns,0) {
@@ -89,7 +94,8 @@ public class Table {
         	if (i == 0) {
         		columnModel.getColumn(i).setPreferredWidth(50);
         	} else {
-        		var width = searchType.equals("Announces") ? 150 : 100;
+        		var width = searchType.equals("Announces")||
+                		searchType.equals("Tournaments") ? 150 : 100;
                 table.getColumnModel().getColumn(i).setPreferredWidth(width);
         	}
         }
@@ -111,11 +117,14 @@ public class Table {
         this.panel.removeAll();
         this.panel.add(table.getTableHeader(), BorderLayout.NORTH);
         this.panel.add(table, BorderLayout.CENTER);
-        if(searchType.equals("Announces")) {
-        	subscribe.setAlignmentX(Component.CENTER_ALIGNMENT);
-        	buttons.add(subscribe);
+        if(searchType.equals("Announces") ||
+        		searchType.equals("Tournaments")) {
+        	if (searchType.equals("Announces")) {
+        		subscribe.setAlignmentX(Component.CENTER_ALIGNMENT);
+        		buttons.add(subscribe);
+        	}
         	this.panel.add(buttons, BorderLayout.SOUTH);
-        } else {
+        } else if (searchType.equals("Players") || searchType.equals("Players")){
         	this.panel.add(confirm, BorderLayout.SOUTH);
         }
     }
