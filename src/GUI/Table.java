@@ -99,13 +99,12 @@ public class Table {
                 table.getColumnModel().getColumn(i).setPreferredWidth(width);
         	}
         }
-        
         this.resetPanel();
     }
 	
 	/**
 	 * Lets the user add custom buttons, an added button cannot be get through
-	 * using the metho getButton, since it's a custom component.
+	 * using the method getButton, since it's a custom component.
 	 * @param btn the button to be added
 	 */
 	public void addButton(JButton btn) {

@@ -49,3 +49,12 @@ INSERT INTO giocatori (idgiocatore, punteggio, username, password, cf, nome, cog
 (NULL, 0, 'victoriaH', 'pwdVictoria48', 'HRRVCT85V01H501H', 'Victoria', 'Hernandez'),
 (NULL, 0, 'williamK', 'pwdWilliam49', 'KNWWLL80W01H501K', 'William', 'Knowles'),
 (NULL, 0, 'yasmineO', 'pwdYasmine50', 'ONYYSM85Y01H501O', 'Yasmine', 'Ortega');
+
+INSERT INTO 'organizzatori' (idadmin, nome, cognome, cf, username, password)
+VALUES (NULL, 'Giorgio', 'Brighi', 'GBDNEFN3944N4UB4', 'admin', 'root');
+
+INSERT INTO 'arbitri' (numtessera, nome, cognome, cf , username, password)
+VALUES (NULL, 'Pierluigi', 'Collina', 'PRLCLLIDWE56N345', 'ref', 'root');
+
+INSERT INTO 'giocatori' (idgiocatore, nome, cognome, cf , username, password)
+VALUES (NULL, 'Pino', 'Bianchi', 'PNIBNCIDWE56N345', 'player', 'root');

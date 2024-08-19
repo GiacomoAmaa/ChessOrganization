@@ -129,4 +129,17 @@ public class Queries {
 	public static final String GAME_ADD_TURN =
 			"insert into turni (codpartita, mossabianca, mossanera, numturno) "
 			+ "values (?, ?, ?, ?)";
+
+	public static final String GET_ALL_SUBS = 
+			"select * "
+			+ "from iscrizioni "
+			+ "where idannuncio = ?";
+	public static final String ADD_PARTICIPANT =
+			"insert into partecipanti "
+			+ "(codpartita, idiscrizione, fazione) "
+			+ "values (?, ?, ?)";
+	public static final String CREATE_GAME =
+			"insert into partite "
+			+ "(codpartita, codtorneo, vincitore, data) "
+			+ "values (NULL, ?, '', ?)";
 }

@@ -156,7 +156,7 @@ ENGINE = InnoDB;
 -- Table `ChessOrg`.`mosse`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`mosse` (
-    `idmossa` INT NOT NULL AUTO_INCREMENT, -- AGGIUNTO 
+    `idmossa` INT NOT NULL AUTO_INCREMENT, -- AGGIUNTO
     `idiscrizione` INT NOT NULL,
     `codpartita` INT NOT NULL,
     `pezzo` CHAR NOT NULL,
