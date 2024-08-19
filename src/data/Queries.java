@@ -122,4 +122,12 @@ public class Queries {
 			"select * "
 			+ "from iscrizioni "
 			+ "where idannuncio = ?";
+	public static final String ADD_PARTICIPANT =
+			"insert into partecipanti "
+			+ "(codpartita, idiscrizione, fazione) "
+			+ "values (?, ?, ?)";
+	public static final String CREATE_GAME =
+			"insert into partite "
+			+ "(codpartita, codtorneo, vincitore, data) "
+			+ "values (NULL, ?, '', ?)";
 }

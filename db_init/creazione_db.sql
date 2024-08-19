@@ -137,11 +137,9 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`partecipanti` (
     `codpartita` INT NOT NULL,
     `idiscrizione` INT NOT NULL,
     `fazione` VARCHAR(20) NOT NULL CHECK (`fazione` IN ('Bianco', 'Nero')),
-    `codtorneo` INT NOT NULL,
     PRIMARY KEY (`codpartita`,`idiscrizione`),
     FOREIGN KEY (`idiscrizione`) REFERENCES `ChessOrg`.`iscrizioni` (`idiscrizione`),
-    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`)
-    FOREIGN KEY (`codtorneo`) REFERENCES `ChessOrg`.`tornei` (`codtorneo`))
+    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
