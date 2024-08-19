@@ -40,8 +40,8 @@ public class AnnounceUI implements UserInterface {
 	
 	private final JTextField announceName = new JTextField("", 30);
 	
-	private final SpinnerNumberModel minModel = new SpinnerNumberModel(2, 2, 32, 1),
-			maxModel = new SpinnerNumberModel(32, 2, 32, 1);
+	private final SpinnerNumberModel minModel = new SpinnerNumberModel(2, 2, 12, 1),
+			maxModel = new SpinnerNumberModel(12, 2, 12, 1);
 	private final JSpinner maxSubs = new JSpinner(maxModel),
 			minSubs = new JSpinner(minModel);
 	

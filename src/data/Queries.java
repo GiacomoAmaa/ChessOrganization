@@ -118,4 +118,8 @@ public class Queries {
 	public static final String GET_GAME_BLACK ="";
 	public static final String GAME_ADD_MOVE = "";
 	public static final String GAME_ADD_TURN ="";
+	public static final String GET_ALL_SUBS = 
+			"select * "
+			+ "from iscrizioni "
+			+ "where idannuncio = ?";
 }
