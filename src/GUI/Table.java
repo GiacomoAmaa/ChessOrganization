@@ -124,7 +124,7 @@ public class Table {
         		buttons.add(subscribe);
         	}
         	this.panel.add(buttons, BorderLayout.SOUTH);
-        } else if (searchType.equals("Players") || searchType.equals("Players")){
+        } else if (searchType.equals("Games") || searchType.equals("Players")){
         	this.panel.add(confirm, BorderLayout.SOUTH);
         }
     }
