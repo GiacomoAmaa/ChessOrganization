@@ -114,8 +114,19 @@ public class Queries {
 	public static final String DELETE_SUBS =
 			"delete from iscrizioni "
 			+ "where idannuncio = ?";
-	public static final String GET_GAME_WHITE ="";
-	public static final String GET_GAME_BLACK ="";
-	public static final String GAME_ADD_MOVE = "";
-	public static final String GAME_ADD_TURN ="";
+	public static final String GET_GAME_WHITE =
+			"select idiscrizione "
+			+ "from partecipanti "
+			+ "where codpartita = ? and fazione = 'Bianco'";
+	public static final String GET_GAME_BLACK =
+			"select idiscrizione "
+			+ "from partecipanti "
+			+ "where codpartita = ? and fazione = 'Nero'";
+	public static final String GAME_ADD_MOVE =
+			"insert into mosse ( idiscrizione, codpartita, pezzo, nuovopezzo, pezzocatturato, "
+			+ "matto, rigaarrivo, colonnaarrivo, rigapartenza, colonnapartenza, stringamossa ) "
+			+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public static final String GAME_ADD_TURN =
+			"insert into turni (codpartita, mossabianca, mossanera, numturno) "
+			+ "values (?, ?, ?, ?)";
 }

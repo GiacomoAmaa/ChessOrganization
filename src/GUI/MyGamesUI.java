@@ -74,7 +74,8 @@ public class MyGamesUI implements UserInterface {
             		if (user.equals(UserType.PLAYER)) {
             			ui = table.getSearchType().equals("Players") ? new StatisticsUI() : new BoardGUI();
             		} else {
-            			ui = new RegisterGameUI();
+            			ui = new RegisterGameUI(0);
+            			//TODO ritornare l'id effettivo del coso selezionato 
             		}
                 	panel.removeAll();
                 	panel.setLayout(new FlowLayout());

@@ -52,7 +52,54 @@ public final static class DAO {
 			// TODO implementation
 			return null;
 		}
+
+		public static int getWhite(Connection conn, int gameId) {
+			try(var stmt = DAOUtils.prepare(conn, Queries.GET_GAME_WHITE, gameId)){
+				var resultSet = stmt.executeQuery();
+				return resultSet.next() ? resultSet.getInt("idiscrizione") : -1;
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}
 		
+		public static int getBlack(Connection conn, int gameId) {
+			try(var stmt = DAOUtils.prepare(conn, Queries.GET_GAME_BLACK, gameId)){
+				var resultSet = stmt.executeQuery();
+				return resultSet.next() ? resultSet.getInt("idiscrizione") : -1;
+
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}
+
+		public static int registerMove(Connection conn, int subscrId, int gameId, char piece, Optional<Character> newPiece,
+				Optional<Character> takenPiece, boolean cMate, char arrCol, int arrLine, char startCol, int startLine, String move) {
+
+			try(var stmt = DAOUtils.prepare(conn, Queries.GAME_ADD_MOVE, subscrId, gameId, piece,
+					newPiece.isPresent() ? newPiece.get().charValue() : null,
+					takenPiece.isPresent() ? takenPiece.get().charValue() : null,
+					cMate, arrCol, arrLine, startCol, startLine, move )){
+
+				stmt.executeUpdate();
+				var resultSet = stmt.getGeneratedKeys();
+				return resultSet.next() ? resultSet.getInt("idmossa") : -1;
+
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}
+		
+		public static int registerTurn(Connection conn, int whiteMove,  Optional<Integer> blackMove, int turn) {
+			try(var stmt = DAOUtils.prepare(conn, Queries.GAME_ADD_TURN, whiteMove,
+					blackMove.isPresent() ? blackMove.get().intValue() : null, turn)){
+				stmt.executeUpdate();
+				var resultSet = stmt.getGeneratedKeys();
+				return resultSet.next() ? resultSet.getInt("idturno") : -1;
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}
+
 		public static int getId(Connection conn, String username, String password) {
 			try (var stmt = DAOUtils.prepare(conn,  Queries.REF_GET_ID, username, password)) {
 				var resultSet = stmt.executeQuery();

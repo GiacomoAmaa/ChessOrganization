@@ -56,15 +56,17 @@ public class Game {
 				this.board.getTile(this.move.getStartingCoord()).moveOutPiece(); // removes the king from arrival position
 				this.board.getTile(this.move.getArrivalCoord()).moveOutPiece(); // removes the rook from arrival position
 				// moves the king in initial position
-				this.board.getTile(this.move.getAttacker()).moveInPiece(new Piece(player, PieceType.KING));
+				this.board.getTile(this.move.getAttacker())
+					.moveInPiece(new Piece(player, PieceType.KING));
 				// moves the rook in initial position
-				this.board.getTile(this.move.getDefender()).moveInPiece(new Piece(player, PieceType.ROOK));
+				this.board.getTile(this.move.getDefender())
+					.moveInPiece(new Piece(player, PieceType.ROOK));
 			} else {
 				App.SOUND.play(Sound.MOVE);
 				// if any piece was captured needs to be restored 
 				if(this.move.isMoveType(MoveSymbols.CAPTURE)) {
 					this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(opponent,
-							PieceType.getPieceTypeFromSymbol(this.move.getDefender())));
+							PieceType.getPieceTypeFromSymbol(this.move.getDefender().charAt(0))));
 				} else {
 					// just remove attacker from arrival position
 					this.board.getTile(this.move.getArrivalCoord()).moveOutPiece();
@@ -73,7 +75,7 @@ public class Game {
 				// the attacker should be demoted to pawn
 				this.board.getTile(this.move.getStartingCoord()).moveInPiece(new Piece(player,
 						this.move.isMoveType(MoveSymbols.PROMOTION) ? PieceType.PAWN :
-							PieceType.getPieceTypeFromSymbol(this.move.getAttacker())));
+							PieceType.getPieceTypeFromSymbol(this.move.getAttacker().charAt(0))));
 			}
 			this.isFinished = false;
 		}
@@ -92,8 +94,10 @@ public class Game {
 
 			if (this.move.isMoveType(MoveSymbols.CASTLING)) {
 				/* castling message case start:stop:O-O:start:stop */
-				this.board.getTile(this.move.getAttacker()).moveOutPiece(); // moves the king from starting position
-				this.board.getTile(this.move.getDefender()).moveOutPiece(); // moves the rook from starting position
+				// moves the king from starting position
+				this.board.getTile(this.move.getAttacker()).moveOutPiece();
+				// moves the rook from starting position
+				this.board.getTile(this.move.getDefender()).moveOutPiece(); 
 				//moves the king in final position
 				this.board.getTile(this.move.getStartingCoord()).moveInPiece(new Piece(player, PieceType.KING));
 				//moves the rook in final position
@@ -101,7 +105,7 @@ public class Game {
 			} else {
 				this.board.getTile(this.move.getStartingCoord()).moveOutPiece();
 				this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(player,
-						PieceType.getPieceTypeFromSymbol(this.move.getAttacker())));
+						PieceType.getPieceTypeFromSymbol(this.move.getAttacker().charAt(0))));
 			}
 
 			if (this.move.isMoveType(MoveSymbols.CHECKMATE) ||
