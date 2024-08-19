@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`partite` (
     `codpartita` INT NOT NULL AUTO_INCREMENT,
     `codtorneo` INT NOT NULL, -- da eliminare livello
     `data` DATE NOT NULL,
-    `vincitore` VARCHAR(20) CHECK(`vincitore` IN ('Bianco', 'Nero', 'Pari','')),
+    `vincitore` VARCHAR(20) CHECK (`vincitore` IN ('Bianco', 'Nero', 'Pari','')),
     PRIMARY KEY (`codpartita`),
     FOREIGN KEY (`codtorneo`) REFERENCES `ChessOrg`.`tornei` (`codtorneo`))
 ENGINE = InnoDB;
@@ -136,7 +136,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`partecipanti` (
     `codpartita` INT NOT NULL,
     `idiscrizione` INT NOT NULL,
-    `fazione` VARCHAR(20) NOT NULL CHECK(`fazione` IN ('Bianco', 'Nero')),
+    `fazione` VARCHAR(20) NOT NULL CHECK (`fazione` IN ('Bianco', 'Nero')),
     PRIMARY KEY (`codpartita`,`idiscrizione`),
     FOREIGN KEY (`idiscrizione`) REFERENCES `ChessOrg`.`iscrizioni` (`idiscrizione`),
     FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`))
@@ -146,8 +146,8 @@ ENGINE = InnoDB;
 -- Table `ChessOrg`.`caselle`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`caselle` (
-    `riga` INT NOT NULL CHECK(`riga` BETWEEN 1 AND 8),
-    `colonna` CHAR(1) NOT NULL CHECK(`colonna` BETWEEN 'a' AND 'h'),
+    `riga` INT NOT NULL CHECK (`riga` BETWEEN 1 AND 8),
+    `colonna` CHAR(1) NOT NULL CHECK (`colonna` BETWEEN 'a' AND 'h'),
     `visite` INT NOT NULL,
     PRIMARY KEY (`riga`,`colonna`))
 ENGINE = InnoDB;
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`mosse` (
     `colonnaarrivo` CHAR(1) NOT NULL,
     `rigapartenza` INT NOT NULL,
     `colonnapartenza` CHAR(1) NOT NULL,
-    `stringamossa` VARCHAR NOT NULL,
+    `stringamossa` VARCHAR(30) NOT NULL,
     PRIMARY KEY (`idmossa`),
     FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`),
     FOREIGN KEY (`rigaarrivo`,`colonnaarrivo`) REFERENCES `ChessOrg`.`caselle` (`riga`,`colonna`),

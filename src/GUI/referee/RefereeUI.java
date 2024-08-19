@@ -45,6 +45,7 @@ public class RefereeUI extends JFrame{
 	private static final JMenuBar menu = new JMenuBar();
 	private static final JMenu search = new JMenu("Search"),
 			designations = new JMenu("My Designations"),
+			tourn = new JMenu("My Tournaments"),
 			logout = new JMenu("Logout");
 
 	private static final FontLoader fontLoad = new FontLoader();
