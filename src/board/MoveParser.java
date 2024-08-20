@@ -29,6 +29,22 @@ public class MoveParser {
 		return this.move[Position.DEFENDER.ordinal()];
 	}
 
+	public int getStartingRow() {
+		return Character.getNumericValue(this.move[Position.FROM.ordinal()].charAt(0));
+	}
+
+	public int getArrivalRow() {
+		return Character.getNumericValue(this.move[Position.TO.ordinal()].charAt(0));
+	}
+
+	public char getStartingCol() {
+		return this.move[Position.FROM.ordinal()].charAt(0);
+	}
+
+	public char getArrivalCol() {
+		return this.move[Position.TO.ordinal()].charAt(0);
+	}
+
 	public String getStartingCoord() {
 		return this.move[Position.FROM.ordinal()];
 	}

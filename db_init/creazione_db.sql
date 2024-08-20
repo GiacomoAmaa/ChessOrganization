@@ -147,7 +147,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`caselle` (
     `riga` INT NOT NULL CHECK (`riga` BETWEEN 1 AND 8),
-    `colonna` CHAR(1) NOT NULL CHECK (`colonna` BETWEEN 'a' AND 'h'),
+    `colonna` CHAR (1) NOT NULL CHECK (`colonna` BETWEEN 'a' AND 'h'),
     `visite` INT NOT NULL,
     PRIMARY KEY (`riga`,`colonna`))
 ENGINE = InnoDB;

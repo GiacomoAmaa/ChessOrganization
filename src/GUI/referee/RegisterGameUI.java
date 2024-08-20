@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -17,6 +18,9 @@ import GUI.BoardGUI;
 import GUI.api.UserInterface;
 import board.Board;
 import board.Game;
+import board.MoveParser;
+import data.Referee;
+import model.DBModel;
 import util.Color;
 import util.MoveSymbols;
 import util.PieceType;
@@ -48,10 +52,11 @@ public class RegisterGameUI implements UserInterface {
     
     private final JButton submitMoveButton = new JButton("Submit Move"),
     		backButton = new JButton("Undo Move ");
-    private int turn;
+    private int turn, gameId;
+    private final MoveParser parser = new MoveParser();
     private Color player;
 
-    public RegisterGameUI() {
+    public RegisterGameUI(int gameId) {
     	List.of(PieceType.UNKNOWN, PieceType.PAWN, PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN,PieceType.KING)
     		.forEach( x -> this.attackingPieceField.addItem(x));
     	List.of(PieceType.UNKNOWN, PieceType.PAWN, PieceType.KNIGHT, PieceType.BISHOP,	PieceType.ROOK, PieceType.QUEEN)
@@ -61,6 +66,7 @@ public class RegisterGameUI implements UserInterface {
     	List.of(MoveSymbols.UNKNOWN, MoveSymbols.CHECKMATE, MoveSymbols.STALEMATE, MoveSymbols.DRAW, MoveSymbols.CONCEDE)
 		.forEach( x -> this.endgameField.addItem(x));
     	this.turn = 1;
+    	this.gameId = gameId;
     	this.player = Color.WHITE;
     	setupForm();
     }
@@ -155,8 +161,23 @@ public class RegisterGameUI implements UserInterface {
         		String move = packMoveInfo();
         		if (!move.isEmpty()) {
         			if(endgameCheck.isSelected()) {
-        				// TODO chiamare query e aggiornare il database
-        				
+        				int white = Referee.DAO.getWhite(DBModel.getConnection(), turn);
+        				int black = Referee.DAO.getBlack(DBModel.getConnection(), turn);
+        				var moves = game.getMoves();
+        				for(int i = 0 ; i < moves.size() ; i++) {
+        					parser.parse(moves.get(i).getX());
+        					int whiteMove = parser.isMoveType(MoveSymbols.CASTLING) ? 
+        							registerCastle(white, move) : registerRegularMove(white, move);
+        					parser.parse(moves.get(i).getY());
+        					Optional<Integer> blackMove;
+        					if (!moves.get(i).getY().isEmpty()) {
+        						blackMove = Optional.of(parser.isMoveType(MoveSymbols.CASTLING) ? 
+            							registerCastle(black, move) : registerRegularMove(black, move));
+        					} else {
+        						blackMove = Optional.ofNullable(null);
+        					}
+        					Referee.DAO.registerTurn(DBModel.getConnection(), whiteMove, blackMove, i);
+        				}        				
         			} else {
             			System.out.println(move);
             			turn = player.isWhite() ? turn : turn + 1;
@@ -189,6 +210,40 @@ public class RegisterGameUI implements UserInterface {
 
     }
 
+    private int registerRegularMove(int playerId, String move) {
+    	return Referee.DAO.registerMove(
+				DBModel.getConnection(),
+				playerId,
+				gameId,
+				parser.isMoveType(MoveSymbols.PROMOTION) ? PieceType.PAWN.getSymbol(): parser.getAttacker().charAt(0),
+				Optional.ofNullable(
+						parser.isMoveType(MoveSymbols.PROMOTION) ? parser.getAttacker().charAt(0) : null),
+				Optional.ofNullable(
+						parser.isMoveType(MoveSymbols.CAPTURE) ? parser.getDefender().charAt(0) : null),
+				parser.isMoveType(MoveSymbols.CHECKMATE),
+				parser.getArrivalCol(),
+				parser.getArrivalRow(),
+				parser.getStartingCol(),
+				parser.getStartingRow(),
+				move);
+    }
+
+    private int registerCastle(int playerId, String move) {
+    	return Referee.DAO.registerMove(
+				DBModel.getConnection(),
+				playerId,
+				gameId,
+				PieceType.KING.getSymbol(),
+				Optional.ofNullable(null),
+				Optional.ofNullable(null),
+				parser.isMoveType(MoveSymbols.CHECKMATE),
+				parser.getStartingCol(),
+				parser.getStartingRow(),
+				parser.getAttacker().charAt(0),
+				Character.getNumericValue(parser.getAttacker().charAt(1)),
+				move);
+    }
+
     private String packMoveInfo() {
 		String result, attacker, defender, from, to, type ;
 		result = attacker = defender = from = to = type = "";
@@ -215,10 +270,10 @@ public class RegisterGameUI implements UserInterface {
     				return "";
     			} else {
     				type = MoveSymbols.PROMOTION.getSymbol();
-    				attacker = ((PieceType) promotedPieceField.getSelectedItem()).getSymbol();
+    				attacker = Character.toString(((PieceType) promotedPieceField.getSelectedItem()).getSymbol());
     			}
     		} else {
-    			attacker = ((PieceType) attackingPieceField.getSelectedItem()).getSymbol();
+    			attacker = Character.toString(((PieceType) attackingPieceField.getSelectedItem()).getSymbol());
     		}
 
     		if(captureCheck.isSelected()) {
@@ -227,7 +282,7 @@ public class RegisterGameUI implements UserInterface {
     				return "";
     			} else {
     				type += MoveSymbols.CAPTURE.getSymbol();
-    				defender = ((PieceType) capturedPieceField.getSelectedItem()).getSymbol();
+    				defender = Character.toString(((PieceType) capturedPieceField.getSelectedItem()).getSymbol());
     			}
     		}
 

@@ -1,18 +1,18 @@
 package util;
 
 public enum PieceType {
-    KING("King", "K"),
-    QUEEN("Queen", "Q"),
-    ROOK("Rook", "R"),
-    BISHOP("Bishop", "B"),
-    KNIGHT("Knight", "N"),
-    PAWN("Pawn", "P"),
-	UNKNOWN("--", "--");
+    KING("King", 'K'),
+    QUEEN("Queen", 'Q'),
+    ROOK("Rook", 'R'),
+    BISHOP("Bishop", 'B'),
+    KNIGHT("Knight", 'N'),
+    PAWN("Pawn", 'P'),
+	UNKNOWN("--", '-');
 
     private final String name;
-    private final String symbol;
+    private final char symbol;
 
-    PieceType(String name, String symbol) {
+    PieceType(String name, char symbol) {
         this.name = name;
         this.symbol = symbol;
     }
@@ -21,7 +21,7 @@ public enum PieceType {
         return name;
     }
 
-    public String getSymbol() {
+    public char getSymbol() {
         return symbol;
     }
 
@@ -30,13 +30,13 @@ public enum PieceType {
         return name;
     }
 
-	public static PieceType getPieceTypeFromSymbol(final String sym) {
+	public static PieceType getPieceTypeFromSymbol(final char sym) {
 		switch(sym) {
-		case "N": return PieceType.KNIGHT;
-		case "K": return PieceType.KING;
-		case "Q": return PieceType.QUEEN;
-		case "R": return PieceType.ROOK;
-		case "B": return PieceType.BISHOP;
+		case 'N': return PieceType.KNIGHT;
+		case 'K': return PieceType.KING;
+		case 'Q': return PieceType.QUEEN;
+		case 'R': return PieceType.ROOK;
+		case 'B': return PieceType.BISHOP;
 		default : return PieceType.PAWN;
 		}
 	}
