@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -50,7 +51,7 @@ public class Tournament {
 				int gameId;
 				var subs = stmt2.executeQuery();
 				while(subs.next()) {
-					subIds.add(subs.getInt("isiscrizione"));
+					subIds.add(subs.getInt("idiscrizione"));
 				}
 				for(int i = 0; i < (subIds.size() * (subIds.size()-1)); i++) {
 					try(var stmt3 = DAOUtils.prepare(conn, Queries.CREATE_GAME, id, Date.valueOf(LocalDate.now()))) {
@@ -66,8 +67,40 @@ public class Tournament {
 				 * against the other subId, remove both the gameIds you used (picked randomly), remove the first subId,
 				 * repeat.
 				 */
-				return false;
-				// DELETE THIS
+				var done = new HashSet<Integer>();
+				for(int sub : subIds) {
+					for (int other : subIds) {
+						if(sub != other && !done.contains(other)) {
+							int index = rnd.nextInt(gameIds.size());
+							var whiteGame = gameIds.get(index);
+							// can't get the same game twice
+							gameIds.remove(index);
+							try(var participant1 = DAOUtils.prepare(conn, Queries.ADD_PARTICIPANT, whiteGame,
+									sub, "Bianco");
+									var participant2 = DAOUtils.prepare(conn, Queries.ADD_PARTICIPANT, whiteGame,
+											other, "Nero")){
+								participant1.executeUpdate();
+								participant2.executeUpdate();
+							}
+							// get another game
+							index = rnd.nextInt(gameIds.size());
+							var blackGame = gameIds.get(index);
+							// can't get the same game twice neither
+							gameIds.remove(index);
+							// do exactly the opposite
+							try(var participant1 = DAOUtils.prepare(conn, Queries.ADD_PARTICIPANT, whiteGame,
+									sub, "Nero");
+									var participant2 = DAOUtils.prepare(conn, Queries.ADD_PARTICIPANT, whiteGame,
+											other, "Bianco")){
+								participant1.executeUpdate();
+								participant2.executeUpdate();
+							}
+						}
+					}
+					// in this way subs will never be selected again in other
+					done.add(sub);
+				}
+				return true;
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return false;
