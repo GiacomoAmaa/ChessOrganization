@@ -22,22 +22,22 @@ public class Referee {
 		Referee.lastname = lastname;
 	}
 	
-	public static int getCardNumber() {
+	public int getCardNumber() {
 		return cardNumber;
 	}
-	public static String getUsername() {
+	public String getUsername() {
 		return username;
 	}
-	public static String getPassword() {
+	public String getPassword() {
 		return password;
 	}
-	public static String getCf() {
+	public String getCf() {
 		return cf;
 	}
-	public static String getName() {
+	public String getName() {
 		return name;
 	}
-	public static String getLastname() {
+	public String getLastname() {
 		return lastname;
 	}
 	

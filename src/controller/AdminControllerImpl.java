@@ -7,6 +7,7 @@ import GUI.admin.AdminUI;
 import controller.api.AdminController;
 import data.Admin;
 import data.Location;
+import data.Tournament;
 import model.DBModel;
 
 public class AdminControllerImpl implements AdminController{
@@ -80,7 +81,7 @@ public class AdminControllerImpl implements AdminController{
 	}
 	
 	public void createTournament(String address, String name, int numSubs, int idAnnounce) {
-		Admin.DAO.createTournament(DBModel.getConnection(), address, name, numSubs, idAnnounce);
+		Tournament.DAO.ufficialize(DBModel.getConnection(), address, name, numSubs, idAnnounce);
 	}
 	
 	public void deleteAnnounce(int idAnnounce) {
