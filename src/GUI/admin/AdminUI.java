@@ -3,7 +3,6 @@ package GUI.admin;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -126,7 +125,6 @@ public class AdminUI extends JFrame {
 		AdminUI.tourn.add(AdminUI.create);
 		// inserting centerPane into pane
 		AdminUI.panel.add(centerPane, BorderLayout.CENTER);
-		// TODO il font non carica
 		AdminUI.defText.setFont(AdminUI.fontLoad.getTextFont().deriveFont(AdminUI.TEXT_SIZE));
 		// initializing northern panel
 		List.of(tourn, locations, search, referee, logout, post, create).stream()
@@ -245,14 +243,5 @@ public class AdminUI extends JFrame {
 			}
 			
 		});
-	}
-	
-	/** 
-	 * Wraps components into panels containing them, with horizontal disposition on the right.
-	 */
-	private JComponent wrapH(Collection<JComponent> elements) {
-		var wrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		elements.stream().forEach(e -> wrapper.add(e));
-		return wrapper;
 	}
 }

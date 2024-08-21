@@ -3,7 +3,6 @@ package controller.api;
 import java.sql.Date;
 import java.util.List;
 
-import data.Tournament;
 
 /** 
  * The controller of an Admin-type user, each admin must be able to create new tournaments,

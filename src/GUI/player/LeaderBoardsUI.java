@@ -32,10 +32,6 @@ public class LeaderBoardsUI implements UserInterface {
             public void actionPerformed(ActionEvent e) {
             	String type = (String) searchType.getSelectedItem();
 
-                Object[][] data = {
-                        {"Anatoly","Karpov", "2850", "10000", "80%"},
-                        {"Gary","Kasparov", "2860", "10000", "81%"}
-                    };
               	switch(type) {
             	case "Most active":
             		//TODO get data
@@ -48,7 +44,7 @@ public class LeaderBoardsUI implements UserInterface {
             		break;
             	}
                 table.clearTable();
-                table.addRows(data, false);
+                //table.addRows(data, false);
             }
         });
         

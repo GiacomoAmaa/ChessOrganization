@@ -3,7 +3,6 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,7 +20,7 @@ public class Table {
     
 	private final JPanel panel =  new JPanel(new BorderLayout()),
 			buttons = new JPanel();
-	private List<String> ids = new ArrayList<>();
+	private List<Integer> ids = new ArrayList<>();
 	private String[] columns;
 	private String searchType;
     private JTable table;
@@ -150,13 +149,13 @@ public class Table {
     }
        
     // Method to add multiple rows to the table
-    public void addRows(Object[][] data, boolean useId) {
+    public void addRows(List<List<Object>> data, boolean useId) {
     	ids.clear();
-    	for (Object[] row : data) {
+    	for (List<Object> row : data) {
         	List<Object> tmp = new ArrayList<>();
-        	List<Object> tmpRow = new ArrayList<>(Arrays.asList(row));
+        	List<Object> tmpRow = new ArrayList<>(row);
         	if(useId) {
-        		ids.add(tmpRow.get(0).toString());
+        		ids.add((Integer) tmpRow.get(0));
         		tmpRow.remove(0);
         	}
         	tmp.add(false);

@@ -44,7 +44,8 @@ public class TournamentUI implements UserInterface {
 						}
 				});
 			});
-			table.addRows(dataArray, false);
+			//TODO sistemare
+			//table.addRows(dataArray, false);
 		}
 		setUp(data, table, keys, create, delete);
 		table.addButton(this.create);
@@ -102,7 +103,8 @@ public class TournamentUI implements UserInterface {
 						}
 				});
 			});
-			table.addRows(dataArray, false);
+			// TODO sistemare
+			//table.addRows(dataArray, false);
 		}
 		setUp(data, table, keys, createTourn, deleteAnn);
 		upper.add(table.getLowerPanel());

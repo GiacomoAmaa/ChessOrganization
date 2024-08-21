@@ -142,4 +142,36 @@ public class Queries {
 			"insert into partite "
 			+ "(codpartita, codtorneo, vincitore, data) "
 			+ "values (NULL, ?, '', ?)";
+	public static final String GET_PLAYERS =
+			"select idgiocatore nome cognome punteggio "
+			+ "from giocatori "
+			+ "where nome like concat('%', ?, '%')"
+			+ "and cognome like concat('%', ?, '%')";
+	public static final String GET_GAME_WITH_PLAYERS = 
+			"select p.codpartita, p.data, t.nome as nome_torneo, p.vincitore,	"
+			+ " g1.nome as nome_bianco, g1.cognome as cognome_bianco, "
+			+ " g2.nome as nome_nero, g2.cognome as cognome_nero "
+			+ "from partite p "
+			+ "join tornei t on p.codtorneo = t.codtorneo "
+			+ "join partecipanti pb on p.codpartita = pb.codpartita and pb.fazione = 'Bianco' "
+			+ "join iscrizioni isb on pb.idiscrizione = isb.idiscrizione "
+			+ "join giocatori g1 on isb.idgiocatore = g1.idgiocatore "
+			+ "join partecipanti pn on p.codpartita = pn.codpartita and pn.fazione = 'Nero' "
+			+ "join iscrizioni isn on pn.idiscrizione = isn.idiscrizione "
+			+ "join giocatori g2 on isn.idgiocatore = g2.idgiocatore "
+			+ "where ( g1.nome like concat('%', ?, '%') "
+			+ "or g1.cognome like concat('%', ?, '%') ) "
+			+ "and ( g2.nome like concat('%', ?, '%') "
+			+ "or g2.cognome like concat('%', ?, '%') ) "
+			+ "and p.data between ? and ? "
+			+ "and p.vincitore in ('Bianco', 'Nero', 'Pari') ";
+	public static final String OLDEST_DATE =
+			"select min(data) as data from partite ";
+	public static final String GET_GAME_MOVES =
+			"select t.numturno, mb.stringamossa as mossa_bianca, mn.stringamossa as mossa_nera "
+			+ "from turni t "
+			+ "join mosse mb on t.mossabianca = mb.idmossa "
+			+ "left join mosse mn on t.mossanera = mn.idmossa "
+			+ "where t.codpartita = ? "
+			+ "order by t.numturno asc ";
 }

@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -38,7 +37,8 @@ public class TournamentsUI implements UserInterface{
 						}
 				});
 			});
-			table.addRows(dataArray, false);
+				//TODO fixare
+			//table.addRows(dataArray, false);
 		}
 		var btn = table.getButton();
 		btn.addActionListener(new ActionListener() {

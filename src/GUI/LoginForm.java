@@ -28,7 +28,6 @@ import javax.swing.ImageIcon;
 import util.Pair;
 import util.TextPrompt;
 import util.UserType;
-import util.loaders.FontLoader;
 
 public class LoginForm extends JFrame {
 	
@@ -49,7 +48,6 @@ public class LoginForm extends JFrame {
 	private static final JPasswordField password = new JPasswordField(LoginForm.MAX_LENGTH);
 	private static final ImageIcon logo = new ImageIcon(LoginForm.class.getResource("/icons/logo.png"));
 	private static final UpdateAgent agent = new UpdateAgent();
-	private static final FontLoader fontload = new FontLoader();
 	
 	public LoginForm() {
 		super("Chess Organization");

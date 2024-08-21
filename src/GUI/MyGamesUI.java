@@ -55,13 +55,10 @@ public class MyGamesUI implements UserInterface {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object[][] data = {
-                        {"Player A","Player B", "Player A", "2023-05-20", "Torneo 1"},
-                        {"Player C","Player D", "Draw", "2023-06-10", "Torneo 2"},
-                        {"Player E","Player F", "Player F", "2023-07-15", "Torneo 3"},
-                    };
+
                 table.clearTable();
-                table.addRows(data, false);
+                //TODO fixare
+                //table.addRows(data, false);
             }
         });
 

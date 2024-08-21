@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,7 +24,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import GUI.api.UserInterface;
-import util.TextPrompt;
 
 public class AddRefereeUI implements UserInterface {
 	

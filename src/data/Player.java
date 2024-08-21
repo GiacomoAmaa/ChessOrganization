@@ -2,6 +2,7 @@ package data;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -78,16 +79,17 @@ public final class Player {
 			return null;
 		}
 		
-		public static List<Tournament> tournamentsForPlayer(Connection conn, int playerId) {
-			// TODO implementation
-			return null;
+		public static ResultSet searchPlayer(Connection conn, String partialName, String partialSurname ) {
+			try(var stmt = DAOUtils.prepare(conn, Queries.GET_PLAYERS, partialName, partialSurname)){
+				var resultSet = stmt.executeQuery();
+				resultSet.next();
+				return resultSet;
+
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
 		}
-		
-		public static List<Player> searchPlayer(Connection conn, String input) {
-			// TODO implementation
-			return null;
-		}
-		
+
 		public static List<Game> searchGames(Connection conn, String input) {
 			// TODO implementation
 			return null;

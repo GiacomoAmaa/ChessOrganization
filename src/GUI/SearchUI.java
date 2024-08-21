@@ -86,21 +86,12 @@ public class SearchUI implements UserInterface {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(searchType.getSelectedItem().equals("Players")){
-                    Object[][] data = {
-                            {"Anatoly","Karpov", "2850", "10000", "80%"},
-                            {"Gary","Kasparov", "2860", "10000", "81%"}
-                        };
                     table.clearTable();
-                    table.addRows(data, false);
+                    //table.addRows(data, false);
                 	//TODO chiama interfaccia con database e passa risultato query a table
                 } else {
-                    Object[][] data = {
-                            {"Player A","Player B", "Player A", "2023-05-20", "Torneo 1"},
-                            {"Player C","Player D", "Draw", "2023-06-10", "Torneo 2"},
-                            {"Player E","Player F", "Player F", "2023-07-15", "Torneo 3"},
-                        };
                     table.clearTable();
-                    table.addRows(data, false);
+                    //table.addRows(data, false);
                 	//TODO chiama interfaccia con database e passa risultato query a table
                 }
             }
