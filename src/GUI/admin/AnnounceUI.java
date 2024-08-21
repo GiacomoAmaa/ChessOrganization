@@ -111,7 +111,7 @@ public class AnnounceUI implements UserInterface {
 
 				announceName.setText("");
 				minSubs.setValue(2);
-				maxSubs.setValue(32);
+				maxSubs.setValue(12);
 				address.setSelectedIndex(-1);
 			}
 		});

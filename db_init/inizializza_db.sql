@@ -50,11 +50,42 @@ INSERT INTO giocatori (idgiocatore, punteggio, username, password, cf, nome, cog
 (NULL, 0, 'williamK', 'pwdWilliam49', 'KNWWLL80W01H501K', 'William', 'Knowles'),
 (NULL, 0, 'yasmineO', 'pwdYasmine50', 'ONYYSM85Y01H501O', 'Yasmine', 'Ortega');
 
-INSERT INTO 'organizzatori' (idadmin, nome, cognome, cf, username, password)
-VALUES (NULL, 'Giorgio', 'Brighi', 'GBDNEFN3944N4UB4', 'admin', 'root');
+INSERT INTO organizzatori (idadmin, nome, cognome, cf, username, password) VALUES 
+(NULL, 'Giorgio', 'Brighi', 'GBDNEFN3944N4UB4', 'admin', 'root');
 
-INSERT INTO 'arbitri' (numtessera, nome, cognome, cf , username, password)
-VALUES (NULL, 'Pierluigi', 'Collina', 'PRLCLLIDWE56N345', 'ref', 'root');
+INSERT INTO sedi (indirizzo, indicazioni) VALUES 
+('Via Garibaldi, 34, Bologna', 'Vicino alla piazza centrale.'),
+('Corso Vittorio Emanuele, 12, Bari', 'Di fronte al teatro comunale.'),
+('Via del Corso, 89, Roma', 'Accanto alla libreria storica.'),
+('Piazza del Duomo, 1, Milano', 'Dietro alla cattedrale principale.');
 
-INSERT INTO 'giocatori' (idgiocatore, nome, cognome, cf , username, password)
+INSERT INTO arbitri (numtessera, nome, cognome, cf , username, password) VALUES 
+(NULL, 'Marco', 'Rossi', 'RSSMRC75A01H501Z', 'marco.rossi', 'r4U9J5kLnHqZcB8x1D0FmNnQzY7gP4Tr'),
+(NULL, 'Luca', 'Verdi', 'VRDLUC85B10F205N', 'luca.verdi', 'D3tL0xR2qV1WpS8zA6F9GnYkU0bI7H5m'),
+(NULL, 'Giulia', 'Bianchi', 'BNCGLI92C12C532S', 'giulia.bianchi', 'Y9T1WqF4cK6mR3Z7N8pL0gX2V5dQ9J1r'),
+(NULL, 'Francesco', 'Neri', 'NRIFNC70D20E121R', 'francesco.neri', 'P6kQ1L7nC3X9zA0gV8tW4H2yR5mJ8B1d'),
+(NULL, 'Elena', 'Russo', 'RSSENN80E15L845P', 'elena.russo', 'V7Z9tR2wN6mL0Q5gX3pF1D8kY4J3B2c'),
+(NULL, 'Matteo', 'Ferrari', 'FRRMTE90F25C151T', 'matteo.ferrari', 'N3mL9P7yX6T1kW2rF4G8dV0zQ5J3C2n'),
+(NULL, 'Sara', 'Esposito', 'SPSRSE85G10B013M', 'sara.esposito', 'Q4X9tW7pN3K2gL8dF1J6mR0yV5Z1C7n'),
+(NULL, 'Davide', 'Conti', 'CNTDVD85H25D963O', 'davide.conti', 'L2J8P1rQ7V6X3mK5gF0Y9W4dT3B9Z6n'),
+(NULL, 'Anna', 'Galli', 'GLLNNA90I15E098U', 'anna.galli', 'B1D4tN6mR9J3X7kP2G8L5Y0W9F3Q1Z2c'),
+(NULL, 'Giovanni', 'Romano', 'RMNGVN95L30H211E', 'giovanni.romano', 'Z2P9tQ4W7mL8X1gN3F0V5J6kY3R9C7d'),
+(NULL, 'Chiara', 'Marini', 'MRNCHR70D15C351B', 'chiara.marini', 'R5X1W9pQ2J7tL3mV8G6F0K4nY3B9C2d'),
+(NULL, 'Pierluigi', 'Collina', 'PRLCLLIDWE56N345', 'ref', 'root');
+
+INSERT INTO gestione (indirizzo, numtessera) VALUES 
+('Via Garibaldi, 34, Bologna', 1),
+('Via Garibaldi, 34, Bologna', 2),
+('Via Garibaldi, 34, Bologna', 3),
+('Via Garibaldi, 34, Bologna', 4),
+('Corso Vittorio Emanuele, 12, Bari', 5),
+('Corso Vittorio Emanuele, 12, Bari', 6),
+('Corso Vittorio Emanuele, 12, Bari', 7),
+('Corso Vittorio Emanuele, 12, Bari', 8),
+('Piazza del Duomo, 1, Milano', 9),
+('Piazza del Duomo, 1, Milano', 10),
+('Piazza del Duomo, 1, Milano', 11),
+('Piazza del Duomo, 1, Milano', 12);
+
+INSERT INTO giocatori (idgiocatore, nome, cognome, cf , username, password)
 VALUES (NULL, 'Pino', 'Bianchi', 'PNIBNCIDWE56N345', 'player', 'root');

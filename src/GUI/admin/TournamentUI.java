@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import GUI.Table;
 import GUI.api.UserInterface;
+import data.Tournament;
 
 public class TournamentUI implements UserInterface {
 	
@@ -60,7 +61,13 @@ public class TournamentUI implements UserInterface {
 			public void actionPerformed(ActionEvent e) {
 				var index = table.getSelectedRowIndex();
 				if (index != -1) {
-					// create should also initialize games and participants.
+					var row = data.get(index);
+					Map<String, Object> map = Map.of("address", row.get(1), "name", row.get(0),
+							"numSubs", Integer.valueOf(row.get(3).split("/")[0]),
+							"idannounce", keys.get(index));
+					create.accept(map);
+					JOptionPane.showMessageDialog(null, "The tournament has been succesfully created.");
+					return;
 				}
 				JOptionPane.showMessageDialog(null, "No index has been selected.",
 						"No index selected", JOptionPane.WARNING_MESSAGE);

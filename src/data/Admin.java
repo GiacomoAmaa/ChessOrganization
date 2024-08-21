@@ -119,15 +119,6 @@ public class Admin {
 			}
 		}
 		
-		public static void createTournament(Connection conn, String address, String name, int numSubs, int idAnnounce) {
-			try (var stmt = DAOUtils.prepare(conn, Queries.CREATE_TOURNAMENT, address, name,
-					Date.valueOf(LocalDate.now()), numSubs, idAnnounce)) {
-				stmt.executeUpdate();
-			} catch (SQLException e) {
-				throw new DAOException(e);
-			}
-		}
-		
 		public static void deleteAnnounce(Connection conn, int idAnnounce) {
 			try (var stmt = DAOUtils.prepare(conn, Queries.DELETE_ANNOUNCE, idAnnounce);
 					var stmt1 = DAOUtils.prepare(conn, Queries.DELETE_SUBS, idAnnounce);) {

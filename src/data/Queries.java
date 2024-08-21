@@ -100,14 +100,16 @@ public class Queries {
 			+ "where idannuncio = ? "
 			+ "and idgiocatore = ?";
 	public static final String 	GET_EXP_ANNOUNCES =
-			"select * "
-			+ "from annunci "
-			+ "where DATE(scadenza) <= ?";
+			"SELECT * "
+			+ "FROM annunci a "
+			+ "WHERE DATE(a.scadenza) <= ? "
+			+ "and not exists (select * from tornei "
+			+ "where idannuncio = a.idannuncio)";
 	// should also create participants and games;
 	public static final String CREATE_TOURNAMENT =
 			"insert into tornei(codtorneo, indirizzo, nome, "
 			+ "datainizio, numpartecipanti, idannuncio) values "
-			+ "(NULL, ?, ?, ?, ?)";
+			+ "(NULL, ?, ?, ?, ?, ?)";
 	public static String DELETE_ANNOUNCE =
 			"delete from annunci "
 			+ "where idannuncio = ?";
@@ -129,7 +131,6 @@ public class Queries {
 	public static final String GAME_ADD_TURN =
 			"insert into turni (codpartita, mossabianca, mossanera, numturno) "
 			+ "values (?, ?, ?, ?)";
-
 	public static final String GET_ALL_SUBS = 
 			"select * "
 			+ "from iscrizioni "
@@ -142,4 +143,18 @@ public class Queries {
 			"insert into partite "
 			+ "(codpartita, codtorneo, vincitore, data) "
 			+ "values (NULL, ?, '', ?)";
+	public static final String GET_ANNOUNCE_DATA = 
+			"select * "
+			+ "from annunci "
+			+ "where idannuncio = ?";
+	public static final String CHOOSE_REFS =
+			"select a.numtessera, (select count(*) from designazioni d where d.numtessera = a.numtessera ) as design "
+			+ "from arbitri a, gestione g "
+			+ "where a.numtessera = g.numtessera "
+			+ "and g.indirizzo = ? "
+			+ "order by design desc "
+			+ "limit ?";
+	public static final String ADD_DESIGNATION =
+			"insert into designazioni (coddesignazione, numtessera, codtorneo) "
+			+ "values (NULL, ?, ?)";
 }

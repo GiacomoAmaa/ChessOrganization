@@ -58,6 +58,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`annunci` (
     `idannuncio`  INT NOT NULL AUTO_INCREMENT, -- DA AGGIUNGERE
+    `nome` VARCHAR(20),
     `indirizzo` CHAR(50) NOT NULL,
     `scadenza` DATE NOT NULL,
     `maxiscrizioni` INT NOT NULL,
@@ -73,6 +74,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`tornei` (
     `codtorneo` INT NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(20),
     `indirizzo` CHAR(50) NOT NULL,
     `datainizio` DATE NOT NULL,
     `numpartecipanti` INT NOT NULL,
