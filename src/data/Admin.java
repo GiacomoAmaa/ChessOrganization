@@ -92,8 +92,8 @@ public class Admin {
 			}
 		}
 		
-		public static List<List<String>> getAnnounces(Connection conn) {
-			var ret = new ArrayList<List<String>>();
+		public static List<List<Object>> getAnnounces(Connection conn) {
+			var ret = new ArrayList<List<Object>>();
 			try (var stmt = DAOUtils.prepare(conn, Queries.GET_EXP_ANNOUNCES, java.sql.Date.valueOf(LocalDate.now()))) {
 				var resultSet = stmt.executeQuery();
 				while(resultSet.next()) {
@@ -111,7 +111,7 @@ public class Admin {
 					}
 					int max = resultSet.getInt("maxiscrizioni");
 					capacity += Integer.toString(max);
-					ret.add(List.of(name, location, date, capacity, id));
+					ret.add(new ArrayList<Object>(List.of(name, location, date, capacity, id)));
 				}
 				return ret;
 			} catch (SQLException e) {

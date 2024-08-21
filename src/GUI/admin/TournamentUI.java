@@ -14,19 +14,18 @@ import javax.swing.JPanel;
 
 import GUI.Table;
 import GUI.api.UserInterface;
-import data.Tournament;
 
 public class TournamentUI implements UserInterface {
 	
 	private final JPanel upper = new JPanel(),
 			lower = new JPanel();
-	private Supplier<List<List<String>>> announces;
+	private Supplier<List<List<Object>>> announces;
 	private Consumer<Map<String, Object>> createTourn;
 	private Consumer<Integer> deleteAnn;
 	private final JButton create = new JButton("Create Tournament"),
 			delete = new JButton("Delete announce");
 	
-	public TournamentUI(Supplier<List<List<String>>> announces, Consumer<Map<String, Object>> create,
+	public TournamentUI(Supplier<List<List<Object>>> announces, Consumer<Map<String, Object>> create,
 			Consumer<Integer> delete) {
 		this.announces = announces;
 		this.createTourn = create;
@@ -35,18 +34,19 @@ public class TournamentUI implements UserInterface {
 		var table = new Table("Tournaments");
 		var keys = new ArrayList<Integer>();
 		if(data.size() != 0) {
-			var dataArray = new Object[data.size()][data.get(0).size()];
+			var dataArray = new ArrayList<List<Object>>();
 				data.stream().forEach(e -> {
+					var tmp = new ArrayList<Object>();
 					e.stream().forEach(elem -> {
-						if(e.indexOf(elem) != 4) {
-							dataArray[data.indexOf(e)][e.indexOf(elem)] = elem;
+						if(e.indexOf(elem) == 4) {
+							keys.add(Integer.valueOf(elem.toString()));
 						} else {
-							keys.add(Integer.valueOf(elem));
+							tmp.add(elem);
 						}
+					});
+					dataArray.add(tmp);
 				});
-			});
-			//TODO sistemare
-			//table.addRows(dataArray, false);
+			table.addRows(dataArray, false);
 		}
 		setUp(data, table, keys, create, delete);
 		table.addButton(this.create);
@@ -55,7 +55,7 @@ public class TournamentUI implements UserInterface {
 		upper.repaint();
 	}
 
-	private void setUp(List<List<String>> data, Table table, ArrayList<Integer> keys, Consumer<Map<String, Object>> create, Consumer<Integer> delete) {
+	private void setUp(List<List<Object>> data, Table table, ArrayList<Integer> keys, Consumer<Map<String, Object>> create, Consumer<Integer> delete) {
 		this.create.addActionListener(new ActionListener() {
 
 			@Override
@@ -64,7 +64,7 @@ public class TournamentUI implements UserInterface {
 				if (index != -1) {
 					var row = data.get(index);
 					Map<String, Object> map = Map.of("address", row.get(1), "name", row.get(0),
-							"numSubs", Integer.valueOf(row.get(3).split("/")[0]),
+							"numSubs", Integer.valueOf(row.get(3).toString().split("/")[0]),
 							"idannounce", keys.get(index));
 					create.accept(map);
 					JOptionPane.showMessageDialog(null, "The tournament has been succesfully created.");
@@ -106,7 +106,7 @@ public class TournamentUI implements UserInterface {
 						if(e.indexOf(elem) != 4) {
 							dataArray[data.indexOf(e)][e.indexOf(elem)] = elem;
 						} else {
-							keys.add(Integer.valueOf(elem));
+							keys.add(Integer.valueOf(elem.toString()));
 						}
 				});
 			});

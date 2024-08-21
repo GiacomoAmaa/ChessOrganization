@@ -121,8 +121,8 @@ public final class Player {
 			}
 		}
 		
-		public static List<List<String>> getAnnounces(Connection conn) {
-			var ret = new ArrayList<List<String>>();
+		public static List<List<Object>> getAnnounces(Connection conn) {
+			var ret = new ArrayList<List<Object>>();
 			try (var stmt = DAOUtils.prepare(conn, Queries.GET_ANNOUNCES, Date.valueOf(LocalDate.now()))) {
 				var resultSet = stmt.executeQuery();
 				while(resultSet.next()) {

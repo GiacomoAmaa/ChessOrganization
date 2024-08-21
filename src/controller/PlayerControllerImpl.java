@@ -62,7 +62,7 @@ public class PlayerControllerImpl implements PlayerController{
 	}
 
 	@Override
-	public List<List<String>> tournaments() {
+	public List<List<Object>> tournaments() {
 		return Player.DAO.getAnnounces(DBModel.getConnection());
 	}
 

@@ -39,7 +39,7 @@ public class PlayerUI extends JFrame{
 	private static final double PADDING = 0.067;
 	private static final float TEXT_SIZE = 15,
 			TITLE_SIZE = 18;
-	private Supplier<List<List<String>>> getAnn;
+	private Supplier<List<List<Object>>> getAnn;
 	private Function<Integer, Boolean> isSub;
 	private Function<Integer, Boolean> subscribe;
 	private Consumer<Integer> unsubscribe;
@@ -75,7 +75,7 @@ public class PlayerUI extends JFrame{
 		setVisible(true);
 	}
 	
-	public void setTournamentsHandler(Supplier<List<List<String>>> handler, Function<Integer, Boolean> isSub,
+	public void setTournamentsHandler(Supplier<List<List<Object>>> handler, Function<Integer, Boolean> isSub,
 			Function<Integer, Boolean> subscribe, Consumer<Integer> unsubscribe) {
 		this.getAnn = handler;
 		this.isSub = isSub;

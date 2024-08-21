@@ -21,24 +21,25 @@ public class TournamentsUI implements UserInterface{
 			lower = new JPanel();
 	private final JButton unsub = new JButton("Unsubscribe");
 	
-	public TournamentsUI(Supplier<List<List<String>>> handler, Function<Integer, Boolean> isSub,
+	public TournamentsUI(Supplier<List<List<Object>>> handler, Function<Integer, Boolean> isSub,
 			Function<Integer, Boolean> subscribe, Consumer<Integer> unsubscribe) {
 		var data = handler.get();
 		var table = new Table("Announces");
 		var keys = new ArrayList<Integer>();
 		if(data.size() != 0) {
-			var dataArray = new Object[data.size()][data.get(0).size()];
+			var dataArray = new ArrayList<List<Object>>();
 				data.stream().forEach(e -> {
+					var tmp = new ArrayList<Object>();
 					e.stream().forEach(elem -> {
-						if(e.indexOf(elem) != 4) {
-							dataArray[data.indexOf(e)][e.indexOf(elem)] = elem;
+						if(e.indexOf(elem) == 4) {
+							keys.add(Integer.valueOf(elem.toString()));
 						} else {
-							keys.add(Integer.valueOf(elem));
+							tmp.add(elem);
 						}
+					});
+					dataArray.add(tmp);
 				});
-			});
-				//TODO fixare
-			//table.addRows(dataArray, false);
+			table.addRows(dataArray, false);
 		}
 		var btn = table.getButton();
 		btn.addActionListener(new ActionListener() {
@@ -47,8 +48,8 @@ public class TournamentsUI implements UserInterface{
 			public void actionPerformed(ActionEvent e) {
 				int index = table.getSelectedRowIndex();
 				if (index != -1) {
-					var subs = Integer.valueOf(data.get(index).get(3).split("/")[0]);
-					var max = Integer.valueOf(data.get(index).get(3).split("/")[1]);
+					var subs = Integer.valueOf(data.get(index).get(3).toString().split("/")[0]);
+					var max = Integer.valueOf(data.get(index).get(3).toString().split("/")[1]);
 					if(!isSub.apply(keys.get(index)) && 
 							subs < max) {
 						if (subscribe.apply(keys.get(index))) {

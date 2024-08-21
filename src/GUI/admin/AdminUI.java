@@ -45,7 +45,7 @@ public class AdminUI extends JFrame {
 	private Function<Map<String, String>, Integer> addRef;
 	private Consumer<Map<String, Object>> createTourn;
 	private Consumer<Integer> deleteAnn;
-	private Supplier<List<List<String>>> getAnnounces;
+	private Supplier<List<List<Object>>> getAnnounces;
 	private static final JPanel panel = new JPanel(new BorderLayout()),
 			// centerPane represents the center section of pane
 			centerPane = new JPanel();
@@ -142,7 +142,7 @@ public class AdminUI extends JFrame {
 	}
 	
 	public void setTournamentsHandler(Consumer<Map<String, Object>> createTourn, Consumer<Integer> deleteAnn,
-			Supplier<List<List<String>>> getAnnounces) {
+			Supplier<List<List<Object>>> getAnnounces) {
 		this.createTourn = createTourn;
 		this.deleteAnn = deleteAnn;
 		this.getAnnounces = getAnnounces;

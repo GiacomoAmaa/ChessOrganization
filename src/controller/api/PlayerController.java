@@ -28,7 +28,7 @@ public interface PlayerController {
 	 * Shows all the tournaments where the user can subscribe to or is already signed to.
 	 * @return 
 	 */
-	public List<List<String>> tournaments();
+	public List<List<Object>> tournaments();
 	
 	/**
 	 * Shows to the player all of his/her stats:

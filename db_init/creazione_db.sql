@@ -81,7 +81,8 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`tornei` (
     `idannuncio` INT NOT NULL,
     PRIMARY KEY (`codtorneo`),
     FOREIGN KEY (`indirizzo`) REFERENCES `ChessOrg`.`sedi` (`indirizzo`),
-    FOREIGN KEY (`idannuncio`) REFERENCES `ChessOrg`.`annunci` (`idannuncio`))
+    FOREIGN KEY (`idannuncio`) REFERENCES `ChessOrg`.`annunci` (`idannuncio`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -104,8 +105,10 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`gestione` (
     `indirizzo` CHAR(50) NOT NULL,
     `numtessera` INT NOT NULL,
     PRIMARY KEY (`numtessera`, `indirizzo`),
-    FOREIGN KEY (`numtessera`) REFERENCES `ChessOrg`.`arbitri` (`numtessera`),
-    FOREIGN KEY (`indirizzo`) REFERENCES `ChessOrg`.`sedi` (`indirizzo`))
+    FOREIGN KEY (`numtessera`) REFERENCES `ChessOrg`.`arbitri` (`numtessera`)
+    ON DELETE CASCADE,
+    FOREIGN KEY (`indirizzo`) REFERENCES `ChessOrg`.`sedi` (`indirizzo`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -117,7 +120,8 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`designazioni` (
     `codtorneo` INT NOT NULL,
     PRIMARY KEY (`coddesignazione`, `numtessera`),
     FOREIGN KEY (`numtessera`) REFERENCES `ChessOrg`.`arbitri` (`numtessera`),
-    FOREIGN KEY (`codtorneo`) REFERENCES `ChessOrg`.`tornei` (`codtorneo`))
+    FOREIGN KEY (`codtorneo`) REFERENCES `ChessOrg`.`tornei` (`codtorneo`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -129,7 +133,8 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`partite` (
     `data` DATE NOT NULL,
     `vincitore` VARCHAR(20) CHECK (`vincitore` IN ('Bianco', 'Nero', 'Pari','')),
     PRIMARY KEY (`codpartita`),
-    FOREIGN KEY (`codtorneo`) REFERENCES `ChessOrg`.`tornei` (`codtorneo`))
+    FOREIGN KEY (`codtorneo`) REFERENCES `ChessOrg`.`tornei` (`codtorneo`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -141,7 +146,8 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`partecipanti` (
     `fazione` VARCHAR(20) NOT NULL CHECK (`fazione` IN ('Bianco', 'Nero')),
     PRIMARY KEY (`codpartita`,`idiscrizione`),
     FOREIGN KEY (`idiscrizione`) REFERENCES `ChessOrg`.`iscrizioni` (`idiscrizione`),
-    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`))
+    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -171,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`mosse` (
     `colonnapartenza` CHAR(1) NOT NULL,
     `stringamossa` VARCHAR(30) NOT NULL,
     PRIMARY KEY (`idmossa`),
-    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`),
+    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`) ON DELETE CASCADE,
     FOREIGN KEY (`rigaarrivo`,`colonnaarrivo`) REFERENCES `ChessOrg`.`caselle` (`riga`,`colonna`),
     FOREIGN KEY (`rigapartenza`,`colonnapartenza`) REFERENCES `ChessOrg`.`caselle` (`riga`,`colonna`),
     FOREIGN KEY (`idiscrizione`) REFERENCES `ChessOrg`.`iscrizioni` (`idiscrizione`))
@@ -186,7 +192,8 @@ CREATE TABLE IF NOT EXISTS `ChessOrg`.`turni` (
     `mossanera` INT , -- da valutare
     `numturno` INT NOT NULL,
     PRIMARY KEY (`codpartita`, `numturno`),
-    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`),
+    FOREIGN KEY (`codpartita`) REFERENCES `ChessOrg`.`partite` (`codpartita`)
+    ON DELETE CASCADE,
     FOREIGN KEY (`mossabianca`) REFERENCES `mosse` (`idmossa`),
     FOREIGN KEY (`mossanera`) REFERENCES `mosse` (`idmossa`))
 ENGINE = InnoDB;

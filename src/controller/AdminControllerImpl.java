@@ -76,7 +76,7 @@ public class AdminControllerImpl implements AdminController{
 		return Location.DAO.getAllAdresses(DBModel.getConnection());
 	}
 	
-	public List<List<String>> getAnnounces() {
+	public List<List<Object>> getAnnounces() {
 		return Admin.DAO.getAnnounces(DBModel.getConnection());
 	}
 	
