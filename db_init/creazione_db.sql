@@ -22,7 +22,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ChessOrg`.`giocatori` (
     `idgiocatore` INT NOT NULL AUTO_INCREMENT,
-    `punteggio` INT NOT NULL,
+    `punteggio` INT  DEFAULT 1000,
     `username` CHAR(30) NOT NULL,
     `password` VARCHAR(512) NOT NULL,
     `cf` CHAR(16) NOT NULL,
