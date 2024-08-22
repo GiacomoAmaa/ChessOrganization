@@ -60,6 +60,17 @@ public class Game {
 			}
 		}
 
+		public static int getNumberofGames(Connection conn, int playerid) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.GAMES_PLAYED, playerid )) {
+				var resultSet = stmt.executeQuery();
+				resultSet.next();
+				return resultSet.getInt(0);
+			} catch (SQLException e) {
+				System.out.println(e);
+				throw new DAOException(e);
+			}
+		}
+
 	}
 
 }

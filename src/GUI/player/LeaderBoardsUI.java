@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 
 import GUI.Table;
 import GUI.api.UserInterface;
+import data.Player;
+import model.DBModel;
 
 public class LeaderBoardsUI implements UserInterface {
 	
@@ -17,7 +19,7 @@ public class LeaderBoardsUI implements UserInterface {
     private final JComboBox<String> searchType =
     		new JComboBox<>(new String[] {"Best players", "Most active", "Best climbers"});
     
-    private final Table table = new Table("Players");
+    private final Table table = new Table("Best players");
 	
 
 	public LeaderBoardsUI() {
@@ -34,17 +36,21 @@ public class LeaderBoardsUI implements UserInterface {
 
               	switch(type) {
             	case "Most active":
-            		//TODO get data
+            		table.setTableModel(type);
+                    table.clearTable();
+                    table.addRows(Player.DAO.mostActive(DBModel.getConnection()), true);
             		break;
             	case "Best climbers":
-            		//TODO get data
+            		table.setTableModel(type);
+                    table.clearTable();
+                    table.addRows(Player.DAO.bestClimber(DBModel.getConnection()), true);
             		break;
             	default:
-            		//TODO get data
+            		table.setTableModel(type);
+                    table.clearTable();
+                    table.addRows(Player.DAO.highestRated(DBModel.getConnection()), true);
             		break;
             	}
-                table.clearTable();
-                //table.addRows(data, false);
             }
         });
         
