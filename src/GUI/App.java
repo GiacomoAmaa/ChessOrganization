@@ -1,6 +1,5 @@
 package GUI;
 
-import GUI.player.PlayerUI;
 import controller.LoginControllerImpl;
 import util.loaders.FontLoader;
 import util.loaders.SoundManager;
@@ -26,7 +25,6 @@ public final class App {
      * @param args
      */
     public static void main(final String[] args) {
-
         var login = new LoginControllerImpl();
         /* does literally nothing but, in this way,
          * spotbugs isn't triggered
