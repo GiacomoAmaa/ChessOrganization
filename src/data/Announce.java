@@ -10,34 +10,34 @@ import model.DBModel;
 
 public class Announce {
 	
-	private static int idAnnounce;
-	private static String address;
-	private static Date expiringDate;
-	private static int maxSubs;
-	private static int minSubs;
-	private static int idAdmin;
+	private int idAnnounce;
+	private String address;
+	private Date expiringDate;
+	private int maxSubs;
+	private int minSubs;
+	private int idAdmin;
 	
 	public Announce(int idAnnounce, String address, Date expiringDate,
 			int maxSubs, int minSubs, int idAdmin) {
-		Announce.idAnnounce = idAnnounce;
-		Announce.address = address;
-		Announce.expiringDate = expiringDate;
-		Announce.maxSubs = maxSubs;
-		Announce.minSubs = minSubs;
-		Announce.idAdmin = idAdmin;
+		this.idAnnounce = idAnnounce;
+		this.address = address;
+		this.expiringDate = expiringDate;
+		this.maxSubs = maxSubs;
+		this.minSubs = minSubs;
+		this.idAdmin = idAdmin;
 	}
 	
 	public Announce(int idAnnounce) {
 		var map = Announce.DAO.getData(DBModel.getConnection(), idAnnounce);
-		Announce.idAnnounce = idAnnounce;
-		Announce.address = map.get("address").toString();
-		Announce.expiringDate = (Date)map.get("date");
-		Announce.maxSubs = (Integer)map.get("maxSubs");
-		Announce.minSubs = (Integer)map.get("minSubs");
-		Announce.idAdmin = (Integer)map.get("idadmin");
+		this.idAnnounce = idAnnounce;
+		this.address = map.get("address").toString();
+		this.expiringDate = (Date)map.get("date");
+		this.maxSubs = (Integer)map.get("maxSubs");
+		this.minSubs = (Integer)map.get("minSubs");
+		this.idAdmin = (Integer)map.get("idadmin");
 	}
 
-	public static int getIdAnnounce() {
+	public int getIdAnnounce() {
 		return idAnnounce;
 	}
 

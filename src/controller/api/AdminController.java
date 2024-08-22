@@ -11,18 +11,6 @@ import java.util.List;
 public interface AdminController {
 	
 	/**
-	 * @param input, an input string to search for players names
-	 * Lets the admin search for players through a searchbar
-	 */
-	public void searchPlayers(String input);
-	
-	/**
-	 * @param input, an input string to search for games names
-	 * Lets the admin search for players through a searchbar
-	 */
-	public void searchGames(String input);
-	
-	/**
 	 * creates a new tournament announce in the db
 	 * @param name name of the torunament
 	 * @param address location of the tournament

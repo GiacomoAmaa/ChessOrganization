@@ -15,56 +15,50 @@ import java.util.Optional;
  */
 public final class Player {
 	
-	private static int id;
-	private static int elo;
-	private static String username; 
-	private static String password;
-	private static String cf;
-	private static String name;
-	private static String lastname;
+	private int id;
+	private int elo;
+	private String username; 
+	private String password;
+	private String cf;
+	private String name;
+	private String lastname;
 	
 	public Player(int id, int elo, String username, String password, String cf, String name, String lastname) {
-		Player.id = id;
-		Player.elo = elo;
-		Player.username = username;
-		Player.password = password;
-		Player.cf = cf;
-		Player.name = name;
-		Player.lastname = lastname;
+		this.id = id;
+		this.elo = elo;
+		this.username = username;
+		this.password = password;
+		this.cf = cf;
+		this.name = name;
+		this.lastname = lastname;
 	}
 		
 	public int getId() {
-		return Player.id;
+		return this.id;
 	}
 
 	public int getElo() {
-		return Player.elo;
+		return this.elo;
 	}
 
 	public String getPassword() {
-		return Player.password;
+		return this.password;
 	}
 
 	public String getCf() {
-		return Player.cf;
+		return this.cf;
 	}
 
 	public String getName() {
-		return Player.name;
+		return this.name;
 	}
 
 	public String getLastname() {
-		return Player.lastname;
+		return this.lastname;
 	}
 	
 	public String getUsername() {
-		return Player.username;
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		var p = (Player) other;
-		return Player.id == p.getId();
+		return this.username;
 	}
 	
 	public final static class DAO {

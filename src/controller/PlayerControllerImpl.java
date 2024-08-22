@@ -10,11 +10,11 @@ import model.DBModel;
 
 public class PlayerControllerImpl implements PlayerController{
 	
-	private static Player model;
+	private Player model;
 	private static final PlayerUI view = new PlayerUI();
 	
 	public PlayerControllerImpl(Player p) {
-		PlayerControllerImpl.model = p;
+		model = p;
 		view.setTournamentsHandler(() -> {
 			return tournaments();
 		}, id -> {

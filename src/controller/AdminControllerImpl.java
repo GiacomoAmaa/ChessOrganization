@@ -12,13 +12,13 @@ import model.DBModel;
 
 public class AdminControllerImpl implements AdminController{
 	
-	private static Admin model;
+	private Admin model;
 	private static final AdminUI view = new AdminUI();
 
 	public AdminControllerImpl(Admin a) {
-		AdminControllerImpl.model = a;
+		model = a;
 		view.setPostHandler(map -> {
-			return postAnnounce((String)map.get("name"), (String)map.get("address"),
+			return postAnnounce(map.get("name").toString(), map.get("address").toString(),
 					(Date)map.get("date"), (Integer)map.get("max"),
 					(Integer)map.get("min"));
 		});
@@ -42,17 +42,6 @@ public class AdminControllerImpl implements AdminController{
 		});
 	}
 
-	@Override
-	public void searchPlayers(String input) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void searchGames(String input) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public boolean postAnnounce(String name, String address, Date expiringDate, int maxSubs, int minSubs) {

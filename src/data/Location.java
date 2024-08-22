@@ -7,12 +7,12 @@ import java.util.List;
 
 public class Location {
 	
-	private static String address;
-	private static String description;
+	private String address;
+	private String description;
 	
 	public Location(String address, String description) {
-		Location.address = address;
-		Location.description = description;
+		this.address = address;
+		this.description = description;
 	}
 
 	public String getAddress() {

@@ -6,20 +6,21 @@ import java.util.List;
 import java.util.Optional;
 
 public class Referee {
-	private static int cardNumber;
-	private static String username; 
-	private static String password;
-	private static String cf;
-	private static String name;
-	private static String lastname;
+
+	private int cardNumber;
+	private String username; 
+	private String password;
+	private String cf;
+	private String name;
+	private String lastname;
 	
 	public Referee(int cardNumber, String username, String password, String cf, String name, String lastname) {
-		Referee.cardNumber = cardNumber;
-		Referee.username = username;
-		Referee.password = password;
-		Referee.cf = cf;
-		Referee.name = name;
-		Referee.lastname = lastname;
+		this.cardNumber = cardNumber;
+		this.username = username;
+		this.password = password;
+		this.cf = cf;
+		this.name = name;
+		this.lastname = lastname;
 	}
 	
 	public int getCardNumber() {

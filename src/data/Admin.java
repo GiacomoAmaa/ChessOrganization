@@ -10,20 +10,20 @@ import java.util.Optional;
 
 public class Admin {
 	
-	private static int idAdmin;
-	private static String username;
-	private static String password;
-	private static String name;
-	private static String lastname;
-	private static String cf;
+	private int idAdmin;
+	private String username;
+	private String password;
+	private String name;
+	private String lastname;
+	private String cf;
 	
 	public Admin(int idAdmin, String username, String password, String name, String lastname, String cf) {
-		Admin.idAdmin = idAdmin;
-		Admin.username = username;
-		Admin.password = password;
-		Admin.name = name;
-		Admin.lastname = lastname;
-		Admin.cf = cf;
+		this.idAdmin = idAdmin;
+		this.username = username;
+		this.password = password;
+		this.name = name;
+		this.lastname = lastname;
+		this.cf = cf;
 	}
 
 	public int getIdAdmin() {
@@ -48,12 +48,6 @@ public class Admin {
 
 	public String getCf() {
 		return cf;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		var other = (Admin)obj;
-		return Admin.idAdmin == other.getIdAdmin();
 	}
 	
 	public final static class DAO {

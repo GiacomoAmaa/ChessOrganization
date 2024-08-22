@@ -28,6 +28,7 @@ import board.Board;
 
 public class  StatisticsUI implements UserInterface {
 	
+	private static final Random RANDOM = new Random();
 	private final Dimension formSize = new Dimension(624, 85);
 	private final JPanel stats = new JPanel(new GridLayout(0, 2));
 	private final JPanel graphs = new JPanel();
@@ -102,11 +103,9 @@ public class  StatisticsUI implements UserInterface {
     private void initHeatMap() {
     	// TODO rimuovere codice per test
     	List<Double> tryheat = new ArrayList<>(64);
-    	Random random = new Random();
-    	
+
         for (int i = 0; i < Board.NUM_TILES; i++) {
-            double value = random.nextDouble() * 6.0;
-            tryheat.add(value);
+            tryheat.add(StatisticsUI.RANDOM.nextDouble() * 6.0);
         }
     	//TODO get info from db
         for (int i = 0; i < Board.NUM_TILES; i++) {

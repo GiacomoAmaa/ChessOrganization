@@ -11,16 +11,16 @@ import java.util.Random;
 
 public class Tournament {
 	
-	private static int tournId;
-	private static String address;
-	private static String date;
-	private static int numParticipants;
+	private int tournId;
+	private String address;
+	private String date;
+	private int numParticipants;
 	
 	public Tournament(int tournId, String address, String date, int numParticipants) {
-		Tournament.tournId = tournId;
-		Tournament.address = address;
-		Tournament.date = date;
-		Tournament.numParticipants = numParticipants;
+		this.tournId = tournId;
+		this.address = address;
+		this.date = date;
+		this.numParticipants = numParticipants;
 	}
 	
 	public int getTournId() {
