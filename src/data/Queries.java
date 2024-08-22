@@ -189,4 +189,30 @@ public class Queries {
 	public static final String ADD_DESIGNATION =
 			"insert into designazioni (coddesignazione, numtessera, codtorneo) "
 			+ "values (NULL, ?, ?)";
+	public static final String MOST_ACTIVE_PLAYERS =
+			"select g.nome, g.cognome, g.punteggio, count(p.codpartita) as numero_partite "
+			+ "from giocatori g "
+			+ "join iscrizioni i on g.idgiocatore = i.idgiocatore "
+			+ "join partecipanti pt on i.idiscrizione = pt.idiscrizione "
+			+ "join partite p on pt.codpartita = p.codpartita "
+			+ "where p.data >= date_sub(curdate(), interval 1 month) "
+			+ "group by g.idgiocatore "
+			+ "order by numero_partite desc "
+			+ "limit 20";
+	public static final String HIGHEST_RATED =
+			"select nome, cognome, punteggio "
+			+ "from giocatori "
+			+ "order by punteggio desc "
+			+ "limit 20 ";
+	public static final String BEST_CLIMBERS =
+			"select g.nome, g.cognome, g.punteggio, count(p.codpartita) as numero_vittorie "
+			+ "from giocatori g "
+			+ "join iscrizioni i on g.idgiocatore = i.idgiocatore "
+			+ "join partecipanti pt on i.idiscrizione = pt.idiscrizione "
+			+ "join partite p on pt.codpartita = p.codpartita "
+			+ "where p.data >= date_sub(currdate(), interval 1 month) "
+			+ "and ((pt.fazione = 'Bianco' and p.vincitore = 'Bianco') "
+			+ "     or (pt.fazione = 'Nero' and p.vincitore = 'Nero')) "
+			+ "group by g.idgiocatore "
+			+ "order by numero_vittorie desc";
 }

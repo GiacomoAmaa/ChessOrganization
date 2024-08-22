@@ -84,7 +84,17 @@ public final class Player {
 			}
 		}
 
-		public static List<Game> searchGames(Connection conn, String input) {
+		public static List<Game> mostActive(Connection conn, Date today) {
+			// TODO implementation
+			return null;
+		}
+
+		public static List<Game> highestRated(Connection conn) {
+			// TODO implementation
+			return null;
+		}
+
+		public static List<Game> bestClimber(Connection conn, Date today) {
 			// TODO implementation
 			return null;
 		}

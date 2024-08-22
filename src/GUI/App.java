@@ -1,5 +1,6 @@
 package GUI;
 
+import GUI.player.PlayerUI;
 import controller.LoginControllerImpl;
 import util.loaders.FontLoader;
 import util.loaders.SoundManager;
@@ -18,7 +19,6 @@ public final class App {
     public static final SoundManager SOUND = new SoundManager();
 
     private App() {
-
     }
 
     /**
