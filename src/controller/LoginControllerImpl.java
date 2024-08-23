@@ -50,9 +50,9 @@ public class LoginControllerImpl implements LoginController {
 			case REFEREE:
 				if (!data.entrySet().isEmpty()) {
 					var referee = LoginControllerImpl.model.refereeAttempt(data.get("username"), data.get("password"), data.get("cardNumber"));
-					if(referee.isPresent()) {
+					if (referee.isPresent()) {
 						view.close();
-						//new RefereeControllerImpl(r.get()); need to do a referee UI
+						new RefereeControllerImpl(referee.get());
 						break;
 					}
 				}
@@ -78,6 +78,7 @@ public class LoginControllerImpl implements LoginController {
 			else {
 				var p = LoginControllerImpl.model.playerAttempt(data.get("username"), data.get("password"));
 				new PlayerControllerImpl(p.get());
+				return;
 			}
 		}
 		LoginControllerImpl.view.missingData();

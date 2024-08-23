@@ -7,161 +7,247 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
- * A representation of a data instance of a player in the database
+ * A representation of a data instance of a player in the database.
  */
 public final class Player {
-	
-	private int id;
-	private int elo;
-	private String username; 
-	private String password;
-	private String cf;
-	private String name;
-	private String lastname;
-	
-	public Player(int id, int elo, String username, String password, String cf, String name, String lastname) {
-		this.id = id;
-		this.elo = elo;
-		this.username = username;
-		this.password = password;
-		this.cf = cf;
-		this.name = name;
-		this.lastname = lastname;
-	}
-		
-	public int getId() {
-		return this.id;
-	}
 
-	public int getElo() {
-		return this.elo;
-	}
+    private int id;
+    private int elo;
+    private String username; 
+    private String password;
+    private String cf;
+    private String name;
+    private String lastname;
 
-	public String getPassword() {
-		return this.password;
-	}
+    /**
+     * the constructor.
+     * @param id
+     * @param elo
+     * @param username
+     * @param password
+     * @param cf
+     * @param name
+     * @param lastname
+     */
+    public Player(final int id, final int elo, final String username,
+            final String password, final String cf, final String name, final String lastname) {
+        this.id = id;
+        this.elo = elo;
+        this.username = username;
+        this.password = password;
+        this.cf = cf;
+        this.name = name;
+        this.lastname = lastname;
+    }
 
-	public String getCf() {
-		return this.cf;
-	}
+    /**
+     * getter for the id.
+     * @return the id
+     */
+    public int getId() {
+        return this.id;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * getter for the elo score.
+     * @return the int score
+     */
+    public int getElo() {
+        return this.elo;
+    }
 
-	public String getLastname() {
-		return this.lastname;
-	}
-	
-	public String getUsername() {
-		return this.username;
-	}
-	
-	public final static class DAO {
-		
-		public static Map<String, Number> stats(Connection conn, int playerId) {
-			// TODO implementation
-			return null;
-		}
-		
-		public static List<Game> gamesForPlayer(Connection conn, int playerId) {
-			// TODO implementation
-			return null;
-		}
-		
-		public static ResultSet searchPlayer(Connection conn, String partialName, String partialSurname ) {
-			try(var stmt = DAOUtils.prepare(conn, Queries.GET_PLAYERS, partialName, partialSurname)){
-				var resultSet = stmt.executeQuery();
-				resultSet.next();
-				return resultSet;
+    /**
+     * getter for the password.
+     * @return the password string
+     */
+    public String getPassword() {
+        return this.password;
+    }
 
-			} catch (SQLException e) {
-				throw new DAOException(e);
-			}
-		}
+    /**
+     * getter for the cf.
+     * @return the code
+     */
+    public String getCf() {
+        return this.cf;
+    }
 
-		public static List<Game> mostActive(Connection conn, Date today) {
-			// TODO implementation
-			return null;
-		}
+    /**
+     * geter for the name.
+     * @return the name
+     */
+    public String getName() {
+        return this.name;
+    }
 
-		public static List<Game> highestRated(Connection conn) {
-			// TODO implementation
-			return null;
-		}
+    /**
+     * getter for the lastname.
+     * @return the lastname
+     */
+    public String getLastname() {
+        return this.lastname;
+    }
 
-		public static List<Game> bestClimber(Connection conn, Date today) {
-			// TODO implementation
-			return null;
-		}
-		
-		public static Optional<Player> exists(Connection conn, String username, String password) {
-			try (var stmt = DAOUtils.prepare(conn, Queries.PLAYER_EXISTS, username, password)) {
-				var resultSet = stmt.executeQuery();
-				while(resultSet.next()) {
-					int id = resultSet.getInt("idgiocatore"), elo = resultSet.getInt("punteggio");
-					String cf =	resultSet.getString("cf"),
-						name = resultSet.getString("nome"),
-						lastname = resultSet.getString("cognome");
-					return Optional.of(new Player(id, elo, username, password, name, lastname, cf));
-				}
-				return Optional.empty();
-				
-			} catch (SQLException e) {
-				throw new DAOException(e);
-			}
-		}
-		
-		public static void newInstance(Connection conn, String name, String lastname, String cf, String username, String password) {
-			try (var stmt = DAOUtils.prepare(conn, Queries.PLAYER_REGISTER, username, password, cf, name, lastname)) {
-				stmt.executeUpdate();
-			} catch (SQLException e) {
-				System.out.println(e);
-				throw new DAOException(e);
-			}
-		}
-		
-		public static List<List<Object>> getAnnounces(Connection conn) {
-			var ret = new ArrayList<List<Object>>();
-			try (var stmt = DAOUtils.prepare(conn, Queries.GET_ANNOUNCES, Date.valueOf(LocalDate.now()))) {
-				var resultSet = stmt.executeQuery();
-				while(resultSet.next()) {
-					var id = Integer.toString(resultSet.getInt("idannuncio"));
-					var location = resultSet.getString("indirizzo");
-					var name = resultSet.getString("nome");
-					var date = ((Date)resultSet.getObject("scadenza")).toString();
-					var capacity = "";
-					try {
-						int subs = Announce.DAO.subsPerAnnounce(conn, resultSet.getInt("idannuncio"));
-						capacity += Integer.toString(subs)+"/";
-					} catch (Exception e) {
-						e.printStackTrace();
-						capacity += "0/";
-					}
-					int max = resultSet.getInt("maxiscrizioni");
-					capacity += Integer.toString(max);
-					ret.add(List.of(name, location, date, capacity, id));
-				}
-				return ret;
-			} catch (SQLException e) {
-				throw new DAOException(e);
-			}
-		}
-		
-		public static boolean isSubscribed(Connection conn, int playerId, int idAnnounce) {
-			try (var stmt = DAOUtils.prepare(conn, Queries.IS_PLAYER_SUBSCRIBED, playerId, idAnnounce)) {
-				var resultSet = stmt.executeQuery();
-				if(resultSet.next()) {
-					return true;
-				}
-				return false;
-			} catch (SQLException e) {
-				throw new DAOException(e);
-			}
-		}
-	}
+    /**
+     * getter for the username.
+     * @return the username
+     */
+    public String getUsername() {
+        return this.username;
+    }
+
+    /**
+     * Utility class for the interations with the database.
+     */
+    public static final class DAO {
+
+        /**
+         * searches for a player through the db.
+         * @param conn the connection to the bd
+         * @param partialName input string for the name
+         * @param partialSurname input string for the surname
+         * @return a resultSet containing the corresponding records
+         */
+        public static ResultSet searchPlayer(final Connection conn, final String partialName, final String partialSurname) {
+            try (var stmt = DAOUtils.prepare(conn, Queries.GET_PLAYERS, partialName, partialSurname)) {
+                var resultSet = stmt.executeQuery();
+                resultSet.next();
+                return resultSet;
+
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+
+        /**
+         * 
+         * @param conn
+         * @param today
+         * @return a list of games
+         */
+        public static List<Game> mostActive(final Connection conn, final Date today) {
+            // TODO implementation
+            return null;
+        }
+
+        /**
+         * 
+         * @param conn
+         * @return a list of games
+         */
+        public static List<Game> highestRated(final Connection conn) {
+            // TODO implementation
+            return null;
+        }
+
+        /**
+         * 
+         * @param conn
+         * @param today
+         * @return a list of games
+         */
+        public static List<Game> bestClimber(final Connection conn, final Date today) {
+            // TODO implementation
+            return null;
+        }
+
+        /**
+         * 
+         * @param conn
+         * @param username
+         * @param password
+         * @return an optional of a player if he/she exists,
+         * otherwise an empty optional is returned
+         */
+        public static Optional<Player> exists(final Connection conn, final String username, final String password) {
+            try (var stmt = DAOUtils.prepare(conn, Queries.PLAYER_EXISTS, username, password)) {
+                var resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("idgiocatore"), elo = resultSet.getInt("punteggio");
+                    String cf =    resultSet.getString("cf"),
+                        name = resultSet.getString("nome"),
+                        lastname = resultSet.getString("cognome");
+                    return Optional.of(new Player(id, elo, username, password, name, lastname, cf));
+                }
+                return Optional.empty();
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+
+        /**
+         * adds a new player to the database, through registration.
+         * @param conn
+         * @param name
+         * @param lastname
+         * @param cf
+         * @param username
+         * @param password
+         */
+        public static void newInstance(final Connection conn, final String name, final String lastname,
+                final String cf, final String username, final String password) {
+            try (var stmt = DAOUtils.prepare(conn, Queries.PLAYER_REGISTER, username, password, cf, name, lastname)) {
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e);
+                throw new DAOException(e);
+            }
+        }
+
+        /**
+         * gets all the tournament announces from the database.
+         * @param conn the connection to the db
+         * @return List where every row represents an announce, and every column
+         * contains an information about it -> name, location, expire date, capacity, id
+         */
+        public static List<List<Object>> getAnnounces(final Connection conn) {
+            var ret = new ArrayList<List<Object>>();
+            try (var stmt = DAOUtils.prepare(conn, Queries.GET_ANNOUNCES, Date.valueOf(LocalDate.now()))) {
+                var resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    var id = Integer.toString(resultSet.getInt("idannuncio"));
+                    var location = resultSet.getString("indirizzo");
+                    var name = resultSet.getString("nome");
+                    var date = ((Date) resultSet.getObject("scadenza")).toString();
+                    var capacity = "";
+                    try {
+                        int subs = Announce.DAO.subsPerAnnounce(conn, resultSet.getInt("idannuncio"));
+                        capacity += Integer.toString(subs) + "/";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        capacity += "0/";
+                    }
+                    int max = resultSet.getInt("maxiscrizioni");
+                    capacity += Integer.toString(max);
+                    ret.add(List.of(name, location, date, capacity, id));
+                }
+                return ret;
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+
+        /**
+         * checks whether a player is subscribed to a certain tournament
+         * or not.
+         * @param conn the connection to the db
+         * @param playerId the id of the player
+         * @param idAnnounce the id of the announce to check
+         * @return true if the player is subscribed, false otherwise
+         */
+        public static boolean isSubscribed(final Connection conn, final int playerId, final int idAnnounce) {
+            try (var stmt = DAOUtils.prepare(conn, Queries.IS_PLAYER_SUBSCRIBED, playerId, idAnnounce)) {
+                var resultSet = stmt.executeQuery();
+                if (resultSet.next()) {
+                    return true;
+                }
+                return false;
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+    }
 }
