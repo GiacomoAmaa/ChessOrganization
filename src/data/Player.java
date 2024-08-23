@@ -2,7 +2,6 @@ package data;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -111,47 +110,79 @@ public final class Player {
          * @param partialSurname input string for the surname
          * @return a resultSet containing the corresponding records
          */
-        public static ResultSet searchPlayer(final Connection conn, final String partialName, final String partialSurname) {
-            try (var stmt = DAOUtils.prepare(conn, Queries.GET_PLAYERS, partialName, partialSurname)) {
+        public static List<List<Object>> searchPlayer(Connection conn, String partialName, String partialSurname ) {
+            try(var stmt = DAOUtils.prepare(conn, Queries.GET_PLAYERS, partialName, partialSurname)){
+                List<List<Object>> data = new ArrayList<>();
                 var resultSet = stmt.executeQuery();
-                resultSet.next();
-                return resultSet;
-
+                while (resultSet.next()) {
+                    List<Object> row = new ArrayList<>();
+                    row.add(List.of(resultSet.getInt("idgiocatore"),
+                            resultSet.getInt("nome"),
+                            resultSet.getString("cognome"),
+                            resultSet.getString("punteggio")
+                            ));
+                }
+                return data;
             } catch (SQLException e) {
                 throw new DAOException(e);
             }
         }
 
-        /**
-         * 
-         * @param conn
-         * @param today
-         * @return a list of games
-         */
-        public static List<Game> mostActive(final Connection conn, final Date today) {
-            // TODO implementation
-            return null;
+        public static List<List<Object>> mostActive(Connection conn) {
+            try(var stmt = DAOUtils.prepare(conn, Queries.MOST_ACTIVE_PLAYERS)){
+                List<List<Object>> data = new ArrayList<>();
+                var resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    List<Object> row = new ArrayList<>();
+                    row.add(List.of(resultSet.getInt("idgiocatore"),
+                            resultSet.getInt("nome"),
+                            resultSet.getString("cognome"),
+                            resultSet.getString("punteggio"),
+                            resultSet.getString("numero_partite")
+                            ));
+                }
+                return data;
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
         }
 
-        /**
-         * 
-         * @param conn
-         * @return a list of games
-         */
-        public static List<Game> highestRated(final Connection conn) {
-            // TODO implementation
-            return null;
+        public static List<List<Object>> highestRated(Connection conn) {
+            try(var stmt = DAOUtils.prepare(conn, Queries.HIGHEST_RATED)){
+                List<List<Object>> data = new ArrayList<>();
+                var resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    List<Object> row = new ArrayList<>();
+                    row.add(List.of(resultSet.getInt("idgiocatore"),
+                            resultSet.getInt("nome"),
+                            resultSet.getString("cognome"),
+                            resultSet.getString("punteggio"),
+                            resultSet.getString("numero_partite")
+                            ));
+                }
+                return data;
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
         }
 
-        /**
-         * 
-         * @param conn
-         * @param today
-         * @return a list of games
-         */
-        public static List<Game> bestClimber(final Connection conn, final Date today) {
-            // TODO implementation
-            return null;
+        public static List<List<Object>> bestClimber(Connection conn) {
+            try(var stmt = DAOUtils.prepare(conn, Queries.BEST_CLIMBERS)){
+                List<List<Object>> data = new ArrayList<>();
+                var resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    List<Object> row = new ArrayList<>();
+                    row.add(List.of(resultSet.getInt("idgiocatore"),
+                            resultSet.getInt("nome"),
+                            resultSet.getString("cognome"),
+                            resultSet.getString("punteggio"),
+                            resultSet.getString("numero_vittorie")
+                            ));
+                }
+                return data;
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
         }
 
         /**
@@ -250,4 +281,5 @@ public final class Player {
             }
         }
     }
+
 }

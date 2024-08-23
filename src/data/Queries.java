@@ -343,7 +343,7 @@ public final class Queries {
      * played in the last month.
      */
     public static final String MOST_ACTIVE_PLAYERS =
-            "select g.nome, g.cognome, g.punteggio, count(p.codpartita) as numero_partite "
+            "select g.idgiocatore, g.nome, g.cognome, g.punteggio, count(p.codpartita) as numero_partite "
             + "from giocatori g "
             + "join iscrizioni i on g.idgiocatore = i.idgiocatore "
             + "join partecipanti pt on i.idiscrizione = pt.idiscrizione "
@@ -357,9 +357,13 @@ public final class Queries {
      * get's a ordered list of players, based on the elo score.
      */
     public static final String HIGHEST_RATED =
-            "select nome, cognome, punteggio "
-            + "from giocatori "
-            + "order by punteggio desc "
+            "select g.idgiocatore, g.nome, g.cognome, g.punteggio, count(p.codpartita) as numero_partite "
+            + "from giocatori g "
+            + "left join iscrizioni i on g.idgiocatore = i.idgiocatore "
+            + "left join partecipanti pa on i.idiscrizione = pa.idiscrizione "
+            + "left join partite p on pa.codpartita = p.codpartita "
+            + "group by g.idgiocatore, g.username, g.punteggio "
+            + "order by g.punteggio desc "
             + "limit 20 ";
 
     /**
@@ -367,7 +371,7 @@ public final class Queries {
      * played in the last month.
      */
     public static final String BEST_CLIMBERS =
-            "select g.nome, g.cognome, g.punteggio, count(p.codpartita) as numero_vittorie "
+            "select g.idgiocatore, g.nome, g.cognome, g.punteggio, count(p.codpartita) as numero_vittorie "
             + "from giocatori g "
             + "join iscrizioni i on g.idgiocatore = i.idgiocatore "
             + "join partecipanti pt on i.idiscrizione = pt.idiscrizione "

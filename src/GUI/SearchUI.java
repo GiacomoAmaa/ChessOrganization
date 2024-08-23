@@ -16,6 +16,9 @@ import com.toedter.calendar.JDateChooser;
 
 import GUI.api.UserInterface;
 import GUI.player.StatisticsUI;
+import data.Game;
+import data.Player;
+import model.DBModel;
 
 public class SearchUI implements UserInterface {
 	
@@ -56,7 +59,7 @@ public class SearchUI implements UserInterface {
     	final Date today = new Date();
     	this.secondDate.setMaxSelectableDate(today);
     	this.secondDate.setDate(today);
-    	// TODO SearchUI.firstDate.setMinSelectableDate(today); da recuperare dal database
+    	this.firstDate.setMinSelectableDate(Game.DAO.getOldestGame(DBModel.getConnection()));
     	this.firstDate.getDateEditor().getUiComponent().setFocusable(false);       
     	this.secondDate.getDateEditor().getUiComponent().setFocusable(false);
     	this.firstDate.setEnabled(false);       
@@ -87,12 +90,15 @@ public class SearchUI implements UserInterface {
             public void actionPerformed(ActionEvent e) {
                 if(searchType.getSelectedItem().equals("Players")){
                     table.clearTable();
-                    //table.addRows(data, false);
-                	//TODO chiama interfaccia con database e passa risultato query a table
+                    var list = Player.DAO.searchPlayer(DBModel.getConnection(), firstName.getText(),
+                    		secondName.getText());
+                    list.forEach( x -> x.add(Game.DAO.getNumberofGames(DBModel.getConnection(), (int) x.get(0))));
+                    table.addRows(list, true);
                 } else {
                     table.clearTable();
-                    //table.addRows(data, false);
-                	//TODO chiama interfaccia con database e passa risultato query a table
+                    var list = Game.DAO.getGameWithPlayers(DBModel.getConnection(), firstName.getText(),
+                    		secondName.getText(), firstDate.getDate(), secondDate.getDate());
+                    table.addRows(list, true);
                 }
             }
         });

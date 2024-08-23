@@ -13,8 +13,9 @@ public class Table {
 	private static final String[] GAMES = {"Select", "White Player", "Black Player", "Winner",
 			"Date", "Tournament"};
 	private static final String[] PLAYERS = {"Select", "Name", "Surname", "Elo",
-			"Games Played", "Win Rate"};
+			"Games Played"};
 	private static final String[] ANNOUNCES = {"Select", "Name", "Location", "Date", "Capacity"};
+	private static final String[] LEADERBOARD2 = {"Select", "Name", "Surname", "Elo", "Games Won"};
     private static final JButton confirm = new JButton("Confirm");
     private static final JButton subscribe = new JButton("Subscribe");
     
@@ -37,6 +38,9 @@ public class Table {
     	case "Tournaments":
     		setTableModel(type);
     		break;
+    	case "Best players":
+    		setTableModel(type);
+    		break;
     	default:
     		setTableModel("Players");
     		break;
@@ -46,15 +50,17 @@ public class Table {
 
 
 	public void setTableModel(String searchType) {
-    	this.searchType = searchType;
-    	/*if(!searchType.equals("Announces"))
-    		this.columns = searchType.equals("Players") ? PLAYERS : GAMES;
-    	else {
+    	this.searchType = searchType;    	
+    	
+    	if(searchType.equals("Announces") || searchType.equals("Tournaments"))
     		this.columns = ANNOUNCES;
-    	}*/
-    	this.columns = searchType.equals("Announces") || searchType.equals("Tournaments") ? ANNOUNCES :
-    		searchType.equals("Players") ? PLAYERS : GAMES;
-    		
+    	else if(searchType.equals("Most active") || searchType.equals("Best players")){
+    		this.columns = PLAYERS;
+    	} else if(searchType.equals("Best climbers")){
+    		this.columns = LEADERBOARD2;
+    	} else {
+    		this.columns = searchType.equals("Players") ? PLAYERS : GAMES;
+    	}
 
         // Create the table model
         tableModel = new DefaultTableModel(columns,0) {
@@ -93,8 +99,8 @@ public class Table {
         	if (i == 0) {
         		columnModel.getColumn(i).setPreferredWidth(50);
         	} else {
-        		var width = searchType.equals("Announces")||
-                		searchType.equals("Tournaments") ? 150 : 100;
+        		var width = !searchType.equals("Games") ||!searchType.equals("")
+        				|| !searchType.equals("Players") ? 100 : 150;
                 table.getColumnModel().getColumn(i).setPreferredWidth(width);
         	}
         }
@@ -122,7 +128,7 @@ public class Table {
         		buttons.add(subscribe);
         	}
         	this.panel.add(buttons, BorderLayout.SOUTH);
-        } else if (searchType.equals("Games") || searchType.equals("Players")){
+        } else {
         	this.panel.add(confirm, BorderLayout.SOUTH);
         }
     }
