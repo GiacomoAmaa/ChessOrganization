@@ -62,6 +62,7 @@ public class PlayerUI extends JFrame{
 	private static final FontLoader fontLoad = new FontLoader();
 
 	private static Optional<JMenu> selected = Optional.empty();
+	private int playerId;
 	
 	public PlayerUI() {
 		super("Chess Organization");
@@ -92,7 +93,7 @@ public class PlayerUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlayerUI.selected = Optional.of(PlayerUI.personal);
-				loadUI(new MyGamesUI(UserType.PLAYER));
+				loadUI(new MyGamesUI(UserType.PLAYER, playerId));
 				update();
 			}
 		});
@@ -101,7 +102,7 @@ public class PlayerUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlayerUI.selected = Optional.of(PlayerUI.personal);
-				loadUI(new StatisticsUI());
+				loadUI(new StatisticsUI(playerId));
 				update();
 			}
 		});
@@ -224,6 +225,14 @@ public class PlayerUI extends JFrame{
 			}
 			
 		});
+	}
+
+	/**
+	 * Sets player id.
+	 * @param id player id
+	 */
+	public void setPlayerId(final int id) {
+		this.playerId = id;
 	}
 	
 }

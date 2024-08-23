@@ -33,10 +33,10 @@ public class Queries {
 			+ "and i.idgiocatore = ?";
 	// could be all in one, needs optimization - - -
 	public static final String GAMES_PLAYED = 
-			"select count distinct * "
-			+ "from partecipanti p, iscrizioni i "
-			+ "where p.idiscrizione = i.idiscrizione "
-			+ "and i.idgiocatore = ?";
+		    "select count(distinct p.codpartita) as numero_partite_giocate "
+		    + "from partecipanti p "
+		    + "join iscrizioni i on p.idiscrizione = i.idiscrizione "
+		    + "where i.idgiocatore = ?";
 	public static final String GAMES_AS_WHITE = 
 			"select count distinct * "
 			+ "from partecipanti p, iscrizioni i "
@@ -219,4 +219,21 @@ public class Queries {
 			+ "     or (pt.fazione = 'Nero' and p.vincitore = 'Nero')) "
 			+ "group by g.idgiocatore "
 			+ "order by numero_vittorie desc";
+	public static final String GET_GAME_VS_OPPONENT =
+			"select p.codpartita, g_bianco.nome as nome_bianco, g_bianco.cognome as cognome_bianco, "
+			+ "g_nero.nome as nome_nero, g_nero.cognome as cognome_nero, "
+			+ "p.vincitore, p.data, t.nome as nome_torneo "
+			+ "from partite p "
+			+ "join partecipanti pa_bianco on p.codpartita = pa_bianco.codpartita "
+			+ "join iscrizioni i_bianco on pa_bianco.idiscrizione = i_bianco.idiscrizione "
+			+ "join giocatori g_bianco on i_bianco.idgiocatore = g_bianco.idgiocatore "
+			+ "join partecipanti pa_nero on p.codpartita = pa_nero.codpartita "
+			+ "join iscrizioni i_nero on pa_nero.idiscrizione = i_nero.idiscrizione "
+			+ "join giocatori g_nero on i_nero.idgiocatore = g_nero.idgiocatore "
+			+ "join tornei t on p.codtorneo = t.codtorneo "
+			+ "where (g_bianco.idgiocatore = ? or g_nero.idgiocatore = ? ) "
+			+ "and (( g_bianco.nome like concat('%', ?, '%') and g_bianco.cognome like concat('%', ?, '%') and g_nero.idgiocatore = ? ) "
+			+ "or (g_nero.nome like concat('%', ?, '%') and g_nero.cognome like concat('%', ?, '%') and g_bianco.idgiocatore = ? )) "
+			+ "and p.data < ? "
+			+ "order by p.data ";
 }

@@ -34,6 +34,28 @@ public class Game {
 			}
 		}
 
+		public static List<List<Object>> getGameVsOpponent(Connection conn, int myId, String oppName, String oppSurname,
+				Date before) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.GET_GAME_VS_OPPONENT, myId, myId,
+					oppName, oppSurname, myId, oppName, oppSurname, myId, new java.sql.Date(before.getTime()))) {
+				List<List<Object>> data = new ArrayList<>();
+				var resultSet = stmt.executeQuery();
+				while (resultSet.next()) {
+					List<Object> row = new ArrayList<>();
+					row.add(List.of(resultSet.getInt("codpartita"),
+							resultSet.getString("nome_bianco") + " " + resultSet.getString("cognome_bianco"),
+							resultSet.getString("nome_nero") + " " + resultSet.getString("cognome_nero"),
+							resultSet.getString("vincitore"),
+							resultSet.getString("nome_torneo")
+							));
+				}
+				return data;
+			} catch (SQLException e) {
+				System.out.println(e);
+				throw new DAOException(e);
+			}
+		}
+
 		public static List<Pair<String,String>> getGameMoves(Connection conn, int codPartita) {
 			try (var stmt = DAOUtils.prepare(conn, Queries.GET_GAME_MOVES, codPartita )) {
 				List<Pair<String,String>> list = new ArrayList<>();
@@ -53,7 +75,7 @@ public class Game {
 			try (var stmt = DAOUtils.prepare(conn, Queries.OLDEST_DATE )) {
 				var resultSet = stmt.executeQuery();
 				resultSet.next();
-				return resultSet.getDate("date");
+				return resultSet.getDate("data");
 			} catch (SQLException e) {
 				System.out.println(e);
 				throw new DAOException(e);

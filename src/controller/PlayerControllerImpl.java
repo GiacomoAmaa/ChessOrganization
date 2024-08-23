@@ -24,6 +24,7 @@ public class PlayerControllerImpl implements PlayerController{
 		}, id -> {
 			unsubscribe(id);
 		});
+		view.setPlayerId(this.model.getId());
 	}
 	
 	/**

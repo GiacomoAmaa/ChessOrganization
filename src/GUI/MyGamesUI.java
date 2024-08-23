@@ -18,14 +18,16 @@ import com.toedter.calendar.JDateChooser;
 import GUI.api.UserInterface;
 import GUI.player.StatisticsUI;
 import GUI.referee.RegisterGameUI;
+import data.Game;
+import model.DBModel;
 import util.UserType;
 
 public class MyGamesUI implements UserInterface {
 	private final JPanel panel = new JPanel(new GridLayout(0, 4));
 	private final Table table = new Table("Games");
     
-    private final JLabel label1 = new JLabel("Black:   ", SwingConstants.CENTER),
-    		label2 = new JLabel("White:   ", SwingConstants.CENTER);
+    private final JLabel label1 = new JLabel("Opponent Name:   ", SwingConstants.RIGHT),
+    		label2 = new JLabel("Opponent Surname:   ", SwingConstants.RIGHT);
 
     private final JTextField firstName = new JTextField(),
     		secondName = new JTextField();
@@ -33,32 +35,31 @@ public class MyGamesUI implements UserInterface {
     
     private final JButton searchButton = new JButton("Search");
     
-    public MyGamesUI(UserType user) {
+    public MyGamesUI(final UserType user, final int playerId) {
         this.panel.add(label1);
         this.panel.add(firstName);
         this.panel.add(label2);
         this.panel.add(secondName);
-        this.panel.add(new JLabel("Since:   ", SwingConstants.CENTER));
+        this.panel.add(new JLabel("Played Before:   ", SwingConstants.RIGHT));
         this.panel.add(firstDate);
         this.panel.add(new JLabel(""));
         this.panel.add(searchButton);
-    	setupForm(user);
+    	setupForm(user, playerId);
     }
 
-    private void setupForm(UserType user) {
+    private void setupForm(final UserType user, final int playerId) {
     	final Date today = new Date();
     	this.firstDate.setMaxSelectableDate(today);
-    	this.firstDate.setDate(today);
-    	// TODO SearchUI.firstDate.setMinSelectableDate(today); da recuperare dal database     
+    	this.firstDate.setDate(today);   
     	this.firstDate.getDateEditor().getUiComponent().setFocusable(false);
         
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 table.clearTable();
-                //TODO fixare
-                //table.addRows(data, false);
+                var list = data.Game.DAO.getGameVsOpponent(DBModel.getConnection(), playerId ,
+                		firstName.getText(), firstName.getText(), firstDate.getDate());
+                table.addRows(list, true);
             }
         });
 
@@ -69,10 +70,11 @@ public class MyGamesUI implements UserInterface {
             	if (index != -1) {
             		UserInterface ui ;
             		if (user.equals(UserType.PLAYER)) {
-            			ui = table.getSearchType().equals("Players") ? new StatisticsUI() : new BoardGUI();
+            			ui = table.getSearchType().equals("Players")
+            					? new StatisticsUI(table.getSelectedRowIndex())
+            							: new BoardGUI(Game.DAO.getGameMoves(DBModel.getConnection(), table.getSelectedRowIndex()));
             		} else {
-            			ui = new RegisterGameUI(0);
-            			//TODO ritornare l'id effettivo del coso selezionato 
+            			ui = new RegisterGameUI(table.getSelectedRowIndex());
             		}
                 	panel.removeAll();
                 	panel.setLayout(new FlowLayout());
@@ -101,5 +103,6 @@ public class MyGamesUI implements UserInterface {
 	public JPanel getLowerPanel() {
 		return this.table.getLowerPanel();
 	}
+
 }
 

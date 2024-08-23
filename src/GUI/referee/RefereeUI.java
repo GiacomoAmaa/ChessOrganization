@@ -53,6 +53,8 @@ public class RefereeUI extends JFrame{
 
 	private static Optional<JMenu> selected = Optional.empty();
 	
+	private int refereeId;
+	
 	public RefereeUI() {
 		super("Chess Organization");
 		setSize(RefereeUI.screen);
@@ -78,7 +80,7 @@ public class RefereeUI extends JFrame{
 		});
 
 		setHandler(RefereeUI.designations, () -> {
-			loadUI(new MyGamesUI(UserType.REFEREE));
+			loadUI(new MyGamesUI(UserType.REFEREE, refereeId));
 			RefereeUI.selected = Optional.of(RefereeUI.search);
 			update();
 		});
@@ -185,5 +187,12 @@ public class RefereeUI extends JFrame{
 			
 		});
 	}
-	
+
+	/**
+	 * Sets player id.
+	 * @param id player id
+	 */
+	public void setPlayerId(final int id) {
+		this.refereeId = id;
+	}
 }

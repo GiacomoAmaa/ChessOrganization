@@ -59,7 +59,7 @@ public class LeaderBoardsUI implements UserInterface {
             public void actionPerformed(ActionEvent e) {
             	int index = table.getSelectedRowIndex();
             	if (index != -1) {
-                	UserInterface ui = new StatisticsUI();
+                	UserInterface ui = new StatisticsUI(table.getSelectedRowIndex());
 
                 	lpanel.removeAll();
                 	lpanel.add(ui.getLowerPanel());

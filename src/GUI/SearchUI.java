@@ -108,8 +108,9 @@ public class SearchUI implements UserInterface {
             public void actionPerformed(ActionEvent e) {
             	int index = table.getSelectedRowIndex();
             	if (index != -1) {
-                	UserInterface ui = table.getSearchType().equals("Players") ? new StatisticsUI() : new BoardGUI();
-
+                	UserInterface ui = table.getSearchType().equals("Players")
+                			? new StatisticsUI(table.getSelectedRowIndex())
+                					: new BoardGUI(Game.DAO.getGameMoves(DBModel.getConnection(), table.getSelectedRowIndex()));
                 	table.getLowerPanel().removeAll();
                 	table.getLowerPanel().add(ui.getLowerPanel());
                 	table.getLowerPanel().revalidate();
@@ -119,11 +120,9 @@ public class SearchUI implements UserInterface {
                 	panel.add(ui.getUpperPanel());
                 	panel.revalidate();
                 	panel.repaint();
-
             	} else {
             		return;
             	}
-
             }
         });
     }

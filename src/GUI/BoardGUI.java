@@ -38,9 +38,8 @@ public class BoardGUI implements UserInterface{
         initializeFooter();
     }
 
-    public BoardGUI() {
-    	//TODO get game from database
-    	this.game = new Game();
+    public BoardGUI(final List<Pair<String, String>> game) {
+    	this.game = new Game(game);
         initializeChessBoard();
         initializeFooter();
     }

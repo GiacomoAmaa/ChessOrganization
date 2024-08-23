@@ -54,7 +54,7 @@ public class  StatisticsUI implements UserInterface {
     wlRatio = new JLabel("Win/Loss ratio:"), wlWhiteRatio = new JLabel("White pieces W/L:"),
     wlBlackRatio = new JLabel("Black pieces W/L:");
     
-    public StatisticsUI() {
+    public StatisticsUI(int playerId) {
     	this.stats.add(name);
     	this.stats.add(surname);
     	this.stats.add(gamesPlayed);

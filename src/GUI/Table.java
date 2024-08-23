@@ -12,8 +12,7 @@ import javax.swing.table.TableColumnModel;
 public class Table {
 	private static final String[] GAMES = {"Select", "White Player", "Black Player", "Winner",
 			"Date", "Tournament"};
-	private static final String[] PLAYERS = {"Select", "Name", "Surname", "Elo",
-			"Games Played"};
+	private static final String[] PLAYERS = {"Select", "Name", "Surname", "Elo", "Games Played"};
 	private static final String[] ANNOUNCES = {"Select", "Name", "Location", "Date", "Capacity"};
 	private static final String[] LEADERBOARD2 = {"Select", "Name", "Surname", "Elo", "Games Won"};
     private static final JButton confirm = new JButton("Confirm");
@@ -99,8 +98,7 @@ public class Table {
         	if (i == 0) {
         		columnModel.getColumn(i).setPreferredWidth(50);
         	} else {
-        		var width = !searchType.equals("Games") ||!searchType.equals("")
-        				|| !searchType.equals("Players") ? 100 : 150;
+        		var width = searchType.equals("Games") ? 100 : 125;
                 table.getColumnModel().getColumn(i).setPreferredWidth(width);
         	}
         }
@@ -141,6 +139,12 @@ public class Table {
             }
         }
         return -1; // Return -1 if no row is selected
+    }
+
+    // Method to get the id of the selected row
+    public int getSelectedRowId() {
+    	var index = getSelectedRowIndex();
+    	return index != -1 ? ids.get(index) :-1;
     }
 
     // Method to get the index of the selected row
