@@ -45,8 +45,6 @@ public class RefereeUI extends JFrame{
 	private static final JMenuBar menu = new JMenuBar();
 	private static final JMenu search = new JMenu("Search"),
 			designations = new JMenu("My Designations"),
-			// sign in to ref the tournaments
-			tourn = new JMenu("My Tournaments"),
 			logout = new JMenu("Logout");
 
 	private static final FontLoader fontLoad = new FontLoader();
@@ -101,7 +99,7 @@ public class RefereeUI extends JFrame{
 		RefereeUI.panel.add(centerPane, BorderLayout.CENTER);
 		RefereeUI.defText.setFont(RefereeUI.fontLoad.getTextFont().deriveFont(RefereeUI.TEXT_SIZE));
 		// initializing northern panel
-		List.of(designations, tourn, search, logout).stream()
+		List.of(designations, search, logout).stream()
 			.forEach(elem -> {
 				if (elem instanceof JMenu) {
 					RefereeUI.menu.add(elem);
@@ -192,7 +190,7 @@ public class RefereeUI extends JFrame{
 	 * Sets player id.
 	 * @param id player id
 	 */
-	public void setPlayerId(final int id) {
+	public void setRefereeId(final int id) {
 		this.refereeId = id;
 	}
 }

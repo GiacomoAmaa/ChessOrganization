@@ -93,6 +93,7 @@ public class LoginForm extends JFrame {
 		LoginForm.name.setText("");
 		LoginForm.lastname.setText("");
 		LoginForm.cf.setText("");
+		LoginForm.cardNumber.setText("");
 		updateType();
 		JOptionPane.showMessageDialog(null, "Username or password are not valid, please try again.");
 	}
