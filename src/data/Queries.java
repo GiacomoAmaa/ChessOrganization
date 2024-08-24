@@ -38,7 +38,7 @@ public class Queries {
      */
     public static final String PLAYER_REGISTER = 
             "insert into giocatori(idgiocatore, punteggio, username, password, cf, nome, cognome) "
-            + "values (null, 0, ?, ?, ?, ?, ?)";
+            + "values (null, 1000, ?, ?, ?, ?, ?)";
 
     /**
      * query which searches in the database for all the
@@ -377,7 +377,7 @@ public class Queries {
 			+ "join iscrizioni i on g.idgiocatore = i.idgiocatore "
 			+ "join partecipanti pt on i.idiscrizione = pt.idiscrizione "
 			+ "join partite p on pt.codpartita = p.codpartita "
-			+ "where p.data >= date_sub(currdate(), interval 1 month) "
+			+ "where p.data >= date_sub(?, interval 1 month) "
 			+ "and ((pt.fazione = 'Bianco' and p.vincitore = 'Bianco') "
 			+ "     or (pt.fazione = 'Nero' and p.vincitore = 'Nero')) "
 			+ "group by g.idgiocatore "

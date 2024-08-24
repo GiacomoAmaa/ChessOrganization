@@ -14,7 +14,7 @@ public class Table {
 			"Date", "Tournament"};
 	private static final String[] PLAYERS = {"Select", "Name", "Surname", "Elo", "Games Played"};
 	private static final String[] ANNOUNCES = {"Select", "Name", "Location", "Date", "Capacity"};
-	private static final String[] LEADERBOARD2 = {"Select", "Name", "Surname", "Elo", "Games Won"};
+	private static final String[] LEADERBOARD = {"Select", "Name", "Surname", "Elo", "Games Won"};
     private static final JButton confirm = new JButton("Confirm");
     private static final JButton subscribe = new JButton("Subscribe");
     
@@ -56,7 +56,7 @@ public class Table {
     	else if(searchType.equals("Most active") || searchType.equals("Best players")){
     		this.columns = PLAYERS;
     	} else if(searchType.equals("Best climbers")){
-    		this.columns = LEADERBOARD2;
+    		this.columns = LEADERBOARD;
     	} else {
     		this.columns = searchType.equals("Players") ? PLAYERS : GAMES;
     	}

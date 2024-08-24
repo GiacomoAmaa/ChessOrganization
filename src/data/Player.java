@@ -171,17 +171,17 @@ public final class Player {
         }
 
         public static List<List<Object>> bestClimber(Connection conn) {
-            try(var stmt = DAOUtils.prepare(conn, Queries.BEST_CLIMBERS)){
+            try(var stmt = DAOUtils.prepare(conn, Queries.BEST_CLIMBERS, java.sql.Date.valueOf(LocalDate.now()))){
                 List<List<Object>> data = new ArrayList<>();
                 var resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    List<Object> row = new ArrayList<>();
-                    row.add(List.of(resultSet.getInt("idgiocatore"),
-                            resultSet.getInt("nome"),
+                    List<Object> row = new ArrayList<>( List.of(resultSet.getInt("idgiocatore"),
+                            resultSet.getString("nome"),
                             resultSet.getString("cognome"),
-                            resultSet.getString("punteggio"),
-                            resultSet.getString("numero_vittorie")
+                            resultSet.getInt("punteggio"),
+                            resultSet.getInt("numero_vittorie")
                             ));
+                    data.add(row);
                 }
                 return data;
             } catch (SQLException e) {
@@ -327,12 +327,12 @@ public final class Player {
                 }
                 res = elo.executeQuery();
                 if (res.next()) {
-                    ret.put("elo", res.getString("punteggio"));
+                    ret.put("elo", Integer.toString(res.getInt("punteggio")));
                 }
                 res = rival.executeQuery();
                 if (res.next()) {
-                    ret.put("rival", res.getString("nome") + " " + res.getShort("cognome") +
-                            " (" + res.getString("numPartite") + " games)");
+                    ret.put("rival", res.getString("nome") + " " + res.getString("cognome") +
+                            " (" + res.getInt("numPartite") + " games)");
                 } else {
                     ret.put("rival", "---");
                 }
