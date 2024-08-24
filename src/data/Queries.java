@@ -403,5 +403,83 @@ public class Queries {
 			+ "and p.data < ? "
 			+ "order by p.data ";
 
+	/**
+	 * gets the favourite opener for a certain player as white.
+	 */
+	public static final String OPENER_WHITE =
+	        "select stringamossa, (count(*)) as occorrenze "
+	        + "from mosse m, partecipanti p, iscrizioni i, giocatori g, turni t "
+	        + "where m.idiscrizione = p.idiscrizione "
+	        + "and p.fazione = 'Bianco' "
+	        + "and t.mossabianca = m.idmossa "
+	        + "and t.numturno = 1 "
+	        + "and p.idiscrizione = i.idiscrizione "
+	        + "and i.idgiocatore = ? "
+	        + "group by stringamossa "
+	        + "order by occorrenze desc "
+	        + "limit 1";
+
+	/**
+     * gets the favourite opener for a certain player as black.
+     */
+    public static final String OPENER_BLACK =
+            "select stringamossa, (count(*)) as occorrenze "
+            + "from mosse m, partecipanti p, iscrizioni i, giocatori g, turni t "
+            + "where m.idiscrizione = p.idiscrizione "
+            + "and p.fazione = 'Nero' "
+            + "and t.mossanera = m.idmossa "
+            + "and t.numturno = 1 "
+            + "and p.idiscrizione = i.idiscrizione "
+            + "and i.idgiocatore = ? "
+            + "group by stringamossa "
+            + "order by occorrenze desc "
+            + "limit 1";
+
+    /**
+     * gets the rival of the current player, the players which have been played
+     * the most games against.
+     */
+    public static final String GET_RIVAL =
+            "select g.nome, g.cognome, (count(*)) as numPartite "
+            + "from giocatori g, iscrizioni i, partecipanti pa, partite p "
+            + "where g.idgiocatore = i.idgiocatore "
+            + "and i.idiscrizione = pa.idiscrizione "
+            + "and pa.codpartita = p.codpartita "
+            + "and p.vincitore <> '' "
+            + "and p.codpartita in (select p2.codpartita "
+            + "from partite p2, partecipanti pa2, "
+            + "iscrizioni i2, giocatori g2 "
+            + "where p2.codpartita = pa2.codpartita "
+            + "and pa2.idiscrizione = i2.idiscrizione "
+            + "and i2.idgiocatore = ? "
+            + "and g.idgiocatore <> i2.idgiocatore) "
+            + "group by g.idgiocatore "
+            + "order by numPartite desc "
+            + "limit 1";
+
+    /**
+     * gets the elo of a specified player.
+     */
+    public static final String GET_ELO =
+            "select punteggio "
+            + "from giocatori "
+            + "where idgiocatore = ?";
+
+    /**
+     * gets the name of a specified player.
+     */
+    public static final String GET_NAME =
+            "select nome "
+            + "from giocatori "
+            + "where idgiocatore = ?";
+
+    /**
+     * gets the lastname of a specified player.
+     */
+    public static final String GET_LASTNAME =
+            "select cognome "
+            + "from giocatori "
+            + "where idgiocatore = ?";
+
     private Queries() { }
 }

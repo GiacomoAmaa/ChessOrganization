@@ -5,8 +5,12 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import board.MoveParser;
 
 /**
  * A representation of a data instance of a player in the database.
@@ -280,6 +284,66 @@ public final class Player {
                 throw new DAOException(e);
             }
         }
-    }
 
+        /**
+         * gives the stats of a specified player.
+         * @param conn
+         * @param playerId
+         * @return a map in which infos are labeled by the key:
+         * "name" -> name, "lastname" -> lastname, "elo" -> score,
+         * "rival" -> rival player, "favOp" -> favorite opener,
+         * "favDef" -> favorite defence
+         */
+        public static Map<String, String> getStats(final Connection conn, final int playerId) {
+            var parser = new MoveParser();
+            var ret = new HashMap<String, String>();
+            try (var name = DAOUtils.prepare(conn, Queries.GET_NAME, playerId);
+                    var lastname = DAOUtils.prepare(conn, Queries.GET_LASTNAME, playerId);
+                    var favOpener = DAOUtils.prepare(conn, Queries.OPENER_WHITE, playerId);
+                    var favDef = DAOUtils.prepare(conn, Queries.OPENER_BLACK, playerId);
+                    var elo = DAOUtils.prepare(conn, Queries.GET_ELO, playerId);
+                    var rival = DAOUtils.prepare(conn, Queries.GET_RIVAL, playerId);) {
+                var res = name.executeQuery();
+                if (res.next()) {
+                    ret.put("name", res.getString("nome"));
+                }
+                res = lastname.executeQuery();
+                if (res.next()) {
+                    ret.put("lastname", res.getString("cognome"));
+                }
+                res = favOpener.executeQuery();
+                if (res.next()) {
+                    parser.parse(res.getString("stringamossa"));
+                    ret.put("favOp", parser.getAttacker() + " " + parser.getArrivalCoord());
+                } else {
+                    ret.put("favOp", "---");
+                }
+                res = favDef.executeQuery();
+                if (res.next()) {
+                    parser.parse(res.getString("stringamossa"));
+                    ret.put("favDef", parser.getAttacker() + " " + parser.getArrivalCoord());
+                } else {
+                    ret.put("favDef", "---");
+                }
+                res = elo.executeQuery();
+                if (res.next()) {
+                    ret.put("elo", res.getString("punteggio"));
+                }
+                res = rival.executeQuery();
+                if (res.next()) {
+                    ret.put("rival", res.getString("nome") + " " + res.getShort("cognome") +
+                            " (" + res.getString("numPartite") + " games)");
+                } else {
+                    ret.put("rival", "---");
+                }
+                if (ret.entrySet().size() == 6) {
+                    return ret;
+                } else {
+                    throw new SQLException();
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+    }
 }
