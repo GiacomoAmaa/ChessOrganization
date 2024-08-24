@@ -54,7 +54,7 @@ public class MoveParser {
      * @return tile row from of the start position
      */
     public int getStartingRow() {
-        return Character.getNumericValue(this.move[Position.FROM.ordinal()].charAt(0));
+        return Character.getNumericValue(this.move[Position.FROM.ordinal()].charAt(1));
     }
 
     /**
@@ -62,23 +62,23 @@ public class MoveParser {
      * @return row of the arriving tile
      */
     public int getArrivalRow() {
-        return Character.getNumericValue(this.move[Position.TO.ordinal()].charAt(0));
+        return Character.getNumericValue(this.move[Position.TO.ordinal()].charAt(1));
     }
 
     /**
      * 
      * @return tile column of the stat position
      */
-    public char getStartingCol() {
-        return this.move[Position.FROM.ordinal()].charAt(0);
+    public String getStartingCol() {
+        return String.valueOf(this.move[Position.FROM.ordinal()].charAt(0));
     }
 
     /**
      * 
      * @return column of the arriving tile
      */
-    public char getArrivalCol() {
-        return this.move[Position.TO.ordinal()].charAt(0);
+    public String getArrivalCol() {
+        return String.valueOf(this.move[Position.TO.ordinal()].charAt(0));
     }
 
     /**

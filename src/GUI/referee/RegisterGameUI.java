@@ -54,6 +54,7 @@ public class RegisterGameUI implements UserInterface {
     		backButton = new JButton("Undo Move ");
     private int turn, gameId;
     private final MoveParser parser = new MoveParser();
+    private String winner = "Pari";
     private Color player;
 
     public RegisterGameUI(int gameId) {
@@ -160,9 +161,17 @@ public class RegisterGameUI implements UserInterface {
             public void actionPerformed(ActionEvent e) {
         		String move = packMoveInfo();
         		if (!move.isEmpty()) {
+        			System.out.println(move);
+        			turn = player.isWhite() ? turn : turn + 1;
+        			player = player.isWhite() ? Color.BLACK : Color.WHITE;
+        	        turnLabel.setText("Turn: " + turn);
+        	        playerLabel.setText(player.isWhite()? "White to play" : "Black to play");
+            		game.uploadMove(move);
+            		board.displayMove();
+
         			if(endgameCheck.isSelected()) {
-        				int white = Referee.DAO.getWhite(DBModel.getConnection(), turn);
-        				int black = Referee.DAO.getBlack(DBModel.getConnection(), turn);
+        				int white = Referee.DAO.getWhite(DBModel.getConnection(), gameId);
+        				int black = Referee.DAO.getBlack(DBModel.getConnection(), gameId);
         				var moves = game.getMoves();
         				for(int i = 0 ; i < moves.size() ; i++) {
         					parser.parse(moves.get(i).getX());
@@ -177,15 +186,9 @@ public class RegisterGameUI implements UserInterface {
         						blackMove = Optional.ofNullable(null);
         					}
         					Referee.DAO.registerTurn(DBModel.getConnection(), whiteMove, blackMove, i);
-        				}        				
-        			} else {
-            			System.out.println(move);
-            			turn = player.isWhite() ? turn : turn + 1;
-            			player = player.isWhite() ? Color.BLACK : Color.WHITE;
-            	        turnLabel.setText("Turn: " + turn);
-            	        playerLabel.setText(player.isWhite()? "White to play" : "Black to play");
-                		game.uploadMove(move);
-                		board.displayMove();
+        				}
+        				Referee.DAO.addWinner(DBModel.getConnection(), gameId, winner);
+        				//TODO ritorna alla pagiNA INIZIALE
         			}
         		}
             }
@@ -215,11 +218,11 @@ public class RegisterGameUI implements UserInterface {
 				DBModel.getConnection(),
 				playerId,
 				gameId,
-				parser.isMoveType(MoveSymbols.PROMOTION) ? PieceType.PAWN.getSymbol(): parser.getAttacker().charAt(0),
+				parser.isMoveType(MoveSymbols.PROMOTION) ? PieceType.PAWN.getSymbol(): parser.getAttacker(),
 				Optional.ofNullable(
-						parser.isMoveType(MoveSymbols.PROMOTION) ? parser.getAttacker().charAt(0) : null),
+						parser.isMoveType(MoveSymbols.PROMOTION) ? parser.getAttacker() : null),
 				Optional.ofNullable(
-						parser.isMoveType(MoveSymbols.CAPTURE) ? parser.getDefender().charAt(0) : null),
+						parser.isMoveType(MoveSymbols.CAPTURE) ? parser.getDefender() : null),
 				parser.isMoveType(MoveSymbols.CHECKMATE),
 				parser.getArrivalCol(),
 				parser.getArrivalRow(),
@@ -239,8 +242,8 @@ public class RegisterGameUI implements UserInterface {
 				parser.isMoveType(MoveSymbols.CHECKMATE),
 				parser.getStartingCol(),
 				parser.getStartingRow(),
-				parser.getAttacker().charAt(0),
-				Character.getNumericValue(parser.getAttacker().charAt(1)),
+				String.valueOf(parser.getAttacker().charAt(0)),
+				parser.getAttacker().charAt(1),
 				move);
     }
 
@@ -270,10 +273,10 @@ public class RegisterGameUI implements UserInterface {
     				return "";
     			} else {
     				type = MoveSymbols.PROMOTION.getSymbol();
-    				attacker = Character.toString(((PieceType) promotedPieceField.getSelectedItem()).getSymbol());
+    				attacker = ((PieceType) promotedPieceField.getSelectedItem()).getSymbol();
     			}
     		} else {
-    			attacker = Character.toString(((PieceType) attackingPieceField.getSelectedItem()).getSymbol());
+    			attacker = ((PieceType) attackingPieceField.getSelectedItem()).getSymbol();
     		}
 
     		if(captureCheck.isSelected()) {
@@ -282,7 +285,7 @@ public class RegisterGameUI implements UserInterface {
     				return "";
     			} else {
     				type += MoveSymbols.CAPTURE.getSymbol();
-    				defender = Character.toString(((PieceType) capturedPieceField.getSelectedItem()).getSymbol());
+    				defender = ((PieceType) capturedPieceField.getSelectedItem()).getSymbol();
     			}
     		}
 
@@ -292,6 +295,11 @@ public class RegisterGameUI implements UserInterface {
     				return "";
     			} else {
     				type += ((MoveSymbols)endgameField.getSelectedItem()).getSymbol();
+    				if (endgameField.getSelectedItem().equals(MoveSymbols.CHECKMATE)) {
+    					this.winner = this.player.isWhite() ? "Bianco" : "Nero";
+    				} else if (endgameField.getSelectedItem().equals(MoveSymbols.CONCEDE)) {
+    					this.winner = this.player.isWhite() ? "Nero" : "Bianco";
+    				}
     			}
     		}
 
@@ -304,7 +312,9 @@ public class RegisterGameUI implements UserInterface {
     		return "";
     	}
 
-		resetForm();
+		if (!endgameCheck.isSelected()) {
+			resetForm();
+		}
     	return result;
     }
 

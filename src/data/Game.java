@@ -19,13 +19,14 @@ public class Game {
 				List<List<Object>> data = new ArrayList<>();
 				var resultSet = stmt.executeQuery();
 				while (resultSet.next()) {
-					List<Object> row = new ArrayList<>();
-					row.add(List.of(resultSet.getInt("codpartita"),
+					List<Object> row = new ArrayList<>( List.of(resultSet.getInt("codpartita"),
 							resultSet.getString("nome_bianco") + " " + resultSet.getString("cognome_bianco"),
 							resultSet.getString("nome_nero") + " " + resultSet.getString("cognome_nero"),
 							resultSet.getString("vincitore"),
+							resultSet.getString("data"),
 							resultSet.getString("nome_torneo")
 							));
+					data.add(row);
 				}
 				return data;
 			} catch (SQLException e) {
@@ -34,20 +35,45 @@ public class Game {
 			}
 		}
 
-		public static List<List<Object>> getGameVsOpponent(Connection conn, int myId, String oppName, String oppSurname,
+		public static List<List<Object>> getGameVsOpponent(Connection conn, final int myId, final String oppName,
+				final String oppSurname,
 				Date before) {
 			try (var stmt = DAOUtils.prepare(conn, Queries.GET_GAME_VS_OPPONENT, myId, myId,
 					oppName, oppSurname, myId, oppName, oppSurname, myId, new java.sql.Date(before.getTime()))) {
 				List<List<Object>> data = new ArrayList<>();
 				var resultSet = stmt.executeQuery();
 				while (resultSet.next()) {
-					List<Object> row = new ArrayList<>();
-					row.add(List.of(resultSet.getInt("codpartita"),
+					List<Object> row = new ArrayList<>( List.of(resultSet.getInt("codpartita"),
 							resultSet.getString("nome_bianco") + " " + resultSet.getString("cognome_bianco"),
 							resultSet.getString("nome_nero") + " " + resultSet.getString("cognome_nero"),
 							resultSet.getString("vincitore"),
+							resultSet.getString("data"),
 							resultSet.getString("nome_torneo")
 							));
+					data.add(row);
+				}
+				return data;
+			} catch (SQLException e) {
+				System.out.println(e);
+				throw new DAOException(e);
+			}
+		}
+
+		public static List<List<Object>> getGameforReferee(Connection conn, final int refId, final String white,
+				final String black, final Date before) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.GET_REF_GAMES, refId,
+					new java.sql.Date(before.getTime()), white, white, black, black)) {
+				List<List<Object>> data = new ArrayList<>();
+				var resultSet = stmt.executeQuery();
+				while (resultSet.next()) {
+					List<Object> row = new ArrayList<>( List.of(resultSet.getInt("codpartita"),
+							resultSet.getString("nome_bianco") + " " + resultSet.getString("cognome_bianco"),
+							resultSet.getString("nome_nero") + " " + resultSet.getString("cognome_nero"),
+							resultSet.getString("vincitore"),
+							resultSet.getString("data"),
+							resultSet.getString("nome_torneo")
+							));
+					data.add(row);
 				}
 				return data;
 			} catch (SQLException e) {
@@ -86,7 +112,7 @@ public class Game {
 			try (var stmt = DAOUtils.prepare(conn, Queries.GAMES_PLAYED, playerid )) {
 				var resultSet = stmt.executeQuery();
 				resultSet.next();
-				return resultSet.getInt(0);
+				return resultSet.getInt(1);
 			} catch (SQLException e) {
 				System.out.println(e);
 				throw new DAOException(e);

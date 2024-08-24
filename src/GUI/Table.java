@@ -162,15 +162,15 @@ public class Table {
     public void addRows(List<List<Object>> data, boolean useId) {
     	ids.clear();
     	for (List<Object> row : data) {
-        	List<Object> tmp = new ArrayList<>();
+        	List<Object> finalRow = new ArrayList<>();
         	List<Object> tmpRow = new ArrayList<>(row);
         	if(useId) {
         		ids.add((Integer) tmpRow.get(0));
         		tmpRow.remove(0);
         	}
-        	tmp.add(false);
-        	tmp.addAll(tmpRow);
-        	tableModel.addRow(tmp.toArray());
+        	finalRow.add(false);
+        	finalRow.addAll(tmpRow);
+        	tableModel.addRow(finalRow.toArray());
         }
     }
 

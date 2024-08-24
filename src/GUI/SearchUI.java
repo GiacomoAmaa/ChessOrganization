@@ -57,9 +57,11 @@ public class SearchUI implements UserInterface {
 
     private void setupForm() {
     	final Date today = new Date();
+    	final Date oldest = Game.DAO.getOldestGame(DBModel.getConnection());
     	this.secondDate.setMaxSelectableDate(today);
     	this.secondDate.setDate(today);
-    	this.firstDate.setMinSelectableDate(Game.DAO.getOldestGame(DBModel.getConnection()));
+    	this.firstDate.setMinSelectableDate(oldest);
+    	this.firstDate.setDate(oldest);
     	this.firstDate.getDateEditor().getUiComponent().setFocusable(false);       
     	this.secondDate.getDateEditor().getUiComponent().setFocusable(false);
     	this.firstDate.setEnabled(false);       

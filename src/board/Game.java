@@ -78,7 +78,7 @@ public class Game {
                 // if any piece was captured needs to be restored 
                 if (this.move.isMoveType(MoveSymbols.CAPTURE)) {
                     this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(opponent,
-                            PieceType.getPieceTypeFromSymbol(this.move.getDefender().charAt(0))));
+                            PieceType.getPieceTypeFromSymbol(this.move.getDefender())));
                 } else {
                     // just remove attacker from arrival position
                     this.board.getTile(this.move.getArrivalCoord()).moveOutPiece();
@@ -87,7 +87,7 @@ public class Game {
                 // the attacker should be demoted to pawn
                 this.board.getTile(this.move.getStartingCoord()).moveInPiece(new Piece(player,
                         this.move.isMoveType(MoveSymbols.PROMOTION) ? PieceType.PAWN
-                            : PieceType.getPieceTypeFromSymbol(this.move.getAttacker().charAt(0))));
+                            : PieceType.getPieceTypeFromSymbol(this.move.getAttacker())));
             }
             this.isFinished = false;
         }
@@ -120,7 +120,7 @@ public class Game {
             } else {
                 this.board.getTile(this.move.getStartingCoord()).moveOutPiece();
                 this.board.getTile(this.move.getArrivalCoord()).moveInPiece(new Piece(player,
-                        PieceType.getPieceTypeFromSymbol(this.move.getAttacker().charAt(0))));
+                        PieceType.getPieceTypeFromSymbol(this.move.getAttacker())));
             }
 
             if (this.move.isMoveType(MoveSymbols.CHECKMATE)

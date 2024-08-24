@@ -115,12 +115,12 @@ public final class Player {
                 List<List<Object>> data = new ArrayList<>();
                 var resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    List<Object> row = new ArrayList<>();
-                    row.add(List.of(resultSet.getInt("idgiocatore"),
-                            resultSet.getInt("nome"),
+                    List<Object> row = new ArrayList<>( List.of(resultSet.getInt("idgiocatore"),
+                            resultSet.getString("nome"),
                             resultSet.getString("cognome"),
-                            resultSet.getString("punteggio")
+                            resultSet.getInt("punteggio")
                             ));
+                    data.add(row);
                 }
                 return data;
             } catch (SQLException e) {
@@ -133,13 +133,13 @@ public final class Player {
                 List<List<Object>> data = new ArrayList<>();
                 var resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    List<Object> row = new ArrayList<>();
-                    row.add(List.of(resultSet.getInt("idgiocatore"),
-                            resultSet.getInt("nome"),
+                    List<Object> row = new ArrayList<>( List.of(resultSet.getInt("idgiocatore"),
+                            resultSet.getString("nome"),
                             resultSet.getString("cognome"),
-                            resultSet.getString("punteggio"),
-                            resultSet.getString("numero_partite")
+                            resultSet.getInt("punteggio"),
+                            resultSet.getInt("numero_partite")
                             ));
+                    data.add(row);
                 }
                 return data;
             } catch (SQLException e) {
@@ -152,13 +152,13 @@ public final class Player {
                 List<List<Object>> data = new ArrayList<>();
                 var resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    List<Object> row = new ArrayList<>();
-                    row.add(List.of(resultSet.getInt("idgiocatore"),
-                            resultSet.getInt("nome"),
+                    List<Object> row = new ArrayList<>( List.of(resultSet.getInt("idgiocatore"),
+                            resultSet.getString("nome"),
                             resultSet.getString("cognome"),
-                            resultSet.getString("punteggio"),
-                            resultSet.getString("numero_partite")
+                            resultSet.getInt("punteggio"),
+                            resultSet.getInt("numero_partite")
                             ));
+                    data.add(row);
                 }
                 return data;
             } catch (SQLException e) {

@@ -79,7 +79,7 @@ public class RefereeUI extends JFrame{
 
 		setHandler(RefereeUI.designations, () -> {
 			loadUI(new MyGamesUI(UserType.REFEREE, refereeId));
-			RefereeUI.selected = Optional.of(RefereeUI.search);
+			RefereeUI.selected = Optional.of(RefereeUI.designations);
 			update();
 		});
 

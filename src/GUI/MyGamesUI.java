@@ -26,8 +26,7 @@ public class MyGamesUI implements UserInterface {
 	private final JPanel panel = new JPanel(new GridLayout(0, 4));
 	private final Table table = new Table("Games");
     
-    private final JLabel label1 = new JLabel("Opponent Name:   ", SwingConstants.RIGHT),
-    		label2 = new JLabel("Opponent Surname:   ", SwingConstants.RIGHT);
+    private final JLabel label1, label2;
 
     private final JTextField firstName = new JTextField(),
     		secondName = new JTextField();
@@ -35,7 +34,11 @@ public class MyGamesUI implements UserInterface {
     
     private final JButton searchButton = new JButton("Search");
     
-    public MyGamesUI(final UserType user, final int playerId) {
+    public MyGamesUI(final UserType user, final int userId) {
+    	this.label1 = new JLabel(user.equals(UserType.PLAYER)
+    			? "Opponent Name:   " : "White Player:   ", SwingConstants.RIGHT);
+    	this.label2 = new JLabel(user.equals(UserType.PLAYER)
+    			? "Opponent Name:   " : "Black Player:   ", SwingConstants.RIGHT);
         this.panel.add(label1);
         this.panel.add(firstName);
         this.panel.add(label2);
@@ -44,10 +47,10 @@ public class MyGamesUI implements UserInterface {
         this.panel.add(firstDate);
         this.panel.add(new JLabel(""));
         this.panel.add(searchButton);
-    	setupForm(user, playerId);
+    	setupForm(user, userId);
     }
 
-    private void setupForm(final UserType user, final int playerId) {
+    private void setupForm(final UserType user, final int userId) {
     	final Date today = new Date();
     	this.firstDate.setMaxSelectableDate(today);
     	this.firstDate.setDate(today);   
@@ -57,9 +60,16 @@ public class MyGamesUI implements UserInterface {
             @Override
             public void actionPerformed(ActionEvent e) {
                 table.clearTable();
-                var list = data.Game.DAO.getGameVsOpponent(DBModel.getConnection(), playerId ,
-                		firstName.getText(), firstName.getText(), firstDate.getDate());
-                table.addRows(list, true);
+        		if (user.equals(UserType.PLAYER)) {
+                    var list = data.Game.DAO.getGameVsOpponent(DBModel.getConnection(), userId,
+                    		firstName.getText(), firstName.getText(), firstDate.getDate());
+                    table.addRows(list, true);
+        		} else {
+        			var list = data.Game.DAO.getGameforReferee(DBModel.getConnection(),
+        					userId, firstName.getText(), secondName.getText(), firstDate.getDate());
+                    table.addRows(list, true);
+        		}
+
             }
         });
 
@@ -71,10 +81,10 @@ public class MyGamesUI implements UserInterface {
             		UserInterface ui ;
             		if (user.equals(UserType.PLAYER)) {
             			ui = table.getSearchType().equals("Players")
-            					? new StatisticsUI(table.getSelectedRowIndex())
-            							: new BoardGUI(Game.DAO.getGameMoves(DBModel.getConnection(), table.getSelectedRowIndex()));
+            					? new StatisticsUI(table.getSelectedRowId())
+            							: new BoardGUI(Game.DAO.getGameMoves(DBModel.getConnection(), table.getSelectedRowId()));
             		} else {
-            			ui = new RegisterGameUI(table.getSelectedRowIndex());
+            			ui = new RegisterGameUI(table.getSelectedRowId());
             		}
                 	panel.removeAll();
                 	panel.setLayout(new FlowLayout());

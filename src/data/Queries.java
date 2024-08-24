@@ -56,10 +56,10 @@ public class Queries {
      * number of games played by a certain player.
      */
     public static final String GAMES_PLAYED = 
-            "select count distinct * "
+            "select count(distinct p.codpartita) "
             + "from partecipanti p, iscrizioni i "
             + "where p.idiscrizione = i.idiscrizione "
-            + "and i.idgiocatore = ?";
+            + "and i.idgiocatore = ? ";
 
     /**
      * games played as white by a certain player.
@@ -268,10 +268,11 @@ public class Queries {
      * searches for all the players who's name matches a certain pattern.
      */
     public static final String GET_PLAYERS =
-			"select idgiocatore nome cognome punteggio "
+			"select idgiocatore, nome, cognome, punteggio "
 			+ "from giocatori "
-			+ "where nome like concat('%', ?, '%')"
-			+ "and cognome like concat('%', ?, '%')";
+			+ "where nome like concat('%', ?, '%') "
+			+ "and cognome like concat('%', ?, '%') "
+			+ " limit 20 ";
 
     /**
      * searches for a game in the db with certain participants.
@@ -401,6 +402,32 @@ public class Queries {
 			+ "and (( g_bianco.nome like concat('%', ?, '%') and g_bianco.cognome like concat('%', ?, '%') and g_nero.idgiocatore = ? ) "
 			+ "or (g_nero.nome like concat('%', ?, '%') and g_nero.cognome like concat('%', ?, '%') and g_bianco.idgiocatore = ? )) "
 			+ "and p.data < ? "
+			+ "order by p.data ";
+
+    /**
+     * adds a winner for the specified game 
+     */
+	public static final String GAME_ADD_WINNER = 
+			"update partite set vincitore = ? where codpartita = ? ";
+
+	/**
+     * gets list of games to be registered with specified players and date 
+     */
+	public static final String GET_REF_GAMES =
+			"select p.codpartita, g_bianco.nome as nome_bianco, g_bianco.cognome as cognome_bianco, "
+			+ "g_nero.nome as nome_nero, g_nero.cognome as cognome_nero, p.vincitore, p.data, t.nome as nome_torneo "
+			+ "from partite p "
+			+ "join partecipanti pa_bianco on p.codpartita = pa_bianco.codpartita and pa_bianco.fazione = 'Bianco' "
+			+ "join iscrizioni i_bianco on pa_bianco.idiscrizione = i_bianco.idiscrizione "
+			+ "join giocatori g_bianco on i_bianco.idgiocatore = g_bianco.idgiocatore "
+			+ "join partecipanti pa_nero on p.codpartita = pa_nero.codpartita and pa_nero.fazione = 'Nero' "
+			+ "join iscrizioni i_nero on pa_nero.idiscrizione = i_nero.idiscrizione "
+			+ "join giocatori g_nero on i_nero.idgiocatore = g_nero.idgiocatore "
+			+ "join tornei t on p.codtorneo = t.codtorneo "
+			+ "join designazioni d on t.codtorneo = d.codtorneo "
+			+ "where d.numtessera = ? and p.vincitore = '' and p.data < ? "
+			+ "and ((g_bianco.nome like concat('%', ?, '%') or g_bianco.cognome like concat('%', ?, '%')) "
+			+ "and (g_nero.nome like concat('%', ?, '%') or g_nero.cognome like concat('%', ?, '%'))) "
 			+ "order by p.data ";
 
     private Queries() { }

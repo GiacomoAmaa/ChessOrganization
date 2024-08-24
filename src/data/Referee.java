@@ -107,14 +107,14 @@ public class Referee {
             }
         }
 
-        public static int registerMove(final Connection conn, final int subscrId, final int gameId, final char piece, final Optional<Character> newPiece,
-                final Optional<Character> takenPiece, final boolean cMate, final char arrCol, final int arrLine, final char startCol,
+        public static int registerMove(final Connection conn, final int subscrId, final int gameId, final String piece, final Optional<String> newPiece,
+                final Optional<String> takenPiece, final boolean cMate, final String arrCol, final int arrLine, final String startCol,
                 final int startLine, final String move) {
 
-            try (var stmt = DAOUtils.prepare(conn, Queries.GAME_ADD_MOVE, subscrId, gameId, piece,
-                    newPiece.isPresent() ? newPiece.get().charValue() : null,
-                    takenPiece.isPresent() ? takenPiece.get().charValue() : null,
-                    cMate, arrCol, arrLine, startCol, startLine, move)) {
+            try (var stmt = DAOUtils.prepare(conn, Queries.GAME_ADD_MOVE, subscrId, gameId, String.valueOf(piece),
+                    newPiece.isPresent() ? newPiece.get() : null,
+                    takenPiece.isPresent() ? takenPiece.get() : null,
+                    cMate, arrLine, arrCol, startLine, startCol, move)) {
 
                 stmt.executeUpdate();
                 var resultSet = stmt.getGeneratedKeys();
@@ -131,6 +131,14 @@ public class Referee {
                 stmt.executeUpdate();
                 var resultSet = stmt.getGeneratedKeys();
                 return resultSet.next() ? resultSet.getInt("idturno") : -1;
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+
+        public static void addWinner(final Connection conn, final int gameId, final String winner) {
+            try (var stmt = DAOUtils.prepare(conn, Queries.GAME_ADD_WINNER, winner, gameId)) {
+                stmt.executeUpdate();
             } catch (SQLException e) {
                 throw new DAOException(e);
             }
