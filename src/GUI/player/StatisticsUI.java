@@ -25,6 +25,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import GUI.api.UserInterface;
 import board.Board;
+import data.Player;
+import model.DBModel;
 
 public class  StatisticsUI implements UserInterface {
 	
@@ -50,17 +52,24 @@ public class  StatisticsUI implements UserInterface {
 
     private List<JButton> squares = new LinkedList<>();
     private final JLabel name = new JLabel("Name:"),
-    surname = new JLabel("Surname:"), gamesPlayed = new JLabel("Games Played:"),
-    wlRatio = new JLabel("Win/Loss ratio:"), wlWhiteRatio = new JLabel("White pieces W/L:"),
-    wlBlackRatio = new JLabel("Black pieces W/L:");
+    surname = new JLabel("Surname:"), elo = new JLabel("Elo:"),
+    favOp = new JLabel("Favorite opening:"), favDef = new JLabel("Favorite Defence:"),
+    rival = new JLabel("Rival:");
     
     public StatisticsUI(int playerId) {
+        var data = Player.DAO.getStats(DBModel.getConnection(), playerId);
+        name.setText(name.getText() + " " + data.get("name"));
+        surname.setText(surname.getText() + " " + data.get("lastname"));
+        elo.setText(elo.getText() + " " + data.get("elo"));
+        favOp.setText(favOp.getText() + " " + data.get("favOp"));
+        favDef.setText(favDef.getText() + " " + data.get("favDef"));
+        rival.setText(rival.getText() + " " + data.get("rival"));
     	this.stats.add(name);
     	this.stats.add(surname);
-    	this.stats.add(gamesPlayed);
-    	this.stats.add(wlRatio);
-    	this.stats.add(wlWhiteRatio);
-    	this.stats.add(wlBlackRatio);
+    	this.stats.add(elo);
+    	this.stats.add(favOp);
+    	this.stats.add(favDef);
+    	this.stats.add(rival);
     	this.stats.add(searchType);
     	this.graphs.add(chessBoard);
     	setup();
