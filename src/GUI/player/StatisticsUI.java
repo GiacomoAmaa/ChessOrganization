@@ -5,11 +5,11 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
@@ -19,9 +19,12 @@ import javax.swing.JPanel;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 
 import GUI.api.UserInterface;
 import board.Board;
@@ -29,8 +32,7 @@ import data.Player;
 import model.DBModel;
 
 public class  StatisticsUI implements UserInterface {
-	
-	private static final Random RANDOM = new Random();
+
 	private final Dimension formSize = new Dimension(624, 85);
 	private final JPanel stats = new JPanel(new GridLayout(0, 2));
 	private final JPanel graphs = new JPanel();
@@ -56,7 +58,7 @@ public class  StatisticsUI implements UserInterface {
     favOp = new JLabel("Favorite opening:"), favDef = new JLabel("Favorite Defence:"),
     rival = new JLabel("Rival:");
     
-    public StatisticsUI(int playerId) {
+    public StatisticsUI(final int playerId) {
         var data = Player.DAO.getStats(DBModel.getConnection(), playerId);
         name.setText(name.getText() + " " + data.get("name"));
         surname.setText(surname.getText() + " " + data.get("lastname"));
@@ -72,13 +74,13 @@ public class  StatisticsUI implements UserInterface {
     	this.stats.add(rival);
     	this.stats.add(searchType);
     	this.graphs.add(chessBoard);
-    	setup();
+    	setup(playerId, Integer.valueOf(data.get("elo")));
     }
     
-    private void setup() {
+    private void setup(final int playerId, final int elo) {
     	this.stats.setPreferredSize(formSize);
-    	initHeatMap();
-    	initCharts();
+    	initHeatMap(playerId, elo);
+    	initCharts(playerId, elo);
         searchType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,39 +105,45 @@ public class  StatisticsUI implements UserInterface {
         
     }
 
-    private void initCharts() {
-        //TODO import series from database
-    	this.eloChart = new ChartPanel(ChartFactory.createXYLineChart("Elo", "Score", "Date", createDataset()));
-    	this.eloChart.setPreferredSize(new Dimension(624,512));
+    private void initCharts(final int playerId, final int elo) {
+        TimeSeriesCollection dataset = createDataset(playerId, elo);
+        JFreeChart chart = ChartFactory.createTimeSeriesChart(
+                "Elo Trend", "Date", "Score", dataset,
+                true, // shows legends
+                true, // Use tooltips
+                false // doesnt generate URLs
+        );
+
+        XYPlot plot = (XYPlot) chart.getPlot();
+        DateAxis dateAxis = (DateAxis) plot.getDomainAxis();
+        dateAxis.setDateFormatOverride(new SimpleDateFormat("dd-MM-yyyy"));
+        this.eloChart = new ChartPanel(chart);
+        this.eloChart.setPreferredSize(new Dimension(624,512));
     }
 
-    private void initHeatMap() {
-    	// TODO rimuovere codice per test
-    	List<Double> tryheat = new ArrayList<>(64);
-
-        for (int i = 0; i < Board.NUM_TILES; i++) {
-            tryheat.add(StatisticsUI.RANDOM.nextDouble() * 6.0);
-        }
-    	//TODO get info from db
+    private void initHeatMap(final int playerId, final int elo) {
+    	List<Double> heatmap = Player.DAO.getHeatMap(DBModel.getConnection(), playerId);
         for (int i = 0; i < Board.NUM_TILES; i++) {
             JButton button = new JButton();
             button.setPreferredSize(new Dimension(78, 64));
-            button.setBackground(percentageColorMap.ceilingEntry(tryheat.get(i)).getValue());
+            button.setBackground(percentageColorMap.ceilingEntry(heatmap.get(i)).getValue());
             this.chessBoard.add(button);
             this.squares.add(button);
         }
     }
 
-    private XYDataset createDataset() {
-        XYSeries s1 = new XYSeries("Elo");
-        s1.add(0, 0);
-        s1.add(1, 2);
-        s1.add(2, 5);
-        s1.add(3, 10);
-        s1.add(4, 7);
-        s1.add(5, 8);
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(s1);
+    private TimeSeriesCollection createDataset(final int playerId, final int elo) {
+        var data = Player.DAO.getTrend(DBModel.getConnection(), playerId, elo);
+        TimeSeries series = new TimeSeries("Elo");
+        
+        data.forEach(x -> {
+            LocalDate localDate = x.getY().toLocalDate();
+        	series.add(new Day(localDate.getDayOfMonth(), localDate.getMonthValue(),
+        			localDate.getYear()), x.getX());
+        });
+
+        TimeSeriesCollection dataset = new TimeSeriesCollection();
+        dataset.addSeries(series);
         return dataset;
     }
 

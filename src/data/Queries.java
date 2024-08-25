@@ -482,9 +482,10 @@ public class Queries {
      * gets number of moves ever done by a player.
      */
     public static final String GET_TOT_MOVES =
-            "select cognome "
-            + "from giocatori "
-            + "where idgiocatore = ?";
+            "select count(m.idmossa) as numero_mosse "
+            + "from mosse m "
+            + "join iscrizioni i on m.idiscrizione = i.idiscrizione "
+            + "where i.idgiocatore = ? ";
 
     /**
      * gets number of moves ever done by a player for every single square.
@@ -495,23 +496,26 @@ public class Queries {
             + "left join mosse m on c.riga = m.rigaarrivo and c.colonna = m.colonnaarrivo "
             + "left join iscrizioni i on m.idiscrizione = i.idiscrizione and i.idgiocatore = ? "
             + "group by c.riga, c.colonna "
-            + "order by c.riga, c.colonna ";
+            + "order by c.riga desc, c.colonna asc ";
 
     /**
-     * gets the last 10 games results
+     * gets the score for the last 10 days of activity in the last month
      */
     public static final String GET_ELO_TREND =
-            "select p.codpartita, "
+            "select p.data, sum( "
             + "case "
             + "when (p.vincitore = 'Bianco' and pt.fazione = 'Bianco') or "
-            + "(p.vincitore = 'Nero' and pt.fazione = 'Nero') then 'Win' "
-            + "when p.vincitore = 'Pari' then 'Draw' "
-            + "else 'Loss' end as risultato "
+            + "(p.vincitore = 'Nero' and pt.fazione = 'Nero') then 1 "
+            + "when p.vincitore = 'Pari' then 0 "
+            + "else -1 end ) as risultato "
             + "from partecipanti pt "
             + "join partite p on pt.codpartita = p.codpartita "
             + "join iscrizioni i on pt.idiscrizione = i.idiscrizione "
             + "where i.idgiocatore = ? and p.vincitore != '' "
-            + "order by p.data desc limit 10 ";
+            + "and p.data >= date_sub(?, interval 1 month) "
+            + "group by p.data "
+            + "order by p.data desc "
+            + "limit 10";
 
     private Queries() { }
 }
