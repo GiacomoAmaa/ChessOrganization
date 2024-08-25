@@ -41,18 +41,6 @@ public class Queries {
             + "values (null, 1000, ?, ?, ?, ?, ?)";
 
     /**
-     * query which searches in the database for all the
-     * games played by a certain player.
-     */
-    public static final String GAMES_FOR_PLAYER = 
-            "select * "
-            + "from partite p, partecipanti pa, iscrizioni i "
-            + "where p.idpartita = pa.idpartita "
-            + "and pa.idiscrizione = i.idiscrizione "
-            + "and i.idgiocatore = ?";
-    // could be all in one, needs optimization - - -
-
-    /**
      * number of games played by a certain player.
      */
     public static final String GAMES_PLAYED = 
@@ -60,28 +48,6 @@ public class Queries {
             + "from partecipanti p, iscrizioni i "
             + "where p.idiscrizione = i.idiscrizione "
             + "and i.idgiocatore = ? ";
-
-    /**
-     * games played as white by a certain player.
-     */
-    public static final String GAMES_AS_WHITE = 
-            "select count distinct * "
-            + "from partecipanti p, iscrizioni i "
-            + "where p.idiscrizione = i.idiscrizione "
-            + "and p.fazione = 'Bianco' "
-            + "and i.idgiocatore = ?";
-
-    /**
-     * games played as black by a certain player.
-     */
-    public static final String GAMES_AS_BLACK = 
-            "select count distinct * "
-            + "from partecipanti p, iscrizioni i "
-            + "where p.idiscrizione = i.idiscrizione "
-            + "and p.fazione = 'Nero' "
-            + "and i.idgiocatore = ?";
-    // now i need wins in general, or wins as white/black
-    // - - - - - - - - - - - - - - - - - - - - - -
 
     /**
      * adds a new tournament announce to the db.
@@ -275,7 +241,7 @@ public class Queries {
 			+ " limit 20 ";
 
     /**
-     * searches for a game in the db with certain participants.
+     * searches for a game in the db with certain participants in the specified time period
      */
     public static final String GET_GAME_WITH_PLAYERS = 
 			"select p.codpartita, p.data, t.nome as nome_torneo, p.vincitore,	"
@@ -294,7 +260,8 @@ public class Queries {
 			+ "and ( g2.nome like concat('%', ?, '%') "
 			+ "or g2.cognome like concat('%', ?, '%') ) "
 			+ "and p.data between ? and ? "
-			+ "and p.vincitore in ('Bianco', 'Nero', 'Pari') ";
+			+ "and p.vincitore in ('Bianco', 'Nero', 'Pari') "
+			+ "limit 20 ";
 
     /**
      * selects the oldest game.
@@ -381,10 +348,11 @@ public class Queries {
 			+ "and ((pt.fazione = 'Bianco' and p.vincitore = 'Bianco') "
 			+ "     or (pt.fazione = 'Nero' and p.vincitore = 'Nero')) "
 			+ "group by g.idgiocatore "
-			+ "order by numero_vittorie desc";
+			+ "order by numero_vittorie desc "
+			+ "limit 20 ";
     
     /**
-     * gets list of games against a specified opponent in the specified period 
+     * gets list of games against a specified opponent before the specified date 
      */
 	public static final String GET_GAME_VS_OPPONENT =
 			"select p.codpartita, g_bianco.nome as nome_bianco, g_bianco.cognome as cognome_bianco, "
@@ -402,7 +370,8 @@ public class Queries {
 			+ "and (( g_bianco.nome like concat('%', ?, '%') and g_bianco.cognome like concat('%', ?, '%') and g_nero.idgiocatore = ? ) "
 			+ "or (g_nero.nome like concat('%', ?, '%') and g_nero.cognome like concat('%', ?, '%') and g_bianco.idgiocatore = ? )) "
 			+ "and p.data < ? "
-			+ "order by p.data ";
+			+ "order by p.data "
+			+ "limit 20 ";
 
     /**
      * adds a winner for the specified game 
@@ -428,7 +397,8 @@ public class Queries {
 			+ "where d.numtessera = ? and p.vincitore = '' and p.data < ? "
 			+ "and ((g_bianco.nome like concat('%', ?, '%') or g_bianco.cognome like concat('%', ?, '%')) "
 			+ "and (g_nero.nome like concat('%', ?, '%') or g_nero.cognome like concat('%', ?, '%'))) "
-			+ "order by p.data ";
+			+ "order by p.data "
+			+ "limit 20 ";
 
 	/**
 	 * gets the favourite opener for a certain player as white.
@@ -507,6 +477,41 @@ public class Queries {
             "select cognome "
             + "from giocatori "
             + "where idgiocatore = ?";
+
+    /**
+     * gets number of moves ever done by a player.
+     */
+    public static final String GET_TOT_MOVES =
+            "select cognome "
+            + "from giocatori "
+            + "where idgiocatore = ?";
+
+    /**
+     * gets number of moves ever done by a player for every single square.
+     */
+    public static final String GET_SQUARES_NUM_MOVES =
+            "select c.riga, c.colonna, count(m.idmossa) as numero_mosse "
+            + "from caselle c "
+            + "left join mosse m on c.riga = m.rigaarrivo and c.colonna = m.colonnaarrivo "
+            + "left join iscrizioni i on m.idiscrizione = i.idiscrizione and i.idgiocatore = ? "
+            + "group by c.riga, c.colonna "
+            + "order by c.riga, c.colonna ";
+
+    /**
+     * gets the last 10 games results
+     */
+    public static final String GET_ELO_TREND =
+            "select p.codpartita, "
+            + "case "
+            + "when (p.vincitore = 'Bianco' and pt.fazione = 'Bianco') or "
+            + "(p.vincitore = 'Nero' and pt.fazione = 'Nero') then 'Win' "
+            + "when p.vincitore = 'Pari' then 'Draw' "
+            + "else 'Loss' end as risultato "
+            + "from partecipanti pt "
+            + "join partite p on pt.codpartita = p.codpartita "
+            + "join iscrizioni i on pt.idiscrizione = i.idiscrizione "
+            + "where i.idgiocatore = ? and p.vincitore != '' "
+            + "order by p.data desc limit 10 ";
 
     private Queries() { }
 }

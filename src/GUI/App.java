@@ -30,10 +30,5 @@ public final class App {
          * spotbugs isn't triggered
          */
         login.toString();
-        //var UI = new AdminControllerImpl(new Admin(1, null, null, null, null, null));
-        //var UI = new RefereeUI();
-        //var UI = new PlayerUI();
-        //var UI = new AdminUI();
-
     }
 }
