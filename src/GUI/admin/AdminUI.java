@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import GUI.SearchUI;
 import GUI.api.UserInterface;
 import util.loaders.FontLoader;
 
@@ -120,6 +121,11 @@ public class AdminUI extends JFrame {
 			loadUI(new LocationUI(postLoc));
 			AdminUI.selected = Optional.of(AdminUI.locations);
 			update();
+		});
+		setHandler(AdminUI.search, () -> {
+		    loadUI(new SearchUI());
+            AdminUI.selected = Optional.of(search);
+            update();
 		});
 		AdminUI.tourn.add(AdminUI.post);
 		AdminUI.tourn.add(AdminUI.create);
