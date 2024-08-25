@@ -118,15 +118,15 @@ public class Referee {
 
                 stmt.executeUpdate();
                 var resultSet = stmt.getGeneratedKeys();
-                return resultSet.next() ? resultSet.getInt("idmossa") : -1;
+                return resultSet.next() ? resultSet.getInt(1) : -1;
 
             } catch (SQLException e) {
                 throw new DAOException(e);
             }
         }
 
-        public static int registerTurn(final Connection conn, final int whiteMove,  final Optional<Integer> blackMove, final int turn) {
-            try (var stmt = DAOUtils.prepare(conn, Queries.GAME_ADD_TURN, whiteMove,
+        public static int registerTurn(final Connection conn, final int gameId, final int whiteMove,  final Optional<Integer> blackMove, final int turn) {
+            try (var stmt = DAOUtils.prepare(conn, Queries.GAME_ADD_TURN, gameId, whiteMove,
                     blackMove.isPresent() ? blackMove.get().intValue() : null, turn)) {
                 stmt.executeUpdate();
                 var resultSet = stmt.getGeneratedKeys();
@@ -136,9 +136,33 @@ public class Referee {
             }
         }
 
-        public static void addWinner(final Connection conn, final int gameId, final String winner) {
-            try (var stmt = DAOUtils.prepare(conn, Queries.GAME_ADD_WINNER, winner, gameId)) {
+        public static void addWinner(final Connection conn, final int gameId, final String winner, int white, int black) {
+            try (var stmt = DAOUtils.prepare(conn, Queries.GAME_ADD_WINNER, winner, gameId);
+                    var whitePlayer = DAOUtils.prepare(conn, Queries.GET_PLAYER, white);
+                    var blackPlayer = DAOUtils.prepare(conn, Queries.GET_PLAYER, black)) {
                 stmt.executeUpdate();
+                // elo update after the game
+                var resW = whitePlayer.executeQuery();
+                var resB = blackPlayer.executeQuery();
+                resW.next();
+                resB.next();
+                if (winner.equals("Bianco")) {
+                    try (var addElo = DAOUtils.prepare(conn, Queries.SET_ELO, resW.getInt("punteggio") + 25,
+                            resW.getInt("idgiocatore"));
+                            var subElo = DAOUtils.prepare(conn, Queries.SET_ELO, resB.getInt("punteggio") - 25,
+                                    resB.getInt("idgiocatore"))) {
+                        addElo.executeUpdate();
+                        subElo.executeUpdate();
+                    }
+                } else if (winner.equals("Nero")) {
+                    try (var addElo = DAOUtils.prepare(conn, Queries.SET_ELO, resB.getInt("punteggio") + 25,
+                            resB.getInt("idgiocatore"));
+                            var subElo = DAOUtils.prepare(conn, Queries.SET_ELO, resW.getInt("punteggio") - 25,
+                                    resW.getInt("idgiocatore"))) {
+                        addElo.executeUpdate();
+                        subElo.executeUpdate();
+                    }
+                }
             } catch (SQLException e) {
                 throw new DAOException(e);
             }

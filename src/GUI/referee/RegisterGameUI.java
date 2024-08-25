@@ -185,9 +185,9 @@ public class RegisterGameUI implements UserInterface {
         					} else {
         						blackMove = Optional.ofNullable(null);
         					}
-        					Referee.DAO.registerTurn(DBModel.getConnection(), whiteMove, blackMove, i);
+        					Referee.DAO.registerTurn(DBModel.getConnection(), gameId, whiteMove, blackMove, i);
         				}
-        				Referee.DAO.addWinner(DBModel.getConnection(), gameId, winner);
+        				Referee.DAO.addWinner(DBModel.getConnection(), gameId, winner, white, black);
         				//TODO ritorna alla pagiNA INIZIALE
         			}
         		}

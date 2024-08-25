@@ -513,5 +513,22 @@ public class Queries {
             + "where i.idgiocatore = ? and p.vincitore != '' "
             + "order by p.data desc limit 10 ";
 
+    /**
+     * sets the elo of a player to a certain amount.
+     */
+    public static final String SET_ELO =
+            "update giocatori "
+            + "set punteggio = ? "
+            + "where idgiocatore = ?";
+
+    /**
+     * gets the player id and the elo, from a participant.
+     */
+    public static String GET_PLAYER =
+            "select g.idgiocatore, g.punteggio "
+            + "from giocatori g, iscrizioni i "
+            + "where g.idgiocatore = i.idgiocatore "
+            + "and i.idiscrizione = ?";
+
     private Queries() { }
 }

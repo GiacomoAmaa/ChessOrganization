@@ -111,7 +111,7 @@ public class SearchUI implements UserInterface {
             	int index = table.getSelectedRowIndex();
             	if (index != -1) {
                 	UserInterface ui = table.getSearchType().equals("Players")
-                			? new StatisticsUI(table.getSelectedRowIndex())
+                			? new StatisticsUI(table.getSelectedRowId())
                 					: new BoardGUI(Game.DAO.getGameMoves(DBModel.getConnection(), table.getSelectedRowIndex()));
                 	table.getLowerPanel().removeAll();
                 	table.getLowerPanel().add(ui.getLowerPanel());
