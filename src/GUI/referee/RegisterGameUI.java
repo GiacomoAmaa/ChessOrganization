@@ -1,5 +1,6 @@
 package GUI.referee;
 
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -168,28 +169,14 @@ public class RegisterGameUI implements UserInterface {
         	        playerLabel.setText(player.isWhite()? "White to play" : "Black to play");
             		game.uploadMove(move);
             		board.displayMove();
-
-        			if(endgameCheck.isSelected()) {
-        				int white = Referee.DAO.getWhite(DBModel.getConnection(), gameId);
-        				int black = Referee.DAO.getBlack(DBModel.getConnection(), gameId);
-        				var moves = game.getMoves();
-        				for(int i = 0 ; i < moves.size() ; i++) {
-        					parser.parse(moves.get(i).getX());
-        					int whiteMove = parser.isMoveType(MoveSymbols.CASTLING) ? 
-        							registerCastle(white, move) : registerRegularMove(white, move);
-        					parser.parse(moves.get(i).getY());
-        					Optional<Integer> blackMove;
-        					if (!moves.get(i).getY().isEmpty()) {
-        						blackMove = Optional.of(parser.isMoveType(MoveSymbols.CASTLING) ? 
-            							registerCastle(black, move) : registerRegularMove(black, move));
-        					} else {
-        						blackMove = Optional.ofNullable(null);
-        					}
-        					Referee.DAO.registerTurn(DBModel.getConnection(), gameId, whiteMove, blackMove, i);
-        				}
-        				Referee.DAO.addWinner(DBModel.getConnection(), gameId, winner, white, black);
-        				//TODO ritorna alla pagiNA INIZIALE
-        			}
+            		if (endgameCheck.isSelected()) {
+                		registerGame();
+                		for (Component comp : panel.getComponents()) {
+                            comp.setEnabled(false);
+                        }
+                        JOptionPane.showMessageDialog(null,
+                                "You have now uploaded the game, reload the area or switch area.");
+            		}
         		}
             }
         });
@@ -211,6 +198,29 @@ public class RegisterGameUI implements UserInterface {
         	}
         });
 
+    }
+
+    private void registerGame() {
+		int white = Referee.DAO.getWhite(DBModel.getConnection(), gameId);
+		int black = Referee.DAO.getBlack(DBModel.getConnection(), gameId);
+		var moves = game.getMoves();
+		for(int i = 0 ; i < moves.size() ; i++) {
+			var wMoveStr = moves.get(i).getX();
+			var bMoveStr = moves.get(i).getY();
+			parser.parse(wMoveStr);
+			int whiteMove = parser.isMoveType(MoveSymbols.CASTLING) ? 
+					registerCastle(white, wMoveStr) : registerRegularMove(white, wMoveStr);
+			parser.parse(bMoveStr);
+			Optional<Integer> blackMove;
+			if (!bMoveStr.isEmpty()) {
+				blackMove = Optional.of(parser.isMoveType(MoveSymbols.CASTLING) ? 
+						registerCastle(black, bMoveStr) : registerRegularMove(black, bMoveStr));
+			} else {
+				blackMove = Optional.ofNullable(null);
+			}
+			Referee.DAO.registerTurn(DBModel.getConnection(), gameId, whiteMove, blackMove, i);
+		}
+		Referee.DAO.addWinner(DBModel.getConnection(), gameId, winner, white, black);
     }
 
     private int registerRegularMove(int playerId, String move) {
@@ -243,7 +253,7 @@ public class RegisterGameUI implements UserInterface {
 				parser.getStartingCol(),
 				parser.getStartingRow(),
 				String.valueOf(parser.getAttacker().charAt(0)),
-				parser.getAttacker().charAt(1),
+				Character.getNumericValue(parser.getAttacker().charAt(1)),
 				move);
     }
 

@@ -45,9 +45,10 @@ public class Queries {
      */
     public static final String GAMES_PLAYED = 
             "select count(distinct p.codpartita) "
-            + "from partecipanti p, iscrizioni i "
-            + "where p.idiscrizione = i.idiscrizione "
-            + "and i.idgiocatore = ? ";
+            + "from partecipanti pt "
+            + "join iscrizioni i on pt.idiscrizione = i.idiscrizione "
+            + "join partite p on pt.codpartita = p.codpartita "
+            + "where i.idgiocatore = ? and p.vincitore != ''";
 
     /**
      * adds a new tournament announce to the db.
@@ -316,7 +317,7 @@ public class Queries {
 			+ "join iscrizioni i on g.idgiocatore = i.idgiocatore "
 			+ "join partecipanti pt on i.idiscrizione = pt.idiscrizione "
 			+ "join partite p on pt.codpartita = p.codpartita "
-			+ "where p.data >= date_sub(curdate(), interval 1 month) "
+			+ "where p.data >= date_sub( ? , interval 1 month) and p.vincitore != '' "
 			+ "group by g.idgiocatore "
 			+ "order by numero_partite desc "
 			+ "limit 20";
@@ -494,7 +495,8 @@ public class Queries {
             "select c.riga, c.colonna, count(m.idmossa) as numero_mosse "
             + "from caselle c "
             + "left join mosse m on c.riga = m.rigaarrivo and c.colonna = m.colonnaarrivo "
-            + "left join iscrizioni i on m.idiscrizione = i.idiscrizione and i.idgiocatore = ? "
+            + "and exists (select 1 from iscrizioni i "
+            + "where m.idiscrizione = i.idiscrizione and i.idgiocatore = ?) "
             + "group by c.riga, c.colonna "
             + "order by c.riga desc, c.colonna asc ";
 

@@ -40,10 +40,10 @@ public class  StatisticsUI implements UserInterface {
 
 	
     private static final TreeMap<Double, Color> percentageColorMap = new TreeMap<Double, Color>( 
-    		Map.of (1.0, new Color(0, 0, 139), // Blu Scuro
-    				2.0, new Color(0, 0, 255), // Blu 
-    				3.0, new Color(255, 255, 0), // Giallo
-    				4.0, new Color(255, 165, 0), // Arancione
+    		Map.of (0.01, new Color(0, 0, 139), // Blu Scuro
+    				0.02, new Color(0, 0, 255), // Blu 
+    				0.03, new Color(255, 255, 0), // Giallo
+    				0.04, new Color(255, 165, 0), // Arancione
     				Double.MAX_VALUE, new Color(139, 0, 0) // Rosso
     				));
 

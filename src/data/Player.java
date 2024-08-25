@@ -134,7 +134,7 @@ public final class Player {
         }
 
         public static List<List<Object>> mostActive(Connection conn) {
-            try(var stmt = DAOUtils.prepare(conn, Queries.MOST_ACTIVE_PLAYERS)){
+            try(var stmt = DAOUtils.prepare(conn, Queries.MOST_ACTIVE_PLAYERS, java.sql.Date.valueOf(LocalDate.now()))){
                 List<List<Object>> data = new ArrayList<>();
                 var resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
@@ -360,7 +360,7 @@ public final class Player {
                 list.add(new Pair<>(elo, java.sql.Date.valueOf(LocalDate.now())));
                 int tmpElo = elo;
                 while(resultSet.next()) {
-                	tmpElo = tmpElo + resultSet.getInt("risultato") * 25;
+                	tmpElo = tmpElo - resultSet.getInt("risultato") * 25;
                 	list.add(new Pair<Integer, Date>(tmpElo, resultSet.getDate("data")));
                 }
                 return list;
@@ -381,9 +381,9 @@ public final class Player {
             	List<Double> list = new ArrayList<>();
                 var num_moves = total.executeQuery();
                 var square_moves = square.executeQuery();
-                int tot = num_moves.next() ? num_moves.getInt("numero_mosse") : 0;
+                Double tot = num_moves.next() ? num_moves.getDouble("numero_mosse") : 0.0;
                 while(square_moves.next()) {
-                	list.add(tot != 0 ? square_moves.getInt("numero_mosse")/tot : 0.0);
+                	list.add(tot != 0 ? square_moves.getDouble("numero_mosse")/tot : 0.0);
                 }
                 return list;
             } catch (SQLException e) {
