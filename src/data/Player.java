@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import board.MoveParser;
+import util.PieceType;
 
 /**
  * A representation of a data instance of a player in the database.
@@ -314,14 +315,16 @@ public final class Player {
                 res = favOpener.executeQuery();
                 if (res.next()) {
                     parser.parse(res.getString("stringamossa"));
-                    ret.put("favOp", parser.getAttacker() + " " + parser.getArrivalCoord());
+                    ret.put("favOp", PieceType.getPieceTypeFromSymbol(parser.getAttacker()).getName() +
+                           " " + parser.getArrivalCoord());
                 } else {
                     ret.put("favOp", "---");
                 }
                 res = favDef.executeQuery();
                 if (res.next()) {
                     parser.parse(res.getString("stringamossa"));
-                    ret.put("favDef", parser.getAttacker() + " " + parser.getArrivalCoord());
+                    ret.put("favDef", PieceType.getPieceTypeFromSymbol(parser.getAttacker()).getName() +
+                           " " + parser.getArrivalCoord());
                 } else {
                     ret.put("favDef", "---");
                 }

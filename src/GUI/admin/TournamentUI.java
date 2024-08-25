@@ -97,22 +97,23 @@ public class TournamentUI implements UserInterface {
 		upper.removeAll();
 		upper.revalidate();
 		var data = announces.get();
-		var table = new Table("Tournaments");
-		var keys = new ArrayList<Integer>();
-		if(data.size() != 0) {
-			var dataArray = new Object[data.size()][data.get(0).size()];
-				data.stream().forEach(e -> {
-					e.stream().forEach(elem -> {
-						if(e.indexOf(elem) != 4) {
-							dataArray[data.indexOf(e)][e.indexOf(elem)] = elem;
-						} else {
-							keys.add(Integer.valueOf(elem.toString()));
-						}
-				});
-			});
-			// TODO sistemare
-			//table.addRows(dataArray, false);
-		}
+        var table = new Table("Tournaments");
+        var keys = new ArrayList<Integer>();
+        if(data.size() != 0) {
+            var dataArray = new ArrayList<List<Object>>();
+                data.stream().forEach(e -> {
+                    var tmp = new ArrayList<Object>();
+                    e.stream().forEach(elem -> {
+                        if(e.indexOf(elem) == 4) {
+                            keys.add(Integer.valueOf(elem.toString()));
+                        } else {
+                            tmp.add(elem);
+                        }
+                    });
+                    dataArray.add(tmp);
+                });
+            table.addRows(dataArray, false);
+        }
 		setUp(data, table, keys, createTourn, deleteAnn);
 		upper.add(table.getLowerPanel());
 		upper.repaint();

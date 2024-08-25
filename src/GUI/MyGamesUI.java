@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-
 import javax.swing.JButton;
 
 import javax.swing.JLabel;
@@ -78,13 +77,14 @@ public class MyGamesUI implements UserInterface {
             public void actionPerformed(ActionEvent e) {
             	int index = table.getSelectedRowIndex();
             	if (index != -1) {
-            		UserInterface ui ;
+            		UserInterface ui;
             		if (user.equals(UserType.PLAYER)) {
             			ui = table.getSearchType().equals("Players")
             					? new StatisticsUI(table.getSelectedRowId())
             							: new BoardGUI(Game.DAO.getGameMoves(DBModel.getConnection(), table.getSelectedRowId()));
             		} else {
-            			ui = new RegisterGameUI(table.getSelectedRowId());
+            		    ui = new RegisterGameUI(table.getSelectedRowId());
+            			
             		}
                 	panel.removeAll();
                 	panel.setLayout(new FlowLayout());

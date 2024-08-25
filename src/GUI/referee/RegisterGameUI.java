@@ -57,7 +57,7 @@ public class RegisterGameUI implements UserInterface {
     private String winner = "Pari";
     private Color player;
 
-    public RegisterGameUI(int gameId) {
+    public RegisterGameUI(final int gameId) {
     	List.of(PieceType.UNKNOWN, PieceType.PAWN, PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN,PieceType.KING)
     		.forEach( x -> this.attackingPieceField.addItem(x));
     	List.of(PieceType.UNKNOWN, PieceType.PAWN, PieceType.KNIGHT, PieceType.BISHOP,	PieceType.ROOK, PieceType.QUEEN)
@@ -188,7 +188,7 @@ public class RegisterGameUI implements UserInterface {
         					Referee.DAO.registerTurn(DBModel.getConnection(), gameId, whiteMove, blackMove, i);
         				}
         				Referee.DAO.addWinner(DBModel.getConnection(), gameId, winner, white, black);
-        				//TODO ritorna alla pagiNA INIZIALE
+        				//TODO switch context.
         			}
         		}
             }
