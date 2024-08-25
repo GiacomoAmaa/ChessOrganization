@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import board.MoveParser;
 import util.PieceType;
+import util.Pair;
 
 /**
  * A representation of a data instance of a player in the database.
@@ -344,6 +345,50 @@ public final class Player {
                 } else {
                     throw new SQLException();
                 }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+
+        /**
+         * gets the trend for the last 10 games
+         * @param conn the connection to the db
+         * @param playerId the id of the player
+         * @return elo trend for last 10 games
+         */
+        public static List<Pair<Integer, Date>> getTrend(final Connection conn, final int playerId, final int elo) {
+            try (var stmt = DAOUtils.prepare(conn, Queries.GET_ELO_TREND, playerId, java.sql.Date.valueOf(LocalDate.now()))) {
+                var resultSet = stmt.executeQuery();
+                List<Pair<Integer, Date>> list = new ArrayList<>();
+                list.add(new Pair<>(elo, java.sql.Date.valueOf(LocalDate.now())));
+                int tmpElo = elo;
+                while(resultSet.next()) {
+                	tmpElo = tmpElo + resultSet.getInt("risultato") * 25;
+                	list.add(new Pair<Integer, Date>(tmpElo, resultSet.getDate("data")));
+                }
+                return list;
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+
+        /**
+         * gets player's heat map information.
+         * @param conn the connection to the db
+         * @param playerId the id of the player
+         * @return list of heat map values
+         */
+        public static List<Double> getHeatMap(final Connection conn, final int playerId) {
+            try (var total = DAOUtils.prepare(conn, Queries.GET_TOT_MOVES, playerId);
+            		var square = DAOUtils.prepare(conn, Queries.GET_SQUARES_NUM_MOVES, playerId)) {
+            	List<Double> list = new ArrayList<>();
+                var num_moves = total.executeQuery();
+                var square_moves = square.executeQuery();
+                int tot = num_moves.next() ? num_moves.getInt("numero_mosse") : 0;
+                while(square_moves.next()) {
+                	list.add(tot != 0 ? square_moves.getInt("numero_mosse")/tot : 0.0);
+                }
+                return list;
             } catch (SQLException e) {
                 throw new DAOException(e);
             }
