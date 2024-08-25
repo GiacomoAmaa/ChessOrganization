@@ -297,7 +297,7 @@ public class Queries {
             + "from arbitri a, gestione g "
             + "where a.numtessera = g.numtessera "
             + "and g.indirizzo = ? "
-            + "order by design desc "
+            + "order by design asc "
             + "limit ?";
 
     /**
@@ -410,7 +410,7 @@ public class Queries {
 	        + "where m.idiscrizione = p.idiscrizione "
 	        + "and p.fazione = 'Bianco' "
 	        + "and t.mossabianca = m.idmossa "
-	        + "and t.numturno = 1 "
+	        + "and t.numturno = 0 "
 	        + "and p.idiscrizione = i.idiscrizione "
 	        + "and i.idgiocatore = ? "
 	        + "group by stringamossa "
@@ -426,7 +426,7 @@ public class Queries {
             + "where m.idiscrizione = p.idiscrizione "
             + "and p.fazione = 'Nero' "
             + "and t.mossanera = m.idmossa "
-            + "and t.numturno = 1 "
+            + "and t.numturno = 0 "
             + "and p.idiscrizione = i.idiscrizione "
             + "and i.idgiocatore = ? "
             + "group by stringamossa "

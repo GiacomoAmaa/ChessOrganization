@@ -58,7 +58,7 @@ public class RegisterGameUI implements UserInterface {
     private String winner = "Pari";
     private Color player;
 
-    public RegisterGameUI(int gameId) {
+    public RegisterGameUI(final int gameId) {
     	List.of(PieceType.UNKNOWN, PieceType.PAWN, PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN,PieceType.KING)
     		.forEach( x -> this.attackingPieceField.addItem(x));
     	List.of(PieceType.UNKNOWN, PieceType.PAWN, PieceType.KNIGHT, PieceType.BISHOP,	PieceType.ROOK, PieceType.QUEEN)
