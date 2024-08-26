@@ -242,7 +242,7 @@ public class Queries {
 			+ " limit 20 ";
 
     /**
-     * searches for a game in the db with certain participants in the specified time period
+     * searches for a game in the db with certain participants in the specified time period.
      */
     public static final String GET_GAME_WITH_PLAYERS = 
 			"select p.codpartita, p.data, t.nome as nome_torneo, p.vincitore,	"
@@ -282,7 +282,7 @@ public class Queries {
             + "order by t.numturno asc ";
 
     /**
-     * get's all the data from a certain anounce.
+     * get's all the data from a certain announce.
      */
     public static final String GET_ANNOUNCE_DATA = 
             "select * "
