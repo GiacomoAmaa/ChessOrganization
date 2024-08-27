@@ -38,8 +38,8 @@ public class Game {
 		public static List<List<Object>> getGameVsOpponent(Connection conn, final int myId, final String oppName,
 				final String oppSurname,
 				Date before) {
-			try (var stmt = DAOUtils.prepare(conn, Queries.GET_GAME_VS_OPPONENT, myId, myId,
-					oppName, oppSurname, myId, oppName, oppSurname, myId, new java.sql.Date(before.getTime()))) {
+			try (var stmt = DAOUtils.prepare(conn, Queries.GET_GAME_VS_OPPONENT, myId,
+					oppName, oppSurname, myId, oppName, oppSurname, new java.sql.Date(before.getTime()))) {
 				List<List<Object>> data = new ArrayList<>();
 				var resultSet = stmt.executeQuery();
 				while (resultSet.next()) {

@@ -262,16 +262,32 @@ public class RegisterGameUI implements UserInterface {
 		result = attacker = defender = from = to = type = "";
 
 		if(castlingCheck.isSelected()) {
-			if(castleField.getSelectedItem().equals("Short")) {
-				result = player.isWhite() ? "e1:g1:" + MoveSymbols.CASTLING.getSymbol() + ":h1:f1":
-					"e8:g8:"+ MoveSymbols.CASTLING.getSymbol() +":h8:f8";
-			} else if(castleField.getSelectedItem().equals("Long")) {
-				result = player.isWhite() ? "e1:c1:" + MoveSymbols.CASTLING.getSymbol() + ":a1:d1":
-					"e8:c8:"+ MoveSymbols.CASTLING.getSymbol() +":a8:d8";
+			if(!castleField.getSelectedItem().equals("--")) {
+	    		if(endgameCheck.isSelected()) {
+	    			if(endgameField.getSelectedItem().equals(MoveSymbols.UNKNOWN)) {
+	    				JOptionPane.showMessageDialog(null,"Required field Missing");
+	    				return "";
+	    			} else {
+	    				type += ((MoveSymbols)endgameField.getSelectedItem()).getSymbol();
+	    				if (endgameField.getSelectedItem().equals(MoveSymbols.CHECKMATE)) {
+	    					this.winner = this.player.isWhite() ? "Bianco" : "Nero";
+	    				} else if (endgameField.getSelectedItem().equals(MoveSymbols.CONCEDE)) {
+	    					this.winner = this.player.isWhite() ? "Nero" : "Bianco";
+	    				}
+	    			}
+	    		}
+				if(castleField.getSelectedItem().equals("Short")) {
+					result = player.isWhite() ? "e1:g1:" + MoveSymbols.CASTLING.getSymbol() + ":h1:f1":
+						"e8:g8:"+ type + MoveSymbols.CASTLING.getSymbol() +":h8:f8";
+				} else if(castleField.getSelectedItem().equals("Long")) {
+					result = player.isWhite() ? "e1:c1:" + type + MoveSymbols.CASTLING.getSymbol() + ":a1:d1":
+						"e8:c8:"+ MoveSymbols.CASTLING.getSymbol() +":a8:d8";
+				}
 			} else {
-				JOptionPane.showMessageDialog(null,"Required field Missing");
-				return "";
+					JOptionPane.showMessageDialog(null,"Required field Missing");
+					return "";
 			}
+
 		} else if (
 				!attackingPieceField.getSelectedItem().equals(PieceType.UNKNOWN) &&
 				!fromField.getSelectedItem().equals("--") &&
