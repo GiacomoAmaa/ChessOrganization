@@ -37,7 +37,7 @@ public class MyGamesUI implements UserInterface {
     	this.label1 = new JLabel(user.equals(UserType.PLAYER)
     			? "Opponent Name:   " : "White Player:   ", SwingConstants.RIGHT);
     	this.label2 = new JLabel(user.equals(UserType.PLAYER)
-    			? "Opponent Name:   " : "Black Player:   ", SwingConstants.RIGHT);
+    			? "Opponent Surname:   " : "Black Player:   ", SwingConstants.RIGHT);
         this.panel.add(label1);
         this.panel.add(firstName);
         this.panel.add(label2);
