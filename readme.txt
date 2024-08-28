@@ -5,7 +5,7 @@ ISTRUZIONI PER IL CORRETTO AVVIO DELL'APPLICAZIONE
 3. aprire il pannello SQL, copiare e incollare il contenuto del file "creazione_db.sql" situato nella cartella "db_init" nella root del progetto.
 4. eseguire la query.
 5. cancellare il pannello SQL, copiare e incollare il contenuto del file "inizializza_db.sql" situato nella cartella "db_init" nella root del progetto.
-6. avviare con doppio click l'applicazione java "chessOrg.jar" situato nella cartella "bin" nella root di progetto.
+6. avviare con doppio click l'applicazione java "ChessOrg.jar" situato nella nella root di progetto.
 7. Sarà possibile effettuare il log in con tre diversi utenti:
 	- username: "player", password: "root" permetterà di accedere alla pagina del giocatore
 	- username: "ref", password: "root", numero tessera: 1 permetterà di accedere alla pagina dell'arbitro
